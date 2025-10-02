@@ -1,0 +1,277 @@
+/* 전체 컨테이너 */
+.editproductmodal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 50px 120px;
+  background: #fff;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 50px auto;
+  border: 1px solid #000000;
+}
+
+/* 각 입력 필드 */
+.editproductmodal-itemfield {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editproductmodal-itemfield p {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.editproductmodal-itemfield input,
+.editproductmodal-itemfield select,
+.editproductmodal-itemfield textarea {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* 가격 입력 2칸 */
+.editproductmodal-price {
+  display: flex;
+  gap: 16px;
+}
+
+.category-field select {
+  max-width: 200px;
+}
+
+/* 사이즈 태그 */
+.editproductmodal-size-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-top: 6px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb transparent;
+}
+
+.editproductmodal-size-tags::-webkit-scrollbar {
+  height: 6px;
+}
+
+.editproductmodal-size-tags::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 3px;
+}
+
+.editproductmodal-size-tags::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editproductmodal-size-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #d3d3d3;
+  color: #000;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: grab;
+  user-select: none;
+}
+
+.editproductmodal-size-tag:active {
+  cursor: grabbing;
+}
+
+.editproductmodal-size-tag button {
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.editproductmodal-size-tag button:hover {
+  color: #fff;
+}
+
+/* 이미지 프리뷰 */
+.editproductmodal-preview-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.editproductmodal-preview-item {
+  position: relative;
+  user-select: none;
+}
+
+.editproductmodal-preview-item img {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  object-fit: cover;
+}
+
+.editproductmodal-main-image {
+  width: 120px;
+  height: 120px;
+}
+
+.editproductmodal-main-label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.editproductmodal-remove-img-btn {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.editproductmodal-remove-img-btn:hover {
+  color: #000;
+}
+
+.editproductmodal-upload-box {
+  width: 100px;
+  height: 100px;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 14px;
+  margin-left: 15px;
+}
+
+/* 설명 textarea */
+.editproductmodal-description textarea {
+  min-height: 220px;  /* 기존 120px + 100px */
+  resize: vertical;
+}
+
+/* 버튼 그룹 */
+.editproductmodal-buttons {
+  display: flex;
+  gap: 12px; /* 버튼 사이 간격 */
+  justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+.editproductmodal-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.editproductmodal-btn:hover {
+  background: #0056b3;
+}
+
+.editproductmodal-btn.cancel {
+  background: #ccc;
+}
+
+/* 반응형 */
+@media(max-width:1280px) {
+  .editproductmodal-container {
+    padding: 45px 60px;
+  }
+  .editproductmodal-description textarea {
+    min-height: 200px;
+  }
+}
+
+@media(max-width:800px) {
+  .editproductmodal-container {
+    padding: 40px 24px;
+    max-width: 100%;
+  }
+
+  .editproductmodal-price {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .editproductmodal-preview-item img,
+  .editproductmodal-upload-box {
+    width: 90px;
+    height: 90px;
+  }
+
+  .editproductmodal-main-image {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+@media(max-width:500px) {
+  .editproductmodal-container {
+    padding: 16px 12px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .editproductmodal-itemfield input,
+  .editproductmodal-itemfield textarea {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .editproductmodal-description textarea {
+    min-height: 250px;  /* 더 큰 입력 영역 */
+  }
+
+  .editproductmodal-price {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .editproductmodal-preview-item img,
+  .editproductmodal-upload-box {
+    width: 70px;
+    height: 70px;
+  }
+
+  .editproductmodal-main-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .editproductmodal-size-tags {
+    gap: 4px;
+  }
+
+  .editproductmodal-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,148 @@
+.listproduct {
+  padding: 20px 12px;
+  width: 100%;
+  
+}
+
+/* 스크롤 영역: 세로 스크롤만 */
+.listproduct-allproducts {
+  width: 100%;
+  max-height: 700px;  /* 필요에 따라 조정 가능 */
+  overflow-y: auto;   /* 세로 스크롤 허용 */
+  overflow-x: hidden; /* 가로 스크롤 제거 */
+  scrollbar-gutter: stable; /* 스크롤바 유무 상관없이 레이아웃 유지 */
+  border: 1px solid #000000;
+}
+
+/* 헤더 sticky */
+.listproduct-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: white;
+}
+
+/* 헤더/행 동일한 grid (8컬럼) */
+.listproduct-format-main,
+.listproduct-format {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 0.6fr 0.6fr;
+  gap: 6px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.listproduct-format {
+  border-bottom: 1px solid black;
+  padding: 12px 0; /* 위아래 패딩으로 행 간격 확보 */
+}
+
+/* Products 대표 이미지 */
+.listproduct-product-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.listproduct-product-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* size-tags 접두사 적용 */
+.listproduct-size-tags {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listproduct-size-tag {
+  background-color: #f2f2f2;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.listproduct-size-tag.empty {
+  background-color: transparent;
+  border: none;
+  color: #999;
+}
+
+.listproduct-size-tag.more {
+  background-color: #eee;
+  border: 1px dashed #bbb;
+  color: #666;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.listproduct-remove-icon {
+  cursor: pointer;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.listproduct-remove-icon:hover {
+  transform: scale(1.2);
+  filter: brightness(0) saturate(100%) invert(32%) sepia(88%) saturate(7483%)
+    hue-rotate(355deg) brightness(92%) contrast(118%);
+}
+
+.listproduct-edit-btn {
+  background-color: #007bff;
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.listproduct-edit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 반응형: 모바일 화면에서 가로 스크롤 없이 꽉 차게 */
+@media (max-width: 800px) {
+  .listproduct-format-main,
+  .listproduct-format {
+    font-size: 12px;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 컬럼 균등 배치 */
+    gap: 4px;
+  }
+
+  .listproduct-product-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .listproduct-size-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  /* 스크롤 제거 */
+  .listproduct-allproducts {
+    overflow-x: hidden;
+  }
+}

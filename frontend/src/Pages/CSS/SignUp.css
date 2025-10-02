@@ -1,0 +1,242 @@
+.signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+.signup-container {
+  max-width: 420px;
+  width: 100%;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.signup-container h1 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111;
+}
+
+.signup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signup-fields input,
+.address-fields input {
+    border: none;
+    border-bottom: 1px solid rgb(199, 199, 199);
+    padding: 8px 4px;
+    font-size: 14px;
+    background: transparent;
+    outline: none;
+    color: #000;
+    transition: border-color 0.2s;
+}
+.signup-fields input:focus,
+.address-fields input:focus {
+    outline: none;
+    border-color: #4e41ff;
+    box-shadow: 0 0 0 2px rgba(255,65,65,0.2);
+}
+
+.signup-fields input:focus,
+.address-fields input:focus,
+.signup-fields input:invalid,
+.address-fields input:invalid {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Address 카드 */
+.address-card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+  text-align: left;
+}
+
+.address-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin: 4px 0 0 5px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+input.error {
+  border-color: #ff4d4f;
+  box-shadow: 0 2px 6px rgba(255, 77, 79, 0.15);
+}
+
+.signup-agree {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.signup-agree a {
+  color: #ff4141;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-agree a:hover {
+  text-decoration: underline;
+}
+
+.signup-container button {
+  width: 90%;
+  margin: 25px auto 0 auto;
+  height: 46px;
+  display: block;
+  background: linear-gradient(135deg, #ff4141, #e52e2e);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.signup-container button:hover {
+  opacity: 0.9;
+}
+
+.signup-container button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.signup-login {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #555;
+}
+
+.signup-login span {
+  color: #ff4141;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.signup-login span:hover {
+  text-decoration: underline;
+}
+
+/* 성공 모달 */
+.success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.success-modal {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  animation: scaleUp 0.4s ease;
+}
+
+.success-modal h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #4b8df0;
+}
+
+.success-modal p {
+  font-size: 14px;
+  color: #444;
+}
+
+.success-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4b8df0, #626cfa);/* 초록 그라데이션 */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.success-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width:800px){
+  .signup-container{
+    max-width: 350px;
+  }
+  .signup-container h1{
+    font-size: 20px;
+  }
+  .signup-fields input,
+  .address-fields input {
+    font-size:13px;
+  }
+  .signup-agree{
+    font-size: 12px;
+  }
+  .signup-container button{
+    font-size:14px;
+  }
+  .signup-login{
+    font-size: 12px;
+  }
+}

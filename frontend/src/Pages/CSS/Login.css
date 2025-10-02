@@ -1,0 +1,160 @@
+.login {
+    width: 100%;
+    min-height: 100vh;
+    background: #f7f8fa; /* 연한 그레이 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 380px;
+    background: #fff;
+    border-radius: 16px; /* 카드 둥근 모서리 */
+    padding: 40px 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* 은은한 그림자 */
+}
+
+.login-container h1 {
+    margin-bottom: 30px;
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    color: #111;
+}
+
+.login-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.login-fields input {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 4px;
+    font-size: 15px;
+    background: transparent;
+    outline: none;
+    color: #000;
+    transition: border-color 0.2s;
+}
+
+.login-fields input:focus {
+    border-bottom: 1.5px solid #007aff;
+}
+
+.login-container button {
+    width: 100%;
+    height: 46px;
+    margin-top: 25px;
+    background: linear-gradient(135deg, #ff4141, #e52e2e); /* 🔴 레드 그라데이션 */
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.login-container button:hover {
+    opacity: 0.9;
+}
+
+.login-login {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #555;
+}
+
+.login-login span {
+    color: #ff4141;   /* 🔴 레드로 변경 */
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.login-agree {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+}
+.login-agree a {
+    color: #ff4141;   /* 🔴 레드로 변경 */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-agree a:hover {
+    text-decoration: underline;
+}
+.address-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.address-group label {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.address-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.address-wrapper input {
+  flex: 1; /* 세 칸 균등 배분 */
+}
+
+/* 반응형 */
+@media(max-width:1280px) {
+    .login-container {
+        max-width: 340px;
+        padding: 30px 20px;
+    }
+    .login-container h1 {
+        font-size: 20px;
+    }
+    .login-fields input {
+        font-size: 14px;
+    }
+    .login-container button {
+        font-size: 15px;
+        height: 44px;
+    }
+    .login-login {
+        font-size: 13px;
+    }
+}
+
+@media(max-width:800px) {
+    .login-container {
+        margin-left: -30px;
+        max-width: 50%;
+        padding: 25px 15px;
+    }
+    .login-container h1 {
+        font-size: 18px;
+    }
+    .login-fields {
+        gap: 20px;
+    }
+    .login-fields input {
+        font-size: 14px;
+    }
+    .login-container button {
+        font-size: 14px;
+        height: 42px;
+    }
+}

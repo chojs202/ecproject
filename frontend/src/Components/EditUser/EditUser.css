@@ -1,0 +1,297 @@
+/* =============================
+   EditUser CSS (Signup과 동일)
+============================= */
+
+.edituser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+.edituser-container {
+  max-width: 420px;
+  width: 100%;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.edituser-container h1 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111;
+}
+
+.edituser-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edituser-fields input,
+.edituser-address-fields input {
+  border: none;
+  border-bottom: 1px solid rgb(199, 199, 199);
+  padding: 8px 4px;
+  font-size: 14px;
+  background: transparent;
+  outline: none;
+  color: #000;
+  transition: border-color 0.2s;
+}
+
+.edituser-fields input:focus,
+.edituser-address-fields input:focus {
+  outline: none;
+  border-color: #4e41ff;
+  box-shadow: 0 0 0 2px rgba(255,65,65,0.2);
+}
+
+.edituser-fields input:focus,
+.edituser-address-fields input:focus,
+.edituser-fields input:invalid,
+.edituser-address-fields input:invalid {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Address 카드 */
+.edituser-address-card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 18px;
+  text-align: left;
+}
+
+.edituser-address-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.edituser-address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edituser-error-text {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin: 4px 0 0 5px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+input.edituser-error {
+  border-color: #ff4d4f;
+  box-shadow: 0 2px 6px rgba(255, 77, 79, 0.15);
+}
+
+.edituser-container button {
+  width: 80%;
+  margin: 25px auto 0 auto;
+  height: 46px;
+  display: block;
+  background: linear-gradient(135deg, #ff4141, #e52e2e);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+
+.edituser-container button:hover {
+  opacity: 0.9;
+}
+
+.edituser-container button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.edituser-login {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #555;
+}
+
+.edituser-login span {
+  color: #ff4141;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edituser-login span:hover {
+  text-decoration: underline;
+}
+
+/* 성공 모달 */
+.edituser-success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.edituser-success-modal {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  animation: scaleUp 0.4s ease;
+}
+
+.edituser-success-modal h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #4b8df0
+}
+
+.edituser-success-modal p {
+  font-size: 14px;
+  color: #444;
+}
+
+.edituser-success-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background:linear-gradient(135deg, #4b8df0, #626cfa);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.edituser-success-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.edituser-delete-section {
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  margin-top: 30px;
+}
+.edituser-delete-section input {
+  flex: 1; /* input이 가능한 최대 너비 차지 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.edituser-delete-section input:focus {
+  border-color: red;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+}
+
+.edituser-delete-section button {
+  background-color: red;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.edituser-delete-section button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+@media (max-width:800px){
+  .edituser-container{
+    max-width: 350px;
+  }
+  .edituser-container h1{
+    font-size: 20px;
+  }
+  .edituser-fields input,
+  .edituser-address-fields input {
+    font-size:13px;
+  }
+  .edituser-container button{
+    font-size:14px;
+  }
+  .edituser-login{
+    font-size: 12px;
+  }
+  @media (max-width: 600px) {
+  .edituser-container button {
+    width: 85%;
+    height: 42px;
+    font-size: 15px;
+  }
+}
+}
+@media (max-width: 500px) {
+  .edituser-container button {
+    width: 80%;
+    height: 38px;
+    font-size: 14px;
+  }
+   .edituser-container p{
+    font-size: 12px;
+   }
+   .edituser-delete-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+   .edituser-delete-section button {
+    width: 90%;
+  }
+  .edituser-delete-section button {
+    width: 70%;
+  }
+}
+
+@media (max-width: 400px) {
+  .edituser-container button {
+    width: 70%;
+    height: 30px;
+    font-size: 13px;
+  }
+  
+}
