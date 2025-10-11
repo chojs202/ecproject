@@ -156,8 +156,8 @@ const AddProduct = () => {
 
     try {
       const formData = new FormData();
-      images.forEach((imgObj, idx) =>
-        formData.append(`product_${idx}`, imgObj.file)
+      images.forEach((imgObj) =>
+        formData.append("product", imgObj.file)
       );
 
       const uploadRes = await fetch(`${API}/upload`, {

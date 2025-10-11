@@ -62,7 +62,6 @@ const fetchUser = async (req, res, next) => {
 // ==============================
 // 5. 이미지 업로드 설정 (Cloudinary)
 // ==============================
-const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Cloudinary 환경변수 연결
