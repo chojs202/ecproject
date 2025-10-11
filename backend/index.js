@@ -170,6 +170,8 @@ const Order = mongoose.model("Order", {
 // 7. 상품 관련 API
 // ==============================
 app.post("/addproduct", async (req, res) => {
+    console.log("📦 /addproduct called!");
+    console.log("Body received:", req.body);
   try {
     // ---------- 가격 숫자 검증 ----------
     const newPrice = Number(req.body.new_price);
