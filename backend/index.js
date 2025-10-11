@@ -14,7 +14,7 @@ const Stripe = require("stripe");
 require("dotenv").config();
 
 // 환경변수 적용
-const port = process.env.PORT || 4000;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT}`;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -83,7 +83,7 @@ app.post("/upload", upload.any(), (req, res) => {
     });
 
     const urls = filesSorted.map(
-      (file) => `http://localhost:${port}/images/${file.filename}`
+      (file) => `${BASE_URL}/images/${file.filename}`
     );
 
     res.json({ success: true, image_urls: urls });
