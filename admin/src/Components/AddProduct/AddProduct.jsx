@@ -209,7 +209,6 @@ const AddProduct = () => {
           />
           {titleError && <small style={{ color: "red" }}>{titleError}</small>}
         </div>
-
         {/* 서버 에러 */}
         {serverError && (
           <div style={{ color: "red", marginBottom: "10px" }}>
