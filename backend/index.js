@@ -56,41 +56,46 @@ const fetchUser = async (req, res, next) => {
   }
 };
 
+
+
 // ==============================
-// 5. 이미지 업로드 설정 (멀티 업로드)
+// 5. 이미지 업로드 설정 (Cloudinary)
 // ==============================
-const storage = multer.diskStorage({
-  destination: "./upload/images",
-  filename: (req, file, cb) =>
-    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`),
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+// Cloudinary 환경변수 연결
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
 });
-const upload = multer({ storage: storage });
 
-app.use("/images", express.static("upload/images"));
+// Cloudinary 저장소 설정
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "ecproject_products", // Cloudinary에 생성될 폴더명
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+  },
+});
 
-// ✅ 여러 장 업로드 (최대 4장) + 순서 보장
-app.post("/upload", upload.any(), (req, res) => {
+const upload = multer({ storage });
+
+// ✅ 여러 장 업로드 (최대 4장)
+app.post("/upload", upload.array("product", 4), async (req, res) => {
   try {
-    const files = req.files;
-    if (!files || files.length === 0)
+    if (!req.files || req.files.length === 0) {
       return res.json({ success: false, message: "No files uploaded" });
+    }
 
-    // fieldname에 idx를 붙여서 보내면 순서 보장 가능
-    // 예: product_0, product_1, ...
-    const filesSorted = files.sort((a, b) => {
-      const idxA = Number(a.fieldname.split("_")[1] ?? 0);
-      const idxB = Number(b.fieldname.split("_")[1] ?? 0);
-      return idxA - idxB;
-    });
-
-    const urls = filesSorted.map(
-      (file) => `${BASE_URL}/images/${file.filename}`
-    );
+    // Cloudinary는 자동으로 URL 반환
+    const urls = req.files.map((file) => file.path);
 
     res.json({ success: true, image_urls: urls });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Upload error:", error);
+    res.status(500).json({ success: false, message: "Image Upload Failed" });
   }
 });
 
