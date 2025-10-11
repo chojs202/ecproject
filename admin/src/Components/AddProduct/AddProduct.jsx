@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 import {API} from "../../config"
 
 const AddProduct = () => {
+  console.log("UPLOAD URL →", `${API}/upload`);
+  console.log("ADD URL →", `${API}/addproduct`);
   const initialProductDetails = {
     name: "",
     image: [],
