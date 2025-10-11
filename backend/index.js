@@ -67,15 +67,28 @@ const upload = multer({ storage: storage });
 
 app.use("/images", express.static("upload/images"));
 
-// ✅ 여러 장 업로드 (최대 4장)
-app.post("/upload", upload.array("product", 4), (req, res) => {
+// ✅ 여러 장 업로드 (최대 4장) + 순서 보장
+app.post("/upload", upload.any(), (req, res) => {
   try {
     const files = req.files;
-    if (!files || files.length === 0) return res.json({ success: false, message: "No files uploaded" });
+    if (!files || files.length === 0)
+      return res.json({ success: false, message: "No files uploaded" });
 
-    const urls = files.map(file => `http://localhost:${port}/images/${file.filename}`);
+    // fieldname에 idx를 붙여서 보내면 순서 보장 가능
+    // 예: product_0, product_1, ...
+    const filesSorted = files.sort((a, b) => {
+      const idxA = Number(a.fieldname.split("_")[1] ?? 0);
+      const idxB = Number(b.fieldname.split("_")[1] ?? 0);
+      return idxA - idxB;
+    });
+
+    const urls = filesSorted.map(
+      (file) => `http://localhost:${port}/images/${file.filename}`
+    );
+
     res.json({ success: true, image_urls: urls });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -85,31 +98,30 @@ app.post("/upload", upload.array("product", 4), (req, res) => {
 // ==============================
 const Product = mongoose.model("Product", {
   id: { type: Number, required: true },
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true},
   image: { type: [String], required: true, default: [] },
-  size: { type: [String], required: false, default: [] },
+  size: { type: [String], required: true, default: [] },
   category: { type: String, required: true },
   new_price: { type: Number, required: true },
   old_price: { type: Number, required: true },
   description: { type: String, required: true },
-  date: { type: Date, default: Date.now },
+  date: { type: Date, required: true, default: Date.now },
   available: { type: Boolean, default: true },
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
 });
 
 const Users = mongoose.model("Users", {
-  name: { type: String },
-  email: { type: String, unique: true },
-  password: { type: String },
-  phone: { type: String },
+  name: { type: String ,required: true },
+  email: { type: String,required: true , unique: true },
+  password: { type: String, required: true  },
+  phone: { type: String, required: true  },
   address: {
-    country: { type: String },
-    region: { type: String },
-    postalCode: { type: String },
+    country: { type: String, required: true },
+    region: { type: String, required: true},
+    postalCode: { type: String, required: true},
   },
   cartData: { type: Object, default: {} },
-  date: { type: Date, default: Date.now },
-  likedProducts: [{ type: Number }],
+  date: { type: Date, required: true, default: Date.now },
 });
 
 // ==============================
@@ -117,7 +129,7 @@ const Users = mongoose.model("Users", {
 // ==============================
 const Promo = mongoose.model("Promo", {
   code: { type: String, required: true, unique: true },
-  discountType: { type: String, enum: ["percent", "fixed"], default: "percent" },
+  discountType: { type: String, enum: ["percent"], default: "percent" },
   amount: { type: Number, required: true },
   minCartValue: { type: Number, default: 0 },
   active: { type: Boolean, default: true },
@@ -127,17 +139,21 @@ const Promo = mongoose.model("Promo", {
 // ==============================
 const Order = mongoose.model("Order", {
   userId: { type: String, required: true },
-  items: [
-    {
-      productId: Number,
-      name: String,
-      size: String,
-      quantity: Number,
-      price: Number,
-    },
-  ],
-  totalAmount: Number,
+  items: {
+    type: [
+      {
+        productId: Number,
+        name: String,
+        size: String,
+        quantity: Number,
+        price: Number,
+      }
+    ],
+    required: true,
+  },
+  totalAmount: { type: Number, required: true },
   discount: Number,    // 프로모코드 할인 금액
+  discountPercent: Number,   // 할인 퍼센트
   finalAmount: Number, // 할인 적용 후 실제 결제 금액
   status: { type: String, enum: ["pending", "paid"], default: "paid" },
   createdAt: { type: Date, default: Date.now },
@@ -149,27 +165,52 @@ const Order = mongoose.model("Order", {
 // ==============================
 app.post("/addproduct", async (req, res) => {
   try {
-    const products = await Product.find({});
-    const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+    // ---------- 가격 숫자 검증 ----------
+    const newPrice = Number(req.body.new_price);
+    const oldPrice = Number(req.body.old_price);
+    if (isNaN(newPrice) || isNaN(oldPrice)) {
+      return res.status(400).json({ success: false, message: "Price must be a number" });
+    }
 
+    // ---------- id 생성 (안전하게) ----------
+    const lastProduct = await Product.findOne({}).sort({ id: -1 });
+    const id = lastProduct ? lastProduct.id + 1 : 1;
+
+    // ---------- 필수 필드 검증 ----------
+    if (!req.body.name) {
+      return res.status(400).json({ success: false, message: "Product name is required" });
+    }
+    if (!req.body.category) {
+      return res.status(400).json({ success: false, message: "Category is required" });
+    }
+
+    // ---------- 이미지 배열 검증 ----------
+    const images = Array.isArray(req.body.image) ? req.body.image : [];
+    if (images.length === 0) {
+      return res.status(400).json({ success: false, message: "At least one image is required" });
+    }
+
+    // ---------- 상품 생성 ----------
     const product = new Product({
       id,
       name: req.body.name,
-      image: req.body.image,
-      size: req.body.size || [],
+      image: images,
+      size: Array.isArray(req.body.size) ? req.body.size : [],
       category: req.body.category,
-      new_price: Number(req.body.new_price),
-      old_price: Number(req.body.old_price),
-      description: req.body.description,
+      new_price: newPrice,
+      old_price: oldPrice,
+      description: req.body.description || "",
     });
 
     await product.save();
     res.json({ success: true, name: req.body.name });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
+    // 실제 에러 메시지를 프론트로 전달
+    res.status(500).json({ success: false, message: error.message || "Server error" });
   }
 });
+
 
 app.get("/allproducts", async (req, res) => {
   const products = await Product.find({});
@@ -257,7 +298,7 @@ app.post("/applypromo", fetchUser, async (req, res) => {
 
     res.json({
       success: true,
-      discountAmount,
+      discountPercent: promo.amount,
       newTotal: cartTotal - discountAmount
     });
   } catch (error) {
@@ -665,7 +706,7 @@ app.post("/create-payment-intent", async (req, res) => {
 // 주문 생성
 app.post("/create-order", fetchUser, async (req, res) => {
   try {
-    const { items, totalAmount, discount, finalAmount } = req.body;
+    const { items, totalAmount, discount, discountPercent, finalAmount } = req.body;
 
     if (!items || items.length === 0)
       return res.status(400).json({ success: false, message: "No items to order" });
@@ -674,10 +715,11 @@ app.post("/create-order", fetchUser, async (req, res) => {
       userId: req.user.id,
       items,
       totalAmount,
-      discount: discount || 0,      // promo discount
+      discount: discount || 0,                // 할인 금액
+      discountPercent: discountPercent || 0,  // 할인 퍼센트
       finalAmount: finalAmount || totalAmount, // 총액에서 할인 적용 후 금액
     });
-
+    console.log(req.body);
     await order.save();
     res.json({ success: true, orderId: order._id });
   } catch (error) {

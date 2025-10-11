@@ -3,6 +3,8 @@
   display: block;
   margin: 30px auto;
   width: 82%;
+  aspect-ratio: 16 / 4;
+ 
 }
 
 /* 정렬 영역 */
@@ -144,6 +146,7 @@
   .shopcategory-banner {
     margin: 20px auto;
     width: 90%;
+    
   }
   .shopcategory-indexSort {
     width: 90%;
@@ -195,7 +198,7 @@
   }
 
   .shopcategory-sort {
-    width: 85%;          /* ✅ 너무 길지 않게 */
+    width: 90%;          /* ✅ 너무 길지 않게 */
     max-width: 280px;
     font-size: 13px;
     padding: 8px 24px 8px 12px;
@@ -205,9 +208,10 @@
   .shopcategory-products {
     width: 95%;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;           /* ✅ 가로 간격 줄임 */
+  
     row-gap: 25px;       /* ✅ 세로 간격 줄임 */
   }
+ 
 
   .shopcategory-loadmore {
     margin: 50px auto;

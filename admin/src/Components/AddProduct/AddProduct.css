@@ -42,7 +42,7 @@
 }
 
 .addproduct-size-tags {
-  display: flex;
+  display: inline;
   gap: 8px;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -51,6 +51,16 @@
   padding-bottom: 6px;
   scrollbar-width: thin;
   scrollbar-color: #bbb transparent;
+  
+}
+.addproduct-size-tags input{
+  text-align: flex-start;
+  padding-left:3px;
+  width: 170px;
+  height: 30px;
+}
+.addproduct-size-tags div{
+  margin-bottom:10px;
 }
 
 .addproduct-size-tags::-webkit-scrollbar {
@@ -96,9 +106,17 @@
 
 .addproduct-preview-list {
   display: flex;
+  flex-direction: row;   /* 세로 정렬 */
+  align-items: flex-start;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-top: 10px;
+}
+.addproduct-preview-list p {
+  margin: 0 0 6px 0;  /* 글씨는 위쪽, 이미지와 간격만 띄움 */
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .addproduct-preview-item {
@@ -106,7 +124,10 @@
   user-select: none;
 }
 
+
 .addproduct-preview-item img {
+  display: flex;
+  flex-direction: row;
   width: 100px;
   height: 100px;
   border-radius: 6px;

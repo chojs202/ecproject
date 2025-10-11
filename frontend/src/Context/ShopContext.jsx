@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer, useCallback, useRef, useState } from "react";
+import { createContext, useEffect, useReducer, useCallback, useRef, useState } from "react";
 
 export const ShopContext = createContext(null);
 
@@ -39,7 +39,8 @@ function reducer(state, action) {
     case "SET_PROMO":
       return {
         ...state,
-        discount: action.discount,
+        discountPercent: action.discountPercent, // ✅ 퍼센트는 이쪽으로
+        discount: action.discountAmount || 0, 
         promoApplied: action.promoApplied,
         promoCode: action.promoCode,
       };
@@ -49,8 +50,9 @@ function reducer(state, action) {
       return { ...state, likedProducts: action.payload }; // 찜 목록 업데이트
     default:
       return state;
+    }
   }
-}
+  
 
 const ShopContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -75,7 +77,7 @@ const ShopContextProvider = ({ children }) => {
       for (let attempt = 1; attempt <= retryCount; attempt++) {
         try {
           const token = localStorage.getItem("auth-token");
-          if (!token || !state.isLoggedIn) return;
+          if (!token) return;
 
           await fetch("http://localhost:4000/updatecart", {
             method: "POST",
@@ -225,7 +227,7 @@ const ShopContextProvider = ({ children }) => {
 
   const getTotalCartAmountWithDiscount = () => {
     const total = getTotalCartAmount();
-    return promoApplied ? total - discount : total;
+     return promoApplied ? total - (total * (discount / 100)) : total;
   };
 
   const getTotalCartItems = () => {
@@ -256,8 +258,14 @@ const ShopContextProvider = ({ children }) => {
       const data = await response.json();
 
       if (data.success) {
-        dispatch({ type: "SET_PROMO", discount: data.discountAmount, promoApplied: true, promoCode: code });
-        localStorage.setItem("discount", data.discountAmount);
+       dispatch({
+          type: "SET_PROMO",
+          discountPercent: data.discountPercent, // 예: 10
+          promoApplied: true,
+          promoCode: code
+        });
+        localStorage.setItem("discountPercent", data.discountPercent);
+        
         localStorage.setItem("promoApplied", "true");
         localStorage.setItem("promoCode", code);
         callback?.(true, "Promo applied");
@@ -363,6 +371,7 @@ const ShopContextProvider = ({ children }) => {
     fetchLikedProducts,
     toggleLike,
     isProductLiked,
+    dispatch
   };
 
   return <ShopContext.Provider value={contextValue}>{children}</ShopContext.Provider>;

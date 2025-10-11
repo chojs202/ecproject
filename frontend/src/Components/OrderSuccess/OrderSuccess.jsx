@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../../Context/ShopContext"; // ShopContext import
 import "./OrderSuccess.css";
 
 export const OrderSuccess = () => {
   const [order, setOrder] = useState(null);
+  const { clearCart, dispatch } = useContext(ShopContext);
 
   useEffect(() => {
     const fetchLatestOrder = async () => {
@@ -20,6 +22,14 @@ export const OrderSuccess = () => {
       }
     };
     fetchLatestOrder();
+
+    // ✅ 주문 성공 후 장바구니 및 할인 코드 초기화
+    clearCart();
+    dispatch({ type: "SET_PROMO", discount: 0, promoApplied: false, promoCode: "" });
+    localStorage.removeItem("promoCode");
+    localStorage.removeItem("discount");
+    localStorage.removeItem("promoApplied");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!order) return <p className="loading">Loading...</p>;

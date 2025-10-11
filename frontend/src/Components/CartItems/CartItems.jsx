@@ -35,20 +35,23 @@ export const CartItems = () => {
     const id = Number(idStr);
     const product = all_product.find(p => p.id === id);
     if (!product) return acc;
-    const qty = cart[id][size];
+     // cart[id]가 없을 수도 있으니 안전하게 처리
+    const qty = cart[id]?.[size] || 0;
+      // 0 이하일 경우 합계에 포함시키지 않음
+    if (qty <= 0) return acc;
     return acc + product.new_price * qty;
   }, 0);
 
-  const subtotal = Object.keys(cart).reduce((acc, itemId) => {
-    const sizes = cart[itemId];
-    const product = all_product.find(p => p.id === Number(itemId));
-    if (!product) return acc;
-    return acc + Object.values(sizes).reduce((s, qty) => s + product.new_price * qty, 0);
-  }, 0);
 
-  const discountPercent = promoApplied && subtotal > 0 ? ((discount / subtotal) * 100).toFixed(0) : 0;
-  const selectedDiscount = promoApplied ? (discount / subtotal) * selectedSubtotal : 0;
+  // 할인 비율 (0 ~ 1)
+  const discountRatio = promoApplied ? discount / 100 : 0;  // discount = 퍼센트 값 (예: 10)
+
+  // 선택된 아이템 기준 할인액/총액
+  const selectedDiscount = promoApplied ? selectedSubtotal * discountRatio : 0;
   const selectedTotal = selectedSubtotal - selectedDiscount;
+
+  // 퍼센트는 그대로 표시
+  const discountPercent = promoApplied ? discount : 0;
 
   const handleApplyPromo = () => {
     if (!inputCode) return alert("Please enter a promo code");
@@ -172,13 +175,13 @@ export const CartItems = () => {
             <p>${selectedSubtotal.toFixed(2)}</p>
           </div>
 
-          {promoApplied && selectedDiscount > 0 && (
+          {promoApplied && (
             <div className="cartitems-total-row">
               <p>Discount ({discountPercent}%)</p>
-              <p>-${selectedDiscount.toFixed(2)}</p>
+              <p>- ${selectedDiscount.toFixed(2)}</p>
             </div>
           )}
-
+          
           <div className="cartitems-total-row">
             <p>Shipping Fee</p>
             <p>Free</p>

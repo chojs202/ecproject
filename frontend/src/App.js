@@ -10,12 +10,12 @@ import { Login } from './Pages/Login';
 import { Footer } from './Components/Footer/Footer';
 import { Signup } from './Pages/SignUp';
 import EditUser from './Components/EditUser/EditUser';
-import men_banner from './Components/Assets/banner_mens.png'
-import women_banner from './Components/Assets/banner_women.png'
-import kid_banner from './Components/Assets/banner_kids.png'
+import men_banner from './Components/Assets/men_banner.png'
+import women_banner from './Components/Assets/women_banner.png'
+import kid_banner from './Components/Assets/kid_banner.png'
 import ChangePassword from './Components/ChangePassword/ChangePassword';
 import Checkout from './Components/Checkout/Checkout';
-import OrderHistory  from './Components/Checkout/OrderHistory';
+import OrderHistory  from './Components/OrderHistory/OrderHistory';
 import OrderSuccess  from './Components/OrderSuccess/OrderSuccess';
 import ShopContextProvider from './Context/ShopContext';
 import SearchPage from './Components/Search/SearchPage';
