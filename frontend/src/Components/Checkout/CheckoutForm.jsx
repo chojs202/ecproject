@@ -3,7 +3,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import './CheckoutForm.css';
-import { API } from "../../config";
+import { API } from "../../../config";
 
 export default function CheckoutForm() {
   const stripe = useStripe();

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer, useCallback, useRef, useState } from "react";
-import { API } from "../config";
+import { API } from "../../config";
 
 
 export const ShopContext = createContext(null);
@@ -322,7 +322,7 @@ const ShopContextProvider = ({ children }) => {
   const fetchLikedProducts = async () => {
     if (!isLoggedIn) return;
     try {
-      const res = await fetch("${API}/likes", {
+      const res = await fetch(`${API}/likes`, {
         headers: { "auth-token": localStorage.getItem("auth-token") },
       });
       const data = await res.json();

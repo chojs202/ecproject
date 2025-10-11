@@ -3,7 +3,7 @@ import "./AddProduct.css";
 import upload_area from "../../assets/upload_area.svg";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { v4 as uuidv4 } from "uuid";
-import { API } from "../../config";
+import { API } from "../../../config"
 
 const AddProduct = () => {
   const initialProductDetails = {
