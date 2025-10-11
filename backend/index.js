@@ -21,8 +21,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 // ==============================
 // 2. MongoDB 연결
