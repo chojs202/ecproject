@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./EditUser.css"; // edituser-css
+import "./EditUser.css"; 
+import { API } from "../../config";
 
 export default function EditUser() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function EditUser() {
 
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:4000/getuser", {
+        const res = await fetch(`${API}/getuser`, {
           method: "GET",
           headers: { "auth-token": token },
         });
@@ -140,7 +141,7 @@ export default function EditUser() {
 
     // 서버 전송
     try {
-      const res = await fetch("http://localhost:4000/edituser", {
+      const res = await fetch(`${API}/edituser`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -178,7 +179,7 @@ export default function EditUser() {
     if (!window.confirm("Are you sure you want to delete? All data will be deleted.")) return;
 
     try {
-      const res = await fetch("http://localhost:4000/deleteuser", {
+      const res = await fetch(`${API}/deleteuser`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

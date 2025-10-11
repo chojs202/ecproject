@@ -1,6 +1,10 @@
 import { createContext, useEffect, useReducer, useCallback, useRef, useState } from "react";
+import { API } from "../config";
+
 
 export const ShopContext = createContext(null);
+
+
 
 const initialState = {
   isLoggedIn: !!localStorage.getItem("auth-token"),
@@ -79,7 +83,7 @@ const ShopContextProvider = ({ children }) => {
           const token = localStorage.getItem("auth-token");
           if (!token) return;
 
-          await fetch("http://localhost:4000/updatecart", {
+          await fetch(`${API}/updatecart`, {
             method: "POST",
             headers: { "auth-token": token, "Content-Type": "application/json" },
             body: JSON.stringify(updatedCart),
@@ -108,7 +112,7 @@ const ShopContextProvider = ({ children }) => {
     if (!token || hasMerged.current || hasMergedFlag) return;
 
     try {
-      const serverRes = await fetch("http://localhost:4000/getcart", {
+      const serverRes = await fetch(`${API}/getcart`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "auth-token": token },
       });
@@ -139,7 +143,7 @@ const ShopContextProvider = ({ children }) => {
   // --------------------- 초기 데이터 로딩 ---------------------
 
   useEffect(() => {
-    fetch("http://localhost:4000/allproducts")
+    fetch(`${API}/allproducts`)
       .then((res) => res.json())
       .then((data) => setAll_Product(data));
 
@@ -250,7 +254,7 @@ const ShopContextProvider = ({ children }) => {
     const cartTotal = getTotalCartAmount();
 
     try {
-      const response = await fetch("http://localhost:4000/applypromo", {
+      const response = await fetch(`${API}/applypromo`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "auth-token": token },
         body: JSON.stringify({ code, cartTotal }),
@@ -290,7 +294,7 @@ const ShopContextProvider = ({ children }) => {
     const token = localStorage.getItem("auth-token");
     if (token) {
       try {
-        await fetch("http://localhost:4000/updatecart", {
+        await fetch(`${API}/updatecart`, {
           method: "POST",
           headers: { "auth-token": token, "Content-Type": "application/json" },
           body: JSON.stringify({}),
@@ -304,7 +308,7 @@ const ShopContextProvider = ({ children }) => {
   const searchProducts = async (keyword) => {
     if (!keyword) return [];
     try {
-      const res = await fetch(`http://localhost:4000/search?q=${encodeURIComponent(keyword)}`);
+      const res = await fetch(`${API}/search?q=${encodeURIComponent(keyword)}`);
       const data = await res.json();
       if (data.success) return data.products || [];
       return [];
@@ -318,7 +322,7 @@ const ShopContextProvider = ({ children }) => {
   const fetchLikedProducts = async () => {
     if (!isLoggedIn) return;
     try {
-      const res = await fetch("http://localhost:4000/likes", {
+      const res = await fetch("${API}/likes", {
         headers: { "auth-token": localStorage.getItem("auth-token") },
       });
       const data = await res.json();
@@ -331,7 +335,7 @@ const ShopContextProvider = ({ children }) => {
   const toggleLike = async (productId) => {
     if (!isLoggedIn) return;
     try {
-      const res = await fetch(`http://localhost:4000/products/${productId}/like`, {
+      const res = await fetch(`${API}/products/${productId}/like`, {
         method: "POST",
         headers: { "auth-token": localStorage.getItem("auth-token") },
       });

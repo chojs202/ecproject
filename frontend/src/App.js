@@ -20,6 +20,7 @@ import OrderSuccess  from './Components/OrderSuccess/OrderSuccess';
 import ShopContextProvider from './Context/ShopContext';
 import SearchPage from './Components/Search/SearchPage';
 import Like from './Components/Like/Like';
+
 function App() {
   return (
     <ShopContextProvider>

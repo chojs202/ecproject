@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
-import "./ChangePassword.css";
+import { API } from "../../config";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const ChangePassword = () => {
       return alert("The new password and the verification password do not match.");
 
     try {
-      const res = await fetch("http://localhost:4000/changepassword", {
+      const res = await fetch(`${API}/changepassword`, {
         method: "PUT",
         headers: {
           Accept: "application/json",

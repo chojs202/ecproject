@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./OrderHistory.css";
+import { API } from "../../config";
 
 export const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
@@ -11,7 +12,7 @@ export const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:4000/orders", {
+        const res = await fetch(`${API}/orders`, {
           headers: { "auth-token": localStorage.getItem("auth-token") },
         });
         const data = await res.json();

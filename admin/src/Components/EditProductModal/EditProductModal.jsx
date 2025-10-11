@@ -3,6 +3,7 @@ import "./EditProductModal.css";
 import upload_area from "../../assets/upload_area.svg";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { v4 as uuidv4 } from "uuid";
+import { API } from "../../config";
 
 const EditProductModal = ({ product, onClose, onSave }) => {
   const [images, setImages] = useState([]);
@@ -113,7 +114,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
       const formData = new FormData();
       newFiles.forEach(({ file }) => formData.append("product", file));
 
-      const responseData = await fetch("http://localhost:4000/upload", {
+      const responseData = await fetch(`${API}/upload`, {
         method: "POST",
         body: formData,
       }).then((res) => res.json());
@@ -129,7 +130,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
       updatedProduct.image = images.map((img) => img.url).filter(Boolean);
     }
 
-    const res = await fetch("http://localhost:4000/updateproduct", {
+    const res = await fetch(`${API}/updateproduct`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedProduct),

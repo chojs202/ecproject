@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Item from "../Item/Item";
 import "./SearchPage.css"; // ShopCategory CSS 재활용
+import { API } from "../../config";
 
 export const SearchPage = () => {
   const location = useLocation();
@@ -35,7 +36,7 @@ export const SearchPage = () => {
       setLoading(true);
       try {
         const res = await fetch(
-          `http://localhost:4000/search?q=${encodeURIComponent(query)}`
+          `${API}/search?q=${encodeURIComponent(query)}`
         );
         const data = await res.json();
         if (data.success) setResults(data.products || []);

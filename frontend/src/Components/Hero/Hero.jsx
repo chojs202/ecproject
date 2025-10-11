@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 import banner_1 from "../Assets/banner_1.png";
 import banner_2 from "../Assets/banner_2.png";
+import { API } from "../../config";
 
 export const Hero = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ export const Hero = () => {
     } else if (currentSlide === 1) {
       try {
         // 최신 상품 가져오기
-        const res = await fetch("http://localhost:4000/allproducts");
+        const res = await fetch(`${API}/allproducts`);
         const data = await res.json();
         if (data.length > 0) {
           const latestProduct = data[data.length - 1]; // 최신 상품

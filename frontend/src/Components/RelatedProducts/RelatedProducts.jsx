@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './RelatedProducts.css'
 import Item from '../Item/Item'
+import { API } from '../../config'
 
 export const RelatedProducts = ({ product }) => {
   const [relatedProduct, setRelatedProduct] = useState([]);
@@ -8,7 +9,7 @@ export const RelatedProducts = ({ product }) => {
   useEffect(() => {
     if (!product) return;
 
-    fetch('http://localhost:4000/allproducts')
+    fetch(`${API}/allproducts`)
       .then(res => res.json())
       .then(data => {
         const seenIds = new Set();

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext"; // ShopContext import
 import "./OrderSuccess.css";
+import { API } from "../../config";
 
 export const OrderSuccess = () => {
   const [order, setOrder] = useState(null);
@@ -10,7 +11,7 @@ export const OrderSuccess = () => {
   useEffect(() => {
     const fetchLatestOrder = async () => {
       try {
-        const res = await fetch("http://localhost:4000/orders", {
+        const res = await fetch(`${API}/orders`, {
           headers: { "auth-token": localStorage.getItem("auth-token") },
         });
         const data = await res.json();

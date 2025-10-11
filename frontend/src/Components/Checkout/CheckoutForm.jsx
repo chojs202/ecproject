@@ -3,6 +3,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import './CheckoutForm.css';
+import { API } from "../../config";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -68,7 +69,7 @@ export default function CheckoutForm() {
 
     try {
       // 1) Stripe PaymentIntent 생성
-      const res = await fetch("http://localhost:4000/create-payment-intent", {
+      const res = await fetch(`${API}/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: localFinalAmount }),
@@ -102,7 +103,7 @@ export default function CheckoutForm() {
           };
         });
 
-        await fetch("http://localhost:4000/create-order", {
+        await fetch(`${API}/create-order`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

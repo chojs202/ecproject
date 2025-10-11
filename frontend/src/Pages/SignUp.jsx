@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/SignUp.css";
+import { API } from '../config';
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ export const Signup = () => {
     if (Object.keys(newErrors).length > 0) return;
 
     let responseData;
-    await fetch("http://localhost:4000/signup", {
+    await fetch(`${API}/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",

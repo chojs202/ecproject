@@ -3,6 +3,7 @@ import "./AddProduct.css";
 import upload_area from "../../assets/upload_area.svg";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { v4 as uuidv4 } from "uuid";
+import { API } from "../../config";
 
 const AddProduct = () => {
   const initialProductDetails = {
@@ -56,7 +57,7 @@ const AddProduct = () => {
     if (!trimmed) return;
     try {
       const res = await fetch(
-        `http://localhost:4000/check-product-title?name=${encodeURIComponent(trimmed)}`
+        `${API}/check-product-title?name=${encodeURIComponent(trimmed)}`
       );
       const data = await res.json();
       if (data.exists) setTitleError("This product title already exists.");
@@ -159,7 +160,7 @@ const AddProduct = () => {
         formData.append(`product_${idx}`, imgObj.file)
       );
 
-      const uploadRes = await fetch("http://localhost:4000/upload", {
+      const uploadRes = await fetch(`${API}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -175,7 +176,7 @@ const AddProduct = () => {
         image: uploadData.image_urls,
       };
 
-      const addRes = await fetch("http://localhost:4000/addproduct", {
+      const addRes = await fetch(`${API}/addproduct`, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify(productToSend),
