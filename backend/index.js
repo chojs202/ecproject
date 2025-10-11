@@ -14,6 +14,7 @@ const Stripe = require("stripe");
 require("dotenv").config();
 
 // 환경변수 적용
+const port = process.env.PORT || 4000 ;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT}`;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const JWT_SECRET = process.env.JWT_SECRET;
