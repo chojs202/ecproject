@@ -10,6 +10,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const Stripe = require("stripe");
+const cloudinary = require("cloudinary");
 
 require("dotenv").config();
 
