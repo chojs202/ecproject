@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './RelatedProducts.css'
 import Item from '../Item/Item'
-import { API } from "../../../config";
+import { API } from '../../config'
 
 export const RelatedProducts = ({ product }) => {
   const [relatedProduct, setRelatedProduct] = useState([]);

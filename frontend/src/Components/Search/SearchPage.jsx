@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Item from "../Item/Item";
-import "./SearchPage.css"; // ShopCategory CSS 재활용
-import { API } from "../../../config";
+import "./SearchPage.css"; 
+import { API } from "../../config";
+
 
 export const SearchPage = () => {
   const location = useLocation();

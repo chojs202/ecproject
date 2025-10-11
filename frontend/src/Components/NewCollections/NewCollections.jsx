@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import "./NewCollections.css"
 import Item from '../Item/Item'
-import { API } from '../../../config'
+import { API } from '../../config'
 
 export const NewCollections = () => {
 

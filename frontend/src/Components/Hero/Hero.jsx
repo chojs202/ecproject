@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 import banner_1 from "../Assets/banner_1.png";
 import banner_2 from "../Assets/banner_2.png";
-import { API } from "../../../config";
+import { API } from "../../config";
 
 export const Hero = () => {
   const navigate = useNavigate();

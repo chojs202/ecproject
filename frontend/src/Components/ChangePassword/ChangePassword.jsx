@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
-import { API } from "../../../config";
+import { API } from "../../config";
 
 const ChangePassword = () => {
   const navigate = useNavigate();

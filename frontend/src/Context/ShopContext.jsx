@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer, useCallback, useRef, useState } from "react";
-import { API } from "../../config";
+import { API } from "../config";
 
 
 export const ShopContext = createContext(null);

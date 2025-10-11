@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext"; // ShopContext import
 import "./OrderSuccess.css";
-import { API } from "../../../config";
+import { API } from "../../config";
 
 export const OrderSuccess = () => {
   const [order, setOrder] = useState(null);

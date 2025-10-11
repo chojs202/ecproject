@@ -3,7 +3,7 @@ import "./EditProductModal.css";
 import upload_area from "../../assets/upload_area.svg";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { v4 as uuidv4 } from "uuid";
-import { API } from "../../../config"
+import API from "../../config"
 
 const EditProductModal = ({ product, onClose, onSave }) => {
   const [images, setImages] = useState([]);

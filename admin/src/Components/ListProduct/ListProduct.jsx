@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import cross_icon from "../../assets/cross_icon.png";
 import "./ListProduct.css";
 import EditProductModal from "../EditProductModal/EditProductModal";
-import { API } from "../../../config"
+import API from "../../config"
 
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
