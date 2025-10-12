@@ -93,7 +93,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() }); // ✅ Cloudinary 대신 메모리 업로드로 테스트
 
 // ✅ 여러 장 업로드 (최대 4장)
 app.post("/upload", upload.array("product", 4), async (req, res) => {
