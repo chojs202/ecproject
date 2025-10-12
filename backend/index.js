@@ -103,7 +103,9 @@ const storage = new CloudinaryStorage({
 console.log("✅ Cloudinary initialized for:", cloudinary.config().cloud_name || "missing");
 
 
-const upload = multer({ storage });
+const upload = multer({ storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+ });
 
 console.log("Cloudinary ENV check:", {
   name: process.env.CLOUDINARY_NAME,
