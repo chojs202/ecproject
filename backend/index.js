@@ -10,7 +10,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const Stripe = require("stripe");
-const cloudinaryLib = require("cloudinary");
+const cloudinary = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 
@@ -78,10 +78,10 @@ const fetchUser = async (req, res, next) => {
 // ==============================
 // 5. 이미지 업로드 설정 (Cloudinary)
 // ==============================
-const cloudinary = cloudinaryLib.v2;
+
 
 // Cloudinary 환경변수 연결
-cloudinary.v2.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
