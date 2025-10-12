@@ -78,6 +78,7 @@ const fetchUser = async (req, res, next) => {
 // ==============================
 // 5. 이미지 업로드 설정 (Cloudinary)
 // ==============================
+const cloudinary = cloudinaryLib.v2;
 
 // Cloudinary 환경변수 연결
 cloudinary.v2.config({
@@ -86,7 +87,6 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const cloudinary = cloudinaryLib.v2;
 
 console.log("✅ Cloudinary ready:", cloudinary.config().cloud_name || "MISSING");
 
