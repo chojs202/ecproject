@@ -208,8 +208,7 @@ const Order = mongoose.model("Order", {
 // 7. 상품 관련 API
 // ==============================
 app.post("/addproduct", async (req, res) => {
-    console.log("📦 /addproduct called!");
-    console.log("Body received:", req.body);
+ 
   try {
     // ---------- 가격 숫자 검증 ----------
     const newPrice = Number(req.body.new_price);
@@ -777,7 +776,6 @@ app.post("/create-order", fetchUser, async (req, res) => {
       discountPercent: discountPercent || 0,  // 할인 퍼센트
       finalAmount: finalAmount || totalAmount, // 총액에서 할인 적용 후 금액
     });
-    console.log(req.body);
     await order.save();
     res.json({ success: true, orderId: order._id });
   } catch (error) {

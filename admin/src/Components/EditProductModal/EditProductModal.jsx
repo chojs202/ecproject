@@ -101,7 +101,6 @@ const EditProductModal = ({ product, onClose, onSave }) => {
 
   // ------------------- 저장 -------------------
   // ✅ Cloudinary 업로드 함수 추가
-  console.log("Cloudinary name check:", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
   const uploadImageToCloudinary = async (file) => {
     const data = new FormData();
     data.append("file", file);

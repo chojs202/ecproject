@@ -158,7 +158,6 @@ const AddProduct = () => {
     }
 
     try {
-      console.log("🟢 Uploading directly to Cloudinary...");
       const uploadUrls = [];
 
       for (const imgObj of images) {
