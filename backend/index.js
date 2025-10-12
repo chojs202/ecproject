@@ -76,63 +76,64 @@ const fetchUser = async (req, res, next) => {
 
 
 // ==============================
-// 5. 이미지 업로드 설정 (Cloudinary)
+// 5. 이미지 업로드 설정 (Cloudinary) 배포시 실제이미지업로드는 프론트에서직접하기때문에 지금은불필요
 // ==============================
 
 
 // Cloudinary 환경변수 연결
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET,
-});
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_NAME,
+//   api_key: process.env.CLOUDINARY_KEY,
+//   api_secret: process.env.CLOUDINARY_SECRET,
+// });
 
 
-console.log("✅ Cloudinary ready:", cloudinary.config().cloud_name || "MISSING");
+// console.log("✅ Cloudinary ready:", cloudinary.config().cloud_name || "MISSING");
 
-// Cloudinary 저장소 설정
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "ecproject_products",
-    allowed_formats: ["jpg", "png", "jpeg", "webp"],
-    resource_type: "image", // ✅ 명시 추가
-    transformation: [{ quality: "auto", fetch_format: "auto" }],
-  },
-});
-console.log("✅ Cloudinary initialized for:", cloudinary.config().cloud_name || "missing");
+// // Cloudinary 저장소 설정
+// const storage = new CloudinaryStorage({
+//   cloudinary,
+//   params: {
+//     folder: "ecproject_products",
+//     allowed_formats: ["jpg", "png", "jpeg", "webp"],
+//     resource_type: "image", // ✅ 명시 추가
+//     transformation: [{ quality: "auto", fetch_format: "auto" }],
+//   },
+// });
+// console.log("✅ Cloudinary initialized for:", cloudinary.config().cloud_name || "missing");
 
 
-const upload = multer({ storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
- });
+// const upload = multer({ storage,
+//   limits: { fileSize: 5 * 1024 * 1024 },
+//  });
 
-console.log("Cloudinary ENV check:", {
-  name: process.env.CLOUDINARY_NAME,
-  key: process.env.CLOUDINARY_KEY,
-  secret: !!process.env.CLOUDINARY_SECRET, // true면 있음, false면 없음
-});
+// console.log("Cloudinary ENV check:", {
+//   name: process.env.CLOUDINARY_NAME,
+//   key: process.env.CLOUDINARY_KEY,
+//   secret: !!process.env.CLOUDINARY_SECRET, // true면 있음, false면 없음
+// });
 
-// ✅ 여러 장 업로드 (최대 4장)
-app.post("/upload", upload.array("product", 4), async (req, res) => {
-    console.log("📸 /upload called");
-    console.log("Headers:", req.headers['content-type']);
-    console.log("Files received count:", req.files?.length ?? 0);
-    console.log("First file object:", req.files?.[0] ?? "none");
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.json({ success: false, message: "No files uploaded" });
-    }
+// // ✅ 여러 장 업로드 (최대 4장)
+// app.post("/upload", upload.array("product", 4), async (req, res) => {
+//     console.log("📸 /upload called");
+//     console.log("Headers:", req.headers['content-type']);
+//     console.log("Files received count:", req.files?.length ?? 0);
+//     console.log("First file object:", req.files?.[0] ?? "none");
+//   try {
+//     if (!req.files || req.files.length === 0) {
+//       return res.json({ success: false, message: "No files uploaded" });
+//     }
 
-    // Cloudinary는 자동으로 URL 반환
-    const urls = req.files.map((file) => file.path);
+//     // Cloudinary는 자동으로 URL 반환
+//     const urls = req.files.map((file) => file.path);
 
-    res.json({ success: true, image_urls: urls });
-  } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).json({ success: false, message: "Image Upload Failed" });
-  }
-});
+//     res.json({ success: true, image_urls: urls });
+//   } catch (error) {
+//     console.error("Upload error:", error);
+//     res.status(500).json({ success: false, message: "Image Upload Failed" });
+//   }
+// });
 
 
 

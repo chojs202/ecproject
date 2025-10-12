@@ -3,11 +3,9 @@ import "./AddProduct.css";
 import upload_area from "../../assets/upload_area.svg";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { v4 as uuidv4 } from "uuid";
-import {API} from "../../config"
+import { API } from "../../config";
 
 const AddProduct = () => {
-  console.log("UPLOAD URL →", `${API}/upload`);
-  console.log("ADD URL →", `${API}/addproduct`);
   const initialProductDetails = {
     name: "",
     image: [],
@@ -29,22 +27,24 @@ const AddProduct = () => {
 
   const debounceTimer = useRef(null);
 
-  // ---------- Change Handler ----------
+  // ---------- 상품명 변경 ----------
   const ChangeHandler = (e) => {
     const { name, value } = e.target;
     setProductDetails((prev) => ({ ...prev, [name]: value }));
-    if (name === "name") setTitleError("");
-    if (name === "old_price" || name === "new_price")
-      setPriceError({ ...priceError, [name]: "" });
+
     if (name === "name") {
+      setTitleError("");
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
       debounceTimer.current = setTimeout(() => {
         checkDuplicateTitle(value);
       }, 500);
     }
+    if (name === "old_price" || name === "new_price") {
+      setPriceError({ ...priceError, [name]: "" });
+    }
   };
 
-  // ---------- 가격 숫자 검증 ----------
+  // ---------- 가격 검증 ----------
   const handlePriceChange = (e) => {
     const { name, value } = e.target;
     if (/^\d*$/.test(value)) {
@@ -147,54 +147,54 @@ const AddProduct = () => {
   // ---------- 상품 추가 ----------
   const Add_Product = async () => {
     setServerError("");
+
     if (!/^\d+$/.test(productDetails.old_price) || !/^\d+$/.test(productDetails.new_price)) {
-       console.log("⛔ price check failed:", productDetails.old_price, productDetails.new_price);
       alert("Price is Only Number.");
       return;
     }
     if (titleError) {
-      console.log("⛔ title error:", titleError);
       alert("Please fix errors before submitting.");
       return;
     }
-    console.log("🟢 passed validation, now uploading...");
+
     try {
-      const formData = new FormData();
-      images.forEach((imgObj) =>
-        formData.append("product", imgObj.file)
-      );
+      console.log("🟢 Uploading directly to Cloudinary...");
+      const uploadUrls = [];
 
-      const uploadRes = await fetch(`${API}/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const uploadData = await uploadRes.json();
+      for (const imgObj of images) {
+        const formData = new FormData();
+        formData.append("file", imgObj.file);
+        formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
-      if (!uploadRes.ok || !uploadData.success) {
-        setServerError(uploadData.message || "Image Upload Failed");
-        return;
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          { method: "POST", body: formData }
+        );
+        const data = await res.json();
+        if (data.secure_url) uploadUrls.push(data.secure_url);
       }
 
       const productToSend = {
         ...productDetails,
-        image: uploadData.image_urls,
+        image: uploadUrls,
       };
 
       const addRes = await fetch(`${API}/addproduct`, {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productToSend),
       });
-      const addData = await addRes.json();
 
-      if (!addRes.ok || !addData.success) {
+      const addData = await addRes.json();
+      if (!addData.success) {
         setServerError(addData.message || "Failed to add product");
         return;
       }
 
-      alert("Product Added");
+      alert("✅ Product Added!");
       resetForm();
     } catch (error) {
+      console.error(error);
       setServerError(error.message);
     }
   };
@@ -202,7 +202,7 @@ const AddProduct = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="addproduct-container">
-        {/* 상품명 */}
+        {/* Product title */}
         <div className="addproduct-field">
           <p>Product title</p>
           <input
@@ -214,11 +214,9 @@ const AddProduct = () => {
           />
           {titleError && <small style={{ color: "red" }}>{titleError}</small>}
         </div>
-        {/* 서버 에러 */}
+
         {serverError && (
-          <div style={{ color: "red", marginBottom: "10px" }}>
-            {serverError}
-          </div>
+          <div style={{ color: "red", marginBottom: "10px" }}>{serverError}</div>
         )}
 
         {/* Price */}
@@ -265,7 +263,7 @@ const AddProduct = () => {
           </select>
         </div>
 
-        {/* Size */}
+        {/* Sizes */}
         <Droppable droppableId="add-sizes" direction="horizontal">
           {(provided) => (
             <div
@@ -339,7 +337,9 @@ const AddProduct = () => {
                         alt={`preview-${idx}`}
                         className={idx === 0 ? "addproduct-main-image" : ""}
                       />
-                      {idx === 0 && <span className="addproduct-main-label">Main Image</span>}
+                      {idx === 0 && (
+                        <span className="addproduct-main-label">Main Image</span>
+                      )}
                       <button
                         type="button"
                         onClick={() => {
@@ -383,10 +383,7 @@ const AddProduct = () => {
           />
         </div>
 
-        <button type="button" onClick={() => {
-    console.log("🟢 ADD button clicked");
-    Add_Product()
-  }} className="addproduct-btn">
+        <button type="button" onClick={Add_Product} className="addproduct-btn">
           ADD
         </button>
       </div>
