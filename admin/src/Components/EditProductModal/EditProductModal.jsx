@@ -100,6 +100,25 @@ const EditProductModal = ({ product, onClose, onSave }) => {
   };
 
   // ------------------- 저장 -------------------
+  // ✅ Cloudinary 업로드 함수 추가
+  console.log("Cloudinary name check:", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+  const uploadImageToCloudinary = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "ecproject_unsigned"); // Cloudinary preset 이름
+    data.append("folder", "ecproject_products"); // 업로드될 폴더명
+  
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME; // .env에서 불러옴
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: "POST",
+      body: data,
+    });
+  
+    const json = await res.json();
+    if (!json.secure_url) throw new Error("Cloudinary upload failed");
+    return json.secure_url;
+  };
+
   const saveChanges = async () => {
     // 가격 최종 체크
     if (!/^\d+$/.test(productDetails.old_price) || !/^\d+$/.test(productDetails.new_price)) {
@@ -110,40 +129,40 @@ const EditProductModal = ({ product, onClose, onSave }) => {
     let updatedProduct = { ...productDetails, size: sizes, id: product.id };
     const newFiles = images.filter((img) => img.file);
 
-    if (newFiles.length > 0) {
-      const formData = new FormData();
-      newFiles.forEach(({ file }) => formData.append("product", file));
-
-      const responseData = await fetch(`${API}/upload`, {
-        method: "POST",
-        body: formData,
-      }).then((res) => res.json());
-
-      if (responseData.success) {
-        // 기존 배열 순서 유지 + 새 파일 URL 교체
-        let imgIndex = 0;
-        updatedProduct.image = images.map((img) =>
-          img.file ? responseData.image_urls[imgIndex++] : img.url
-        );
+     try {
+        if (newFiles.length > 0) {
+          // 🔹 Cloudinary로 직접 업로드
+          const uploadPromises = newFiles.map(({ file }) => uploadImageToCloudinary(file));
+          const uploadedUrls = await Promise.all(uploadPromises);
+        
+          // 기존 순서 유지
+          let imgIndex = 0;
+          updatedProduct.image = images.map((img) =>
+            img.file ? uploadedUrls[imgIndex++] : img.url
+          );
+        } else {
+          updatedProduct.image = images.map((img) => img.url).filter(Boolean);
+        }
+      
+        // 🔹 서버에 업데이트 요청
+        const res = await fetch(`${API}/updateproduct`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProduct),
+        }).then((res) => res.json());
+      
+        if (!res.success) {
+          alert("Failed to save product");
+          return;
+        }
+      
+        onSave(updatedProduct);
+        onClose();
+      } catch (err) {
+        console.error("❌ Image upload failed:", err);
+        alert("Image upload failed. Please try again.");
       }
-    } else {
-      updatedProduct.image = images.map((img) => img.url).filter(Boolean);
-    }
-
-    const res = await fetch(`${API}/updateproduct`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedProduct),
-    }).then((res) => res.json());
-
-    if (!res.success) {
-      alert("Failed to save product");
-      return;
-    }
-
-    onSave(updatedProduct);
-    onClose();
-  };
+    };
 
   return (
     <div className="editproductmodal-container">
