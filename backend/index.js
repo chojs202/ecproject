@@ -33,7 +33,9 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors()); // ✅ preflight 요청까지 허용
+app.options("/upload", cors());
+app.options("/addproduct", cors());
+app.options("/api/*", cors()); // ✅ preflight 요청까지 허용
 
 app.use(express.json());
 // ==============================
