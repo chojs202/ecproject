@@ -15,7 +15,7 @@ export default function CheckoutForm() {
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { cartItems, all_product, discount } = useContext(ShopContext);
+  const { cartItems, all_product, discountPercent } = useContext(ShopContext);
 
   // 선택된 항목 가져오기
   const locationState = location.state || {};
@@ -36,9 +36,6 @@ export default function CheckoutForm() {
   }
 
   const selectedSubtotal = itemsToCheckout.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-
-  const discountPercent = discount || 0;
 
   const discountRatio = discountPercent / 100; // 예: 10 → 0.1
   const proportionDiscount = selectedSubtotal * discountRatio;
@@ -114,7 +111,7 @@ export default function CheckoutForm() {
             totalAmount: selectedSubtotal,   // 원래 합계
             discount: proportionDiscount,    // 할인 금액
             finalAmount: localFinalAmount,   // 최종 결제 금액
-            discountPercent: discount,       // 몇 % 할인인지 추가 저장
+            discountPercent: discountPercent,       // 몇 % 할인인지 추가 저장
           }),
         });
 
