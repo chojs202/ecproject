@@ -95,6 +95,12 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
+console.log("Cloudinary ENV check:", {
+  name: process.env.CLOUDINARY_NAME,
+  key: process.env.CLOUDINARY_KEY,
+  secret: !!process.env.CLOUDINARY_SECRET, // true면 있음, false면 없음
+});
+
 // ✅ 여러 장 업로드 (최대 4장)
 app.post("/upload", upload.array("product", 4), async (req, res) => {
   try {
