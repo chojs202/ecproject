@@ -13,6 +13,7 @@ const Stripe = require("stripe");
 const cloudinary = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
+console.log("📦 /applypromo:", req.body);
 
 require("dotenv").config();
 

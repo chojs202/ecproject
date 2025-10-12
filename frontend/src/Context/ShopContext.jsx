@@ -140,6 +140,23 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
+  
+  // --------------------- 로컬스토리지에서 쿠폰 상태 복원 ---------------------
+    useEffect(() => {
+    const storedPromoApplied = localStorage.getItem("promoApplied") === "true";
+    const storedDiscount = localStorage.getItem("discountPercent");
+    const storedPromoCode = localStorage.getItem("promoCode");
+
+    if (storedPromoApplied && storedDiscount) {
+      dispatch({
+        type: "SET_PROMO",
+        discountPercent: Number(storedDiscount),
+        promoApplied: true,
+        promoCode: storedPromoCode || "",
+      });
+    }
+  }, []);
+
   // --------------------- 초기 데이터 로딩 ---------------------
 
   useEffect(() => {
