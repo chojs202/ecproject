@@ -14,6 +14,7 @@ export const CartItems = () => {
     removeItemCompletely,
     applyPromoCode,
     discount,
+    discountPercent,
     promoApplied,
     isLoggedIn
   } = useContext(ShopContext);
@@ -44,14 +45,14 @@ export const CartItems = () => {
 
 
   // 할인 비율 (0 ~ 1)
-  const discountRatio = promoApplied ? discount / 100 : 0;  // discount = 퍼센트 값 (예: 10)
+  const discountRatio = promoApplied ? discountPercent / 100 : 0;  // discount = 퍼센트 값 (예: 10)
 
   // 선택된 아이템 기준 할인액/총액
   const selectedDiscount = promoApplied ? selectedSubtotal * discountRatio : 0;
   const selectedTotal = selectedSubtotal - selectedDiscount;
 
   // 퍼센트는 그대로 표시
-  const discountPercent = promoApplied ? discount : 0;
+  const shownDiscountPercent = promoApplied ? discountPercent : 0;
 
   const handleApplyPromo = () => {
     if (!inputCode) return alert("Please enter a promo code");
@@ -177,7 +178,7 @@ export const CartItems = () => {
 
           {promoApplied && (
             <div className="cartitems-total-row">
-              <p>Discount ({discountPercent}%)</p>
+              <p>Discount ({shownDiscountPercent}%)</p>
               <p>- ${selectedDiscount.toFixed(2)}</p>
             </div>
           )}
