@@ -246,11 +246,11 @@ const ShopContextProvider = ({ children }) => {
     return totalAmount;
   }, [cartItems, guestCart, all_product, isLoggedIn]);
 
-  const getTotalCartAmountWithDiscount = () => {
+  const getTotalCartAmountWithDiscount = useCallback(() => {
     const total = getTotalCartAmount();
-      const discountRatio = promoApplied ? (state.discountPercent || 0) / 100 : 0;
-      return total - total * discountRatio;
-  };
+    const discountRatio = promoApplied ? (state.discountPercent || 0) / 100 : 0;
+    return total - total * discountRatio;
+  }, [getTotalCartAmount, promoApplied, state.discountPercent]);
 
   const getTotalCartItems = () => {
     const cart = isLoggedIn ? cartItems : guestCart;
@@ -382,6 +382,7 @@ const ShopContextProvider = ({ children }) => {
     all_product,
     promoCode,
     discount,
+    discountPercent: state.discountPercent || 0, // ✅ 추가
     promoApplied,
     isLoggedIn,
     logout: () => dispatch({ type: "LOGOUT" }),

@@ -13,7 +13,6 @@ export const CartItems = () => {
     removeFromCart,
     removeItemCompletely,
     applyPromoCode,
-    discount,
     discountPercent,
     promoApplied,
     isLoggedIn
@@ -35,29 +34,27 @@ export const CartItems = () => {
     const [idStr, size] = itemKey.split("-");
     const id = Number(idStr);
     const product = all_product.find(p => p.id === id);
-    if (!product) return acc;
-     // cart[id]가 없을 수도 있으니 안전하게 처리
+    if (!product?.new_price) return acc; // ✅ 추가: product.new_price가 없으면 건너뛰기
+  
     const qty = cart[id]?.[size] || 0;
-      // 0 이하일 경우 합계에 포함시키지 않음
     if (qty <= 0) return acc;
     return acc + product.new_price * qty;
   }, 0);
 
 
   // 할인 비율 (0 ~ 1)
-  const discountRatio = promoApplied ? discountPercent / 100 : 0;  // discount = 퍼센트 값 (예: 10)
+  const discountRatio = promoApplied ? (discountPercent || 0) / 100 : 0; // ✅ NaN 방지
 
   // 선택된 아이템 기준 할인액/총액
   const selectedDiscount = promoApplied ? selectedSubtotal * discountRatio : 0;
   const selectedTotal = selectedSubtotal - selectedDiscount;
 
   // 퍼센트는 그대로 표시
-  const shownDiscountPercent = promoApplied ? discountPercent : 0;
+ const shownDiscountPercent = promoApplied ? discountPercent : 0;
 
   const handleApplyPromo = () => {
     if (!inputCode) return alert("Please enter a promo code");
     if (!localStorage.getItem('auth-token')) return alert("Login required");
-    if (promoApplied && discount > 0) return alert("Promo already applied");
 
     applyPromoCode(inputCode, (success, message) => alert(message));
     setInputCode("");
