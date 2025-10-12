@@ -33,8 +33,7 @@ app.use(
     credentials: true,
   })
 );
-app.options("/upload", cors());
-app.options("/addproduct", cors());
+
 
 
 app.use(express.json());
