@@ -90,7 +90,7 @@ export const Navbar = () => {
         {isLoggedIn ? (
           <button onClick={()=>{ 
             logout();
-            setTimeout(() => navigate('/'), 0); 
+            navigate('/');
            }}>Log Out</button>
         ) : (
           <Link to="/login"><button>Login</button></Link>

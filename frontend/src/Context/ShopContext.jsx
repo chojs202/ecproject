@@ -385,7 +385,10 @@ const ShopContextProvider = ({ children }) => {
     discountPercent: state.discountPercent || 0, // ✅ 추가
     promoApplied,
     isLoggedIn,
-    logout: () => dispatch({ type: "LOGOUT" }),
+    logout: () => {
+      dispatch({ type: "LOGOUT" });
+      localStorage.removeItem("likedProducts"); // 혹시 남아있던 캐시 제거
+    },
     mergeLocalCartToServer,
     applyPromoCode,
     clearCart,
