@@ -36,7 +36,7 @@ app.use(
 
 
 
-app.use(express.json());
+
 // ==============================
 // 2. MongoDB 연결
 // ==============================
@@ -111,6 +111,8 @@ app.post("/upload", upload.array("product", 4), async (req, res) => {
     res.status(500).json({ success: false, message: "Image Upload Failed" });
   }
 });
+
+app.use(express.json());
 
 // ==============================
 // 6. DB 모델 정의
