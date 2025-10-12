@@ -248,7 +248,8 @@ const ShopContextProvider = ({ children }) => {
 
   const getTotalCartAmountWithDiscount = () => {
     const total = getTotalCartAmount();
-     return promoApplied ? total - (total * (discount / 100)) : total;
+      const discountRatio = promoApplied ? (state.discountPercent || 0) / 100 : 0;
+      return total - total * discountRatio;
   };
 
   const getTotalCartItems = () => {
