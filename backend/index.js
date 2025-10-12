@@ -11,6 +11,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const Stripe = require("stripe");
 const cloudinary = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 require("dotenv").config();
 
@@ -75,7 +76,6 @@ const fetchUser = async (req, res, next) => {
 // ==============================
 // 5. 이미지 업로드 설정 (Cloudinary)
 // ==============================
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Cloudinary 환경변수 연결
 cloudinary.config({
@@ -93,7 +93,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage: multer.memoryStorage() }); // ✅ Cloudinary 대신 메모리 업로드로 테스트
+const upload = multer({ storage });
 
 // ✅ 여러 장 업로드 (최대 4장)
 app.post("/upload", upload.array("product", 4), async (req, res) => {
