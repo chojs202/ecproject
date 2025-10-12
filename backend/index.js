@@ -21,9 +21,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",                // 개발 환경 (Vite)
+      "https://ecproject-main.onrender.com", // 프론트 배포 URL
+      "https://ecproject-admin.onrender.com",    // 어드민 배포 URL
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "auth-token"],
+    credentials: true,
+  })
+);
+app.options("*", cors()); // ✅ preflight 요청까지 허용
 
+app.use(express.json());
 // ==============================
 // 2. MongoDB 연결
 // ==============================

@@ -148,14 +148,16 @@ const AddProduct = () => {
   const Add_Product = async () => {
     setServerError("");
     if (!/^\d+$/.test(productDetails.old_price) || !/^\d+$/.test(productDetails.new_price)) {
+       console.log("⛔ price check failed:", productDetails.old_price, productDetails.new_price);
       alert("Price is Only Number.");
       return;
     }
     if (titleError) {
+      console.log("⛔ title error:", titleError);
       alert("Please fix errors before submitting.");
       return;
     }
-
+    console.log("🟢 passed validation, now uploading...");
     try {
       const formData = new FormData();
       images.forEach((imgObj) =>
@@ -381,7 +383,10 @@ const AddProduct = () => {
           />
         </div>
 
-        <button type="button" onClick={Add_Product} className="addproduct-btn">
+        <button type="button" onClick={() => {
+    console.log("🟢 ADD button clicked");
+    Add_Product()
+  }} className="addproduct-btn">
           ADD
         </button>
       </div>
