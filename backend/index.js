@@ -10,8 +10,9 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const Stripe = require("stripe");
-const cloudinary = require("cloudinary");
+const cloudinaryLib = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 
 require("dotenv").config();
 
@@ -35,6 +36,7 @@ app.use(
   })
 );
 
+app.use(express.json());
 
 
 
@@ -78,20 +80,28 @@ const fetchUser = async (req, res, next) => {
 // ==============================
 
 // Cloudinary 환경변수 연결
-cloudinary.config({
+cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
+const cloudinary = cloudinaryLib.v2;
+
+console.log("✅ Cloudinary ready:", cloudinary.config().cloud_name || "MISSING");
+
 // Cloudinary 저장소 설정
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "ecproject_products", // Cloudinary에 생성될 폴더명
+    folder: "ecproject_products",
     allowed_formats: ["jpg", "png", "jpeg", "webp"],
+    resource_type: "image", // ✅ 명시 추가
+    transformation: [{ quality: "auto", fetch_format: "auto" }],
   },
 });
+console.log("✅ Cloudinary initialized for:", cloudinary.config().cloud_name || "missing");
+
 
 const upload = multer({ storage });
 
@@ -103,6 +113,10 @@ console.log("Cloudinary ENV check:", {
 
 // ✅ 여러 장 업로드 (최대 4장)
 app.post("/upload", upload.array("product", 4), async (req, res) => {
+    console.log("📸 /upload called");
+    console.log("Headers:", req.headers['content-type']);
+    console.log("Files received count:", req.files?.length ?? 0);
+    console.log("First file object:", req.files?.[0] ?? "none");
   try {
     if (!req.files || req.files.length === 0) {
       return res.json({ success: false, message: "No files uploaded" });
@@ -118,7 +132,7 @@ app.post("/upload", upload.array("product", 4), async (req, res) => {
   }
 });
 
-app.use(express.json());
+
 
 // ==============================
 // 6. DB 모델 정의
