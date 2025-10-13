@@ -71,6 +71,11 @@ export default function CheckoutForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: localFinalAmount, currency: "usd" }),
       });
+      // 실패 처리
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody?.message || `Failed to create PaymentIntent (${res.status})`);
+      }
       const data = await res.json();
       if (!data.clientSecret) throw new Error("Failed to create PaymentIntent");
 
