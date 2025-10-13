@@ -14,7 +14,7 @@ export const createPaymentIntent = async (req, res) => {
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // Stripe는 센트 단위
-      currency: "krw",
+      currency: "usd",
       payment_method_types: ["card"],
     });
 

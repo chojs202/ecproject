@@ -69,7 +69,7 @@ export default function CheckoutForm() {
       const res = await fetch(`${API}/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: localFinalAmount }),
+        body: JSON.stringify({ amount: localFinalAmount, currency: "usd" }),
       });
       const data = await res.json();
       if (!data.clientSecret) throw new Error("Failed to create PaymentIntent");
