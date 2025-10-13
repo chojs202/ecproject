@@ -27,6 +27,7 @@ const port = process.env.PORT || 4000;
 app.use(
   cors({
     origin: [
+      "http://localhost:3000", 
       "http://localhost:5173",
       "https://ecproject-main.onrender.com",
       "https://ecproject-admin.onrender.com",

@@ -13,7 +13,6 @@ export const Login = () => {
   };
 
   const login = async () => {
-    console.log("Login Function Executed", formData)
     let responseData;
     await fetch(`${API}/login`,{
       method:"POST",
