@@ -19,8 +19,11 @@ const Like = () => {
 
   // ------------------- 로그인 체크 -------------------
   useEffect(() => {
-    if (!isLoggedIn) navigate("/login");
-    else fetchLikedProducts();
+    if (!isLoggedIn) {
+    navigate("/login", { replace: true });
+    return;
+    }
+    fetchLikedProducts();
   }, [isLoggedIn, fetchLikedProducts, navigate]);
 
   // ------------------- 사이즈 선택 -------------------
