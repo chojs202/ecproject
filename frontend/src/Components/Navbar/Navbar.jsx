@@ -1,40 +1,25 @@
-import React, { useContext, useState, useRef} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../Assets/shop_image.png';
-import cart_icon from '../Assets/cart_icon.png';
-import menu_icon from '../Assets/menu_icon.png';
-import search_icon from "../Assets/search_icon.png";
-import like_icon from "../Assets/like_icon.png";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
+import { LogIn, LogOut, Heart, ShoppingCart, Menu, X } from 'lucide-react'; // ✅ Menu, X 추가
 
 export const Navbar = () => {
   const { getTotalCartItems, isLoggedIn, logout, likedProducts } = useContext(ShopContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const [showSearch, setShowSearch] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [keyword, setKeyword] = useState("");
-  const searchInputRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if(keyword.trim() === "") return;
-    navigate(`/search?query=${encodeURIComponent(keyword)}`);
-    setKeyword("");
-    setShowSearch(false);
-    setDropdownOpen(false);
-  };
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const handleSearchIconClick = () => {
-    setShowSearch(prev => !prev);
-    setTimeout(() => {
-      if (searchInputRef.current) searchInputRef.current.focus();
-    }, 0);
-  };
-
-  const getActiveMenu = () => {
-    switch(location.pathname){
+  const activeMenu = (() => {
+    switch (location.pathname) {
       case "/": return "shop";
       case "/men": return "men";
       case "/women": return "women";
@@ -43,92 +28,74 @@ export const Navbar = () => {
       case "/orders": return "orders";
       default: return "";
     }
-  };
-  const activeMenu = getActiveMenu();
-
+  })();
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="nav-left">
-        <Link to="/" onClick={()=>setDropdownOpen(false)} className="nav-logo">
-          <img src={logo} alt="logo" className="logo-img"/>
+        <Link to="/" onClick={() => setDropdownOpen(false)} className="nav-logo">
+          <img src={logo} alt="logo" className="logo-img" />
           <span>SHOP</span>
         </Link>
 
-        <img 
-          src={menu_icon} 
-          alt="menu" 
-          className="nav-dropdown-btn dropdown-img"
-          onClick={()=>setDropdownOpen(prev=>!prev)}
-        />
+        {/* ✅ Lucide-react 햄버거/닫기 아이콘으로 교체 */}
+        <button
+          className="nav-dropdown-btn"
+          onClick={() => setDropdownOpen(prev => !prev)}
+          aria-label="Toggle menu"
+        >
+          {dropdownOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
 
-        <ul className={`nav-menu ${dropdownOpen ? "nav-menu-visible" : ""}`}>
-          <li className={activeMenu==="shop"?"active":""}>
-            <Link to="/" onClick={()=>setDropdownOpen(false)}>Shop</Link>
-          </li>
-          <li className={activeMenu==="men"?"active":""}>
-            <Link to="/men" onClick={()=>setDropdownOpen(false)}>Men</Link>
-          </li>
-          <li className={activeMenu==="women"?"active":""}>
-            <Link to="/women" onClick={()=>setDropdownOpen(false)}>Women</Link>
-          </li>
-          <li className={activeMenu==="kid"?"active":""}>
-            <Link to="/kid" onClick={()=>setDropdownOpen(false)}>Kid</Link>
-          </li>
-          <li className={activeMenu==="orders"?"active":""}>
-            <Link to="/orders" onClick={()=>setDropdownOpen(false)}>My Orders</Link>
-          </li>
+        <ul
+          className={`nav-menu ${dropdownOpen ? "nav-menu-visible" : ""}`}
+          onClick={() => setDropdownOpen(false)}
+        >
+          <li className={activeMenu === "shop" ? "active" : ""}><Link to="/">Main</Link></li>
+          <li className={activeMenu === "men" ? "active" : ""}><Link to="/men">Men</Link></li>
+          <li className={activeMenu === "women" ? "active" : ""}><Link to="/women">Women</Link></li>
+          <li className={activeMenu === "kid" ? "active" : ""}><Link to="/kid">Kid</Link></li>
+          <li className={activeMenu === "orders" ? "active" : ""}><Link to="/orders">My Orders</Link></li>
           {isLoggedIn && (
-            <li className={activeMenu==="edituser"?"active":""}>
-              <Link to="/edituser" onClick={()=>setDropdownOpen(false)}>Edit User</Link>
-            </li>
+            <li className={activeMenu === "edituser" ? "active" : ""}><Link to="/edituser">Edit User</Link></li>
           )}
         </ul>
       </div>
 
+      {/* ✅ 오버레이: 메뉴가 열릴 때만 표시 */}
+      {dropdownOpen && <div
+        className={`nav-overlay ${dropdownOpen ? "visible" : ""}`}
+        onClick={() => setDropdownOpen(false)}
+      ></div>}
+
       <div className="nav-right">
         {isLoggedIn ? (
-          <button onClick={()=>{ 
-            logout();
-            navigate('/');
-           }}>Log Out</button>
+          <button
+            className="nav-icon-btn"
+            data-tooltip="Log out"
+            onClick={() => { logout(); navigate('/'); }}
+          >
+            <LogOut size={20} />
+          </button>
         ) : (
-          <Link to="/login"><button>Login</button></Link>
+          <button
+            className="nav-icon-btn"
+            data-tooltip="Log in"
+            onClick={() => navigate('/login')}
+          >
+            <LogIn size={20} />
+          </button>
         )}
 
-        <div className="nav-search">
-          <img 
-            src={search_icon} 
-            alt="search" 
-            className="search-icon search-img"
-            onClick={handleSearchIconClick}
-          />
-          <form onSubmit={handleSearchSubmit}>
-            <input 
-              ref={searchInputRef}
-              type="text" 
-              className={`search-input ${showSearch?"active":""}`}
-              placeholder="Product Name"
-              value={keyword}
-              onChange={(e)=>setKeyword(e.target.value)}
-              autoFocus
-            />
-          </form>
-        </div>
-
-        <div className="like-wrapper">
-          <Link to="/like" onClick={()=>setDropdownOpen(false)}>
-            <img src={like_icon} alt="like" className="like-img" />
-          </Link>
-          {likedProducts.length > 0 && (
-            <span className="like-count-badge">{likedProducts.length}</span>
-          )}
-        </div>
-
-        <Link to="/cart">
-          <img src={cart_icon} onClick={()=>setDropdownOpen(false)} alt="cart" className="cart-img"/>
+        <Link to="/like" onClick={() => setDropdownOpen(false)} className="nav-icon-wrapper" data-tooltip="Wishlist">
+          <Heart size={20} />
+          {likedProducts.length > 0 && <span className="icon-badge">{likedProducts.length}</span>}
         </Link>
-        <div className="nav-cart-count">{getTotalCartItems()}</div>
+
+        <Link to="/cart" onClick={() => setDropdownOpen(false)} className="nav-icon-wrapper" data-tooltip="Cart">
+          <ShoppingCart size={20} />
+          {getTotalCartItems() > 0 && <span className="icon-badge">{getTotalCartItems()}</span>}
+        </Link>
       </div>
     </nav>
   );

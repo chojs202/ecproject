@@ -5,6 +5,7 @@ import { NewCollections } from '../Components/NewCollections/NewCollections'
 
 
 export const Shop = () => {
+
   return (
     <div>
       <Hero/>

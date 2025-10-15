@@ -27,10 +27,10 @@ const port = process.env.PORT || 4000;
 app.use(
   cors({
     origin: [
-      "http://localhost:3000", 
-      "http://localhost:5173",
-      "https://ecproject-main.onrender.com",
-      "https://ecproject-admin.onrender.com",
+      "http://localhost:3000",  //프론트엔드 로컬환경
+      "http://localhost:5173", //  admin 로컬환경
+      "https://ecproject-main.onrender.com", // 프론트엔드 배포환경
+      "https://ecproject-admin.onrender.com", // admin 배포환경
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "auth-token"],

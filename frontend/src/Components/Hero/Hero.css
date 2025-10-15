@@ -1,158 +1,276 @@
-.hero {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
+.hero-container {
   position: relative;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
- 
-
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
 }
 
-/* 좌우 버튼 – 넷플릭스 스타일 */
+.hero-slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: 60%;   
+  background-position: center 35%;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 1.2s ease, transform 2s ease;
+  will-change: opacity, transform;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+/* 부드러운 overlay */
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(245, 240, 230, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+/* 중앙 텍스트 */
+.hero-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) translateY(10px);
+  color: #333;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 1.2s ease forwards 0.3s;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0); 
+  }
+}
+
+.hero-text h1 {
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.hero-text p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+.hero-text button {
+  background: #a67c52;
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hero-text button:hover {
+  background: #8f6942;
+  transform: translateY(-2px);
+}
+
+/* 좌우 버튼 */
 .hero-prev, .hero-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: none;
-  background: rgba(0,0,0,0.4);
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  z-index: 3;
 }
-
-.hero-prev { left: -25px; ;}
-.hero-next { right: -25px; }
 
 .hero-prev svg, .hero-next svg {
   width: 20px;
   height: 20px;
-  fill: white;
-  transition: transform 0.2s;
-  
+  fill: #333;
+  transition: transform 0.25s ease, fill 0.25s ease;
 }
 
 .hero-prev:hover, .hero-next:hover {
-  background: rgba(0,0,0,0.7);
+  background: rgba(255,255,255,0.6);
   transform: translateY(-50%) scale(1.1);
 }
 
 .hero-prev:hover svg, .hero-next:hover svg {
+  fill: #a67c52;
   transform: scale(1.2);
 }
 
-/* 닷(dot) 인디케이터 */
+.hero-prev { left: 15px; }
+.hero-next { right: 15px; }
+
+/* 닷 인디케이터 */
 .hero-dots {
   position: absolute;
-  bottom: 15px;
-  right: 20px;
+  bottom: 20px;
+  right: 25px;
   display: flex;
-  gap: 8px;
-  z-index: 1;
+  gap: 10px;
+  z-index: 4;
 }
 
 .hero-dots .dot {
-  width: 12px;
-  height: 12px;
-  background: rgba(255,255,255,0.6);
+  width: 10px;
+  height: 10px;
+  background: rgba(100, 100, 100, 0.3);
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
-.hero-dots .dot.active { background: #5f5f5f; }
+.hero-dots .dot.active {
+  background: #a67c52;
+  transform: scale(1.25);
+}
 
 /* 모달 */
 .promo-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9998;
+  z-index: 9999;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
 }
 
 .promo-modal-content {
-  background: white;
-  padding: 30px 40px;
-  border-radius: 10px;
+  background: #fefcf9;
+  padding: 35px 45px;
+  border-radius: 12px;
   text-align: center;
-  min-width: 300px;
-  max-width: 500px;
   width: 80%;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  position: relative;
+  max-width: 420px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  animation: slideUp 0.4s ease forwards;
+  transform: translateY(15px);
+  opacity: 0;
+}
+
+@keyframes slideUp {
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .promo-modal-content h3 {
   font-size: 22px;
+  font-weight: 600;
+  color: #222;
   margin-bottom: 10px;
-}
-
-.promo-modal-content p {
-  font-size: 16px;
-  margin-bottom: 15px;
 }
 
 .promo-modal-content strong {
   display: block;
-  font-size: 24px;
-  color: #f76a6a;
-  margin-bottom: 50px;
-  word-break: break-word;
+  font-size: 26px;
+  color: #a67c52;
+  margin: 10px 0px 20px 0px;
 }
 
-/* 중앙 하단 Close 버튼 */
+
 .promo-close-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 25px;
-  border: none;
-  border-radius: 6px;
-  background: #000000;
+  background: #a67c52;
   color: white;
-  font-size: 16px;
-  font-weight: 500;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
-  z-index: 10000;
+  font-size: 15px;
+  transition: background 0.3s ease;
 }
 
-.promo-close-btn:hover { background: #e03b3b; }
+.promo-close-btn:hover {
+  background: #8f6942;
+}
 
-/* ---------------- 반응형 ---------------- */
-@media (max-width: 768px) {
-  .promo-modal-content {
-    padding: 25px 30px;
-    width: 85%;
+.promo-code-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.promo-code {
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  color: #a67c52;
+  font-size: 26px;
+  font-weight: 600;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.promo-code:hover {
+  color: #8f6942;
+  transform: scale(1.05);
+}
+
+/* ✅ 체크 아이콘 애니메이션 */
+.copied-check {
+  position: absolute;
+  display: flex;
+  right: 93px;    
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-5px);
+  animation: fadeCheck 1.2s ease forwards;
+}
+
+.copied-check svg {
+  color: #8f6942;
+  opacity: 0;
+  transform: scale(0.6);
+  animation: popCheck 1.2s ease forwards;
+}
+
+@keyframes popCheck {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-15deg);
   }
-  .promo-modal-content h3 { font-size: 20px; }
-  .promo-modal-content p { font-size: 15px; }
-  .promo-modal-content strong { font-size: 22px; }
-  .promo-close-btn { padding: 8px 20px; font-size: 15px; bottom: 15px; }
+  20% {
+    opacity: 1;
+    transform: scale(1.1) rotate(0deg);
+  }
+  60% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
-@media (max-width: 500px) {
-  .promo-modal-content { padding: 20px 15px; width: 90%; }
-  .promo-modal-content h3 { font-size: 18px; }
-  .promo-modal-content p { font-size: 14px; }
-  .promo-modal-content strong { font-size: 20px; }
-  .promo-close-btn { bottom: 10px; padding: 7px 16px; font-size: 14px; }
+/* 반응형 */
+@media (max-width: 768px) {
+  .hero-container{
+    height: 60vh;
+  }
+  .hero-text h1 { font-size: 1.8rem; }
+  .hero-text p { font-size: 0.95rem; }
+  .hero-text button { padding: 10px 22px; font-size: 14px; }
 }

@@ -1,88 +1,218 @@
-.item{
-    width: 280px;
+/* ============================= */
+/* ⚫ ITEM CARD — 입체 호버 스타일 */
+/* ============================= */
+.item {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transform-origin: center;
+  background: #fff;
+  transition:
+    transform 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+    box-shadow 0.5s ease,
+    filter 0.4s ease;
 }
-.item img{
-    width: 280px;
-    height: 380px;
+
+/* ✅ hover 시 카드가 앞으로 뜨면서 살짝 위로 이동 */
+.item:hover {
+  transform: scale(1.06) translateY(-6px);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.22);
+  filter: brightness(1.03);
 }
-.item p{
-    margin: 6px 0px;
-    font-size: 17px;
-    
+
+/* ============================= */
+/* 🖼️ IMAGE */
+/* ============================= */
+.item img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  transition:
+    transform 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+    filter 0.6s ease;
 }
-.item-prices{
-    display: flex;
-    gap: 20px;
+
+/* ✅ 이미지도 같이 커짐 */
+.item:hover img {
+  transform: scale(1.08) translateY(-4px);
+  filter: brightness(0.93) contrast(1.05);
 }
-.item-price-new{
-    color:#374151;
-    font-size: 18px;
-    font-weight: 600;
+
+/* ============================= */
+/* ✨ CARD INFO — 이미지와 함께 같이 올라옴 */
+/* ============================= */
+.card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 25px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.2));
+  color: #fff;
+  opacity: 0;
+  transform: translateY(40px) scale(0.96); /* ✅ 처음엔 아래에 숨김 */
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+  z-index: 2;
+  border-radius: 8px;
 }
-.item-price-old{
-    color:#8c8c8c;
-    font-size:18px;
-    font-weight:500;
-    text-decoration: line-through;
+
+/* ✅ hover 시 info도 카드와 함께 위로 떠오르며 확대 */
+.item:hover .card-info {
+  opacity: 1;
+  transform: translateY(5px) scale(1.08);
 }
-.item:hover{
-    transform: scale(1.05);
-    transition: 0.6s;
+
+/* ============================= */
+/* TEXT */
+/* ============================= */
+.card-info h3 {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
-@media(max-width:1280px){
-    .item{
-        width: 220px;
-        font-size: 14px;
-    }
-    .item img{
-        width: 220px;
-        height: 320px;
-    }
-    .item-price-new{
-        font-size: 14px;
-    }
-    .item-price-old{
-        font-size: 14px;
-    }
+
+.card-info .price {
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
-@media(max-width:1024px){
-    .item{
-        width: 170px;
-        font-size: 13px;
-    }
-    .item img{
-        width: 170px;
-        height: 270px;
-    }
-    .item-price-new{
-        font-size: 13px;
-    }
-    .item-price-old{
-        font-size: 13px;
-    }
+
+.card-info .old-price {
+  font-size: 12px;
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 6px;
 }
-@media(max-width:800px){
-    .item{
-        width: 120px;
-        font-size: 12px;
-    }
-    .item img{
-        width: 120px;
-        height: 200px;
-    }
-    .item-price-new{
-        font-size: 12px;
-    }
-    .item-price-old{
-        font-size: 12px;
-    }
+
+/* ============================= */
+/* ❤️ LIKE BUTTON */
+/* ============================= */
+.like-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.25s ease;
 }
-@media(max-width:500px){
-    .item{
-        width: 160px;
-    }
-    .item img{
-        width:160px;
-        height: 260px;
-    }
+
+.like-btn:hover {
+  transform: scale(1.1);
+}
+
+.like-btn svg {
+  stroke: #fff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  transition: all 0.25s ease;
+}
+
+.like-btn.liked svg {
+  fill: #ff4d4f;
+  stroke: #ff4d4f;
+  filter: drop-shadow(0 0 6px rgba(255, 77, 79, 0.5));
+}
+
+/* ❤️ 클릭 효과 */
+.like-btn.liked {
+  animation: heart-pulse 0.28s cubic-bezier(0.5, 1.5, 0.5, 1);
+}
+
+@keyframes heart-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.4); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+/* ============================= */
+/* 🩶 LIKE MODAL (비회원용) */
+/* ============================= */
+.like-modal-overlay {
+  position: fixed; /* ✅ 전 화면 덮기 */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* ✅ 카드보다 위 */
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s ease;
+}
+
+.like-modal {
+  background: #fff;
+  padding: 28px 32px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 320px;
+  max-width: 90%;
+  animation: scaleIn 0.3s ease;
+}
+
+.like-modal p {
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.like-modal-btns {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.modal-login-btn,
+.modal-close-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.modal-login-btn {
+  background: #111;
+  color: #fff;
+}
+.modal-login-btn:hover {
+  background: #000;
+}
+
+.modal-close-btn {
+  background: #f5f5f5;
+  color: #333;
+}
+.modal-close-btn:hover {
+  background: #e9e9e9;
+}
+
+/* ============================= */
+/* 🎞️ ANIMATIONS */
+/* ============================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

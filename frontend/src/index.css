@@ -1,18 +1,69 @@
-*{
+/* ==============================
+   🔧 Global Reset & Normalize
+   ============================== */
+
+/* 모든 기본 여백 제거 */
+* {
   margin: 0;
-  
+  padding: 0;
+  box-sizing: border-box;
 }
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+
+/* HTML, BODY 기본 설정 */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* ✅ 가로 스크롤 방지 */
+  overflow-y: scroll; /* ✅ 항상 세로 스크롤 가능 상태 유지 (밀림 방지) */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'poppins';
+  background-color: #fff; /* 원하는 기본 배경 */
+  color: #111; /* 텍스트 기본색 */
+  font-family: 'Poppins';
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* ✅ 스크롤바 숨기기 (시각적으로만) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+body {
+  -ms-overflow-style: none;  /* IE, Edge 구버전 */
+  scrollbar-width: none;     /* Firefox */
+  scrollbar-gutter: stable both-edges; /* ✅ 스크롤 유무 상관없이 레이아웃 흔들림 방지 */
+}
+
+/* 링크 기본 밑줄 제거 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 리스트 점 제거 */
+ul, ol {
+  list-style: none;
+}
+
+/* 버튼, 인풋 기본 스타일 제거 */
+button, input, textarea {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* 버튼 커서 */
+button {
+  cursor: pointer;
+}
+
+/* 이미지 블록화 및 최대폭 제한 */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
