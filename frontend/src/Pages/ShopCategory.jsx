@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './CSS/ShopCategory.css';
 import { ShopContext } from '../Context/ShopContext';
 import Item from '../Components/Item/Item';
+import { motion } from "framer-motion";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -93,7 +94,15 @@ export const ShopCategory = (props) => {
 
   return (
     <div className='shop-category'>
-      <img className='shopcategory-banner' src={props.banner} alt='' />
+      <motion.img
+       className="shopcategory-banner"
+       src={props.banner}
+       alt=""
+       initial={{ opacity: 0, y: 30, scale: 0.98 }}
+       animate={{ opacity: 1, y: 0, scale: 1 }}
+       transition={{ duration: 0.8, ease: "easeOut" }}
+       viewport={{ once: false, amount: 0.8 }}
+      />
 
       <div className='shopcategory-indexSort'>
         <p>

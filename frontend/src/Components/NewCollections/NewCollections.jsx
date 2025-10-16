@@ -20,9 +20,10 @@ export const NewCollections = () => {
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}   // ✅ blur 추가
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} // ✅ 선명해지게
         transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: false, amount: 0.8 }} 
+        viewport={{ once: true, amount: 0.8 }} 
       >
-        NEW COLLECTIONS
+       New Collection
+       
       </motion.h1>
 
       {/* 구분선 */}
@@ -30,7 +31,7 @@ export const NewCollections = () => {
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        viewport={{ once: false, amount: 0.8 }}  
+        viewport={{ once: true, amount: 0.8 }}  
       />
 
       {/* 상품 목록 */}
