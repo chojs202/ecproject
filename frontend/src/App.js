@@ -1,4 +1,5 @@
 import './App.css';
+import { useEffect } from 'react';
 import { ScrollToTop } from './ScrollToTop';
 import { Navbar } from './Components/Navbar/Navbar';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
@@ -24,6 +25,13 @@ import PageTransition from './Components/PageTransition/PageTransition';
 
 function AnimatedRoutes() {
   const location = useLocation();
+   useEffect(() => {
+    const images = [men_banner, women_banner, kid_banner];
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   return (
     <AnimatePresence mode="wait">

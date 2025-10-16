@@ -140,7 +140,7 @@ export const Hero = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate("/women");
+                    handleBannerClick();
                   }}
                 >
                   Shop Now

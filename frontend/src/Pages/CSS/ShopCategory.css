@@ -18,6 +18,13 @@
   object-fit: cover;
   box-shadow: 0 10px 9px rgba(0, 0, 0, 0.2);
   animation: shopcategory-fadeSlide 1s ease;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  filter: blur(4px);
+}
+.shopcategory-banner.visible {
+  opacity: 1;
+  filter: blur(0);
 }
 
 /* ===== 인덱스 & 정렬 영역 ===== */

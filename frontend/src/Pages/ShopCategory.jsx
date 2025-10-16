@@ -14,14 +14,21 @@ export const ShopCategory = (props) => {
   const query = useQuery();
   const navigate = useNavigate();
 
-  // query 값 미리 변수로 추출 (ESLint 경고 해결)
   const pageValue = query.get('page');
   const sortValue = query.get('sort');
 
-  // state 초기화
   const [currentPage, setCurrentPage] = useState(parseInt(pageValue) || 1);
   const [sortOption, setSortOption] = useState(sortValue || 'new');
   const [itemsPerPage, setItemsPerPage] = useState(8);
+
+  // ✅ 이미지 로드 상태
+  const [bannerLoaded, setBannerLoaded] = useState(false);
+
+  // ✅ 배너 미리 불러오기 (클릭 전에도 캐시되게)
+  useEffect(() => {
+    const preload = new Image();
+    preload.src = props.banner;
+  }, [props.banner]);
 
   // 반응형 itemsPerPage
   useEffect(() => {
@@ -35,7 +42,7 @@ export const ShopCategory = (props) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // URL 변화 → state 동기화 (변수를 dependency로)
+  // URL 변화 동기화
   useEffect(() => {
     setCurrentPage(parseInt(pageValue) || 1);
     setSortOption(sortValue || 'new');
@@ -46,10 +53,8 @@ export const ShopCategory = (props) => {
     (item) => item.category === props.category
   );
 
-  // date 문자열 → 숫자
   const getDateValue = (d) => new Date(d).getTime();
 
-  // 정렬 로직
   const sortedProducts = (() => {
     if (sortOption === 'old') {
       return [...filteredProducts].sort(
@@ -72,12 +77,10 @@ export const ShopCategory = (props) => {
     }
   })();
 
-  // 페이지네이션
   const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
 
-  // 페이지 이동
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
@@ -85,23 +88,23 @@ export const ShopCategory = (props) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 정렬 변경
   const handleSortChange = (newSort) => {
     setSortOption(newSort);
-    setCurrentPage(1); // 정렬 바꾸면 페이지 1로 초기화
+    setCurrentPage(1);
     navigate(`?page=1&sort=${newSort}`);
   };
 
   return (
     <div className='shop-category'>
+      {/* ✅ 배너 로딩 전 / 후 애니메이션 */}
       <motion.img
-       className="shopcategory-banner"
-       src={props.banner}
-       alt=""
-       initial={{ opacity: 0, y: 30, scale: 0.98 }}
-       animate={{ opacity: 1, y: 0, scale: 1 }}
-       transition={{ duration: 0.8, ease: "easeOut" }}
-       viewport={{ once: false, amount: 0.8 }}
+        className={`shopcategory-banner ${bannerLoaded ? 'visible' : ''}`}
+        src={props.banner}
+        alt=''
+        onLoad={() => setBannerLoaded(true)}
+        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        animate={bannerLoaded ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
       <div className='shopcategory-indexSort'>
