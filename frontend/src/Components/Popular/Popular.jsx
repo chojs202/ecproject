@@ -20,17 +20,17 @@ export const Popular = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.18, delayChildren: 0.1 },
+      transition: { staggerChildren: 0.12, delayChildren: 0.1,  ease: "linear", },
     },
   };
 
   const card = {
-    hidden: { opacity: 0, y: 70, scale: 0.97 },
+    hidden: { opacity: 0, y: 90, scale: 0.97 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 1.0, ease: [0.25, 0.1, 0.25, 1] },
+      transition: { duration: 1.2, ease: [0.42, 0, 0.58, 1], },
     },
   };
 
@@ -77,7 +77,7 @@ export const Popular = () => {
             onMouseEnter={() => handleHoverEnter(item.image)}
             onMouseLeave={handleHoverLeave}
             whileHover={{ scale: 1.03 }}
-            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
           >
             <Item
               id={item.id}

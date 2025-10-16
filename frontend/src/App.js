@@ -1,5 +1,6 @@
 
 import './App.css';
+import { ScrollToTop } from './ScrollToTop';
 import { Navbar } from './Components/Navbar/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Shop } from './Pages/Shop';
@@ -25,26 +26,29 @@ function App() {
   return (
     <ShopContextProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Navbar/>
-        <Routes>
-          <Route path="/" element={<Shop/>}/>
-          <Route path="/men" element={<ShopCategory banner={men_banner} category="men"/>}/>
-          <Route path="/women" element={<ShopCategory banner={women_banner} category="women"/>}/>
-          <Route path="/kid" element={<ShopCategory banner={kid_banner} category="kid"/>}/>
-          <Route path="/product" element={<Product/>}>
-            <Route path=":productId" element={<Product/>}/>
-          </Route>
-          <Route path="/cart" element={<Cart/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/signup" element={<Signup/>}/>
-          <Route path="/edituser" element={<EditUser/>}/>
-          <Route path="/changepassword" element={<ChangePassword/>}/>
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/orders" element={<OrderHistory />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/like" element={<Like />} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path="/" element={<Shop/>}/>
+            <Route path="/men" element={<ShopCategory banner={men_banner} category="men"/>}/>
+            <Route path="/women" element={<ShopCategory banner={women_banner} category="women"/>}/>
+            <Route path="/kid" element={<ShopCategory banner={kid_banner} category="kid"/>}/>
+            <Route path="/product" element={<Product/>}>
+              <Route path=":productId" element={<Product/>}/>
+            </Route>
+            <Route path="/cart" element={<Cart/>}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/signup" element={<Signup/>}/>
+            <Route path="/edituser" element={<EditUser/>}/>
+            <Route path="/changepassword" element={<ChangePassword/>}/>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/orders" element={<OrderHistory />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/like" element={<Like />} />
+          </Routes>
+        </main>
         <Footer/>
       </BrowserRouter>
     </ShopContextProvider>
