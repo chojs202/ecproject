@@ -2,8 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./Popular.css";
 import Item from "../Item/Item";
 import { API } from "../../config";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 
 export const Popular = () => {
   const [popularProducts, setPopularProducts] = useState([]);
@@ -11,70 +10,73 @@ export const Popular = () => {
   const [isActive, setIsActive] = useState(false);
   const hoverTimer = useRef(null);
 
+  // ✅ 데이터 불러오기 (안전 처리 포함)
   useEffect(() => {
     fetch(`${API}/popularinwomen`)
-      .then((res) => res.json())
-      .then((data) => setPopularProducts(data));
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setPopularProducts(Array.isArray(data) ? data : []))
+      .catch(() => setPopularProducts([]));
   }, []);
 
+  // ✅ hover 효과 — 깜빡임 방지 + cleanup 포함
   const handleHoverEnter = (image) => {
     const src = image[0];
-    setIsActive(false);
+    if (bgImage === src) return; // 같은 이미지면 skip
     clearTimeout(hoverTimer.current);
-    window._hoverTimer = setTimeout(() => {
+    setIsActive(false);
+    hoverTimer.current = setTimeout(() => {
       setBgImage(src);
-      requestAnimationFrame(() => setIsActive(true));
-    }, 30);
+      setIsActive(true);
+    }, 60);
   };
 
-  const handleHoverLeave = () => setIsActive(false);
+  const handleHoverLeave = () => {
+    clearTimeout(hoverTimer.current);
+    setIsActive(false);
+  };
 
-  // ✅ Scroll-Fade 컴포넌트 정의 (등장 + 사라짐)
-  const ScrollFadeCard = ({ children, delay = 0 }) => {
-    const controls = useAnimation();
-    const { ref, inView } = useInView({ threshold: 0.3 });
+  // ✅ unmount 시 타이머 클린업
+  useEffect(() => {
+    return () => clearTimeout(hoverTimer.current);
+  }, []);
 
-    useEffect(() => {
-      if (inView) {
-        // 스크롤 내려올 때
-        controls.start({
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: { duration: 0.7, delay, ease: "easeOut" },
-        });
-      } else {
-        // 스크롤 위로 올라갈 때
-        controls.start({
-          opacity: 0,
-          y: 60,
-          scale: 0.98,
-          transition: { duration: 0.5, ease: "easeInOut" },
-        });
-      }
-    }, [inView, controls, delay]);
+  // ✅ 애니메이션 설정 (Observer 통합형)
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+        ease: "easeOut",
+      },
+    },
+  };
 
-    return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 60, scale: 0.98 }}
-        animate={controls}
-        whileHover={{ scale: 1.03 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        style={{ willChange: "transform, opacity" }}
-      >
-        {children}
-      </motion.div>
-    );
+  const cardVariants = {
+    hidden: { opacity: 0, y: 60, scale: 0.98 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      y: 60,
+      transition: { duration: 0.5, ease: "easeInOut" },
+    },
   };
 
   return (
     <div className="popular">
+      {/* ✅ 배경 오버레이 */}
       <div
         className={`bg-overlay ${isActive ? "active" : ""}`}
         style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
 
+      {/* ✅ 타이틀 애니메이션 */}
       <motion.h1
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -91,21 +93,35 @@ export const Popular = () => {
         viewport={{ once: true, amount: 0.8 }}
       />
 
-      <div className="popular-item">
+      {/* ✅ 스크롤 진입 시 순차 등장 */}
+      <motion.div
+        className="popular-item"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.25 }}
+      >
         {popularProducts.map((item, i) => (
-          <ScrollFadeCard key={i} delay={i * 0.12}>
+          <motion.div
+            key={item.id || i}
+            className="fade-card"
+            variants={cardVariants}
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            onMouseEnter={() => handleHoverEnter(item.image)}
+            onMouseLeave={handleHoverLeave}
+            style={{ willChange: "transform, opacity" }}
+          >
             <Item
               id={item.id}
               name={item.name}
               image={item.image}
               new_price={item.new_price}
               old_price={item.old_price}
-              onMouseEnter={() => handleHoverEnter(item.image)}
-              onMouseLeave={handleHoverLeave}
             />
-          </ScrollFadeCard>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
