@@ -2,31 +2,45 @@ import React, { useEffect, useState } from "react";
 import cross_icon from "../../assets/cross_icon.png";
 import "./ListProduct.css";
 import EditProductModal from "../EditProductModal/EditProductModal";
-import {API} from "../../config"
+import { API } from "../../config";
 
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // ✅ 전체 상품 불러오기 (GET /api/products)
   const fetchInfo = async () => {
-    const res = await fetch(`${API}/allproducts`);
-    const data = await res.json();
-    setAllProducts(data);
+    try {
+      const res = await fetch(`${API}/api/products`);
+      const data = await res.json();
+      setAllProducts(data);
+    } catch (error) {
+      console.error("❌ Failed to fetch products:", error);
+    }
   };
 
   useEffect(() => {
     fetchInfo();
   }, []);
 
+  // ✅ 상품 삭제 (DELETE /api/products/:id)
   const remove_product = async (id) => {
-    await fetch(`${API}/removeproduct`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    setAllProducts((prev) => prev.filter((p) => p.id !== id));
+    try {
+      const res = await fetch(`${API}/api/products/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAllProducts((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        alert("Failed to delete product");
+      }
+    } catch (error) {
+      console.error("❌ Delete failed:", error);
+    }
   };
 
+  // ✅ 수정 후 상태 업데이트
   const handleSave = (updatedProduct) => {
     setAllProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))

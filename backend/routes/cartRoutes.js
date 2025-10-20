@@ -4,9 +4,9 @@ import { fetchUser } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.post("/getcart", fetchUser, getCart);
-router.post("/addtocart", fetchUser, addToCart);
-router.post("/removefromcart", fetchUser, removeFromCart);
-router.post("/updatecart", fetchUser, updateCart);
+router.get("/", fetchUser, getCartItems);
+router.post("/", fetchUser, addCartItem);
+router.put("/:productId", fetchUser, updateCartItem);
+router.delete("/:productId", fetchUser, removeCartItem);
 
 export default router;

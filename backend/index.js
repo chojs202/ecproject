@@ -32,7 +32,7 @@ app.use(
       "https://ecproject-main.onrender.com", // 프론트엔드 배포환경
       "https://ecproject-admin.onrender.com", // admin 배포환경
     ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "auth-token"],
     credentials: true,
   })
@@ -58,12 +58,12 @@ app.get("/", (_req, res) => res.send("Express App is Running"));
 // ==============================
 // 5. 라우트 연결
 // ==============================
-app.use("/", productRoutes);
-app.use("/", promoRoutes);
-app.use("/", likeRoutes);
-app.use("/", userRoutes);
-app.use("/", cartRoutes);
-app.use("/", orderRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/promos", promoRoutes);
+app.use("/api/likes", likeRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 // ==============================
 // 6. 기본 프로모 코드 생성

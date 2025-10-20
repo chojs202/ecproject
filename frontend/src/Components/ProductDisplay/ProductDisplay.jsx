@@ -1,127 +1,191 @@
 import { useContext, useState, useEffect } from 'react'
+import { useSwipeable } from 'react-swipeable'
+import { motion } from 'framer-motion'     // ✅ 추가
 import './ProductDisplay.css'
 import star_icon from '../Assets/star_icon.png'
 import star_dull_icon from '../Assets/star_dull_icon.png'
 import { ShopContext } from '../../Context/ShopContext'
 
-export const ProductDisplay = (props) => {
-    const { product } = props
-    const { addToCart, toggleLike, isProductLiked, isLoggedIn } = useContext(ShopContext)
-    const [selectedSize, setSelectedSize] = useState('')
-    const [mainImageIndex, setMainImageIndex] = useState(0)
+export const ProductDisplay = ({ product }) => {
+  const { addToCart, toggleLike, isProductLiked, isLoggedIn } = useContext(ShopContext)
+  const [selectedSize, setSelectedSize] = useState('')
+  const [mainImageIndex, setMainImageIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-    const images = Array.isArray(product.image) ? product.image : []
+  const images = Array.isArray(product.image) ? product.image : []
+  const liked = isProductLiked(product.id)
 
-    const prevImage = () => {
-        setMainImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  const nextImage = () => {
+    if (isTransitioning) return
+    setIsTransitioning(true)
+    setMainImageIndex(prev => prev + 1)
+  }
+
+  const prevImage = () => {
+    if (isTransitioning) return
+    setIsTransitioning(true)
+    setMainImageIndex(prev => prev - 1)
+  }
+
+  const handleTransitionEnd = () => {
+    if (mainImageIndex === -1) {
+      setIsTransitioning(false)
+      setMainImageIndex(images.length - 1)
+    } else if (mainImageIndex === images.length) {
+      setIsTransitioning(false)
+      setMainImageIndex(0)
+    } else {
+      setIsTransitioning(false)
     }
+  }
 
-    const nextImage = () => {
-        setMainImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-    }
+  const handlers = useSwipeable({
+    onSwipedLeft: () => nextImage(),
+    onSwipedRight: () => prevImage(),
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+    delta: 20,
+    flickThreshold: 0.3,
+  })
 
-    useEffect(() => { setMainImageIndex(0) }, [product])
+  useEffect(() => { setMainImageIndex(0) }, [product])
 
-    // ------------------- 찜 여부 -------------------
-    const liked = isProductLiked(product.id)
-
-    return (
-        <div className='productdisplay'>
-            {/* 좌측: 이미지 + 썸네일 */}
-            <div className="productdisplay-left">
-                <div className="productdisplay-main-img-container">
-                    <button className="prev-btn" onClick={prevImage}>&lt;</button>
-                    <img
-                        className='productdisplay-main-img'
-                        src={images[mainImageIndex] || '/placeholder.png'}
-                        alt={product.name}
-                    />
-                    <button className="next-btn" onClick={nextImage}>&gt;</button>
-                </div>
-
-                <div className="productdisplay-thumbnails">
-                    {images.map((img, idx) => (
-                        <img
-                            key={idx}
-                            src={img}
-                            alt={`${product.name} ${idx}`}
-                            className={`thumbnail ${idx === mainImageIndex ? 'active' : ''}`}
-                            onMouseEnter={() => setMainImageIndex(idx)}
-                        />
-                    ))}
-                </div>
+  return (
+    <div className="productdetail">
+      <div className="productdetail-container">
+        <div className="productdetail-gallery">
+          {/* ================= 이미지 슬라이드 ================= */}
+          <div className="main-image-box">
+            <div
+              className="main-image-slide-wrapper"
+              {...handlers}
+              style={{
+                transform: `translateX(-${(mainImageIndex + 1) * 100}%)`,
+                transition: isTransitioning ? 'transform 0.45s ease' : 'none',
+              }}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {images.length > 0 && (
+                <img
+                  src={images[images.length - 1]}
+                  alt="clone-last"
+                  className="slide-image"
+                  draggable={false}
+                />
+              )}
+              {images.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`${product.name} ${idx}`}
+                  className="slide-image"
+                  draggable={false}
+                />
+              ))}
+              {images.length > 0 && (
+                <img src={images[0]} alt="clone-first" className="slide-image" draggable={false} />
+              )}
             </div>
 
-            {/* 우측: 상품 정보 */}
-            <div className="productdisplay-right">
-                <h1>{product.name}</h1>
+            {/* ❤️ 좋아요 버튼 */}
+            <button
+              className={`like-btn ${liked ? 'liked' : ''}`}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  alert('You must be logged in to like a product.')
+                  return
+                }
+                toggleLike(product.id)
+              }}
+            >
+              {liked ? '❤️' : '🤍'}
+            </button>
 
-                <div className="productdisplay-right-stars">
-                    <img src={star_icon} alt="" />
-                    <img src={star_icon} alt="" />
-                    <img src={star_icon} alt="" />
-                    <img src={star_icon} alt="" />
-                    <img src={star_dull_icon} alt="" />
-                    <p>(122)</p>
-                </div>
+            <button className="prev-btn" onClick={prevImage} disabled={isTransitioning}>
+              &lt;
+            </button>
+            <button className="next-btn" onClick={nextImage} disabled={isTransitioning}>
+              &gt;
+            </button>
+          </div>
 
-                <div className="productdisplay-right-prices">
-                    <div className="productdisplay-right-price-old">${product.old_price}</div>
-                    <div className="productdisplay-right-price-new">${product.new_price}</div>
-                </div>
-
-                {product.size && product.size.length > 0 && (
-                    <div className="productdisplay-right-sizes">
-                        <label htmlFor="size-select">Select Size: </label>
-                        <select
-                            id="size-select"
-                            value={selectedSize}
-                            onChange={(e) => setSelectedSize(e.target.value)}
-                        >
-                            <option value="">-- Choose Size --</option>
-                            {product.size.map((s, idx) => (
-                                <option key={idx} value={s}>{s}</option>
-                            ))}
-                        </select>
-                    </div>
-                )}
-
-                {/* ----------------- ADD TO CART + LIKE 버튼 ----------------- */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
-                    {/* 찜(하트) 버튼 */}
-                    <button
-                        className={`like-btn ${liked ? 'liked' : ''}`}
-                        onClick={() => {
-                            if (!isLoggedIn) {
-                              alert("You must be logged in to like a product."); // 로그인 필요 알림
-                              return;
-                            }
-                            console.log("Like button clicked for product:", product.id);
-                            toggleLike(product.id);
-                        }}
-                        title={liked ? 'Remove from Likes' : 'Add to Likes'}
-                    >
-                        {liked ? '❤️' : '🤍'}
-                    </button>
-                    
-                    {/* ADD TO CART 버튼 */}
-                    <button className="add-to-cart-btn"
-                        onClick={() => {
-                            if (product.size && product.size.length > 0 && !selectedSize) {
-                                alert("Please select a size before adding to cart.")
-                                return
-                            }
-                            addToCart({ id: product.id, size: selectedSize })
-                        }}
-                    >
-                        ADD TO CART
-                    </button>
-                </div>
-
-                <p className='productdisplay-right-category'>
-                    <span>Category :</span> {product.category}
-                </p>
-            </div>
+          {/* 썸네일 */}
+          <div className="thumbnail-row">
+            {images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`${product.name} ${idx}`}
+                className={`thumbnail ${idx === mainImageIndex ? 'active' : ''}`}
+                onMouseEnter={() => setMainImageIndex(idx)}
+              />
+            ))}
+          </div>
         </div>
-    )
+
+        {/* ================= 상품 정보 (부드럽게 등장) ================= */}
+        <motion.div
+          className="productdetail-info"
+          initial={{ opacity: 0, y: 40, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 10,   // 튕김 정도
+            damping: 2,     // 감속 정도
+            duration: 1.1,
+          }}
+        >
+          <h1 className="product-title">{product.name}</h1>
+
+          <div className="rating">
+            {[...Array(4)].map((_, i) => (
+              <img key={i} src={star_icon} alt="star" />
+            ))}
+            <img src={star_dull_icon} alt="dull star" />
+            <p>(122)</p>
+          </div>
+
+          <div className="price-box">
+            <span className="old-price">${product.old_price}</span>
+            <span className="new-price">${product.new_price}</span>
+          </div>
+
+          {product.size?.length > 0 && (
+            <div className="size-select">
+              <label htmlFor="size-select">Size:</label>
+              <select
+                id="size-select"
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+              >
+                <option value="">-- Choose Size --</option>
+                {product.size.map((s, idx) => (
+                  <option key={idx} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <button
+            className="add-to-cart-btn"
+            onClick={() => {
+              if (product.size && product.size.length > 0 && !selectedSize) {
+                alert('Please select a size before adding to cart.')
+                return
+              }
+              addToCart({ id: product.id, size: selectedSize })
+            }}
+          >
+            ADD TO CART
+          </button>
+
+          <p className="category-text">
+            <span>Category :</span> {product.category}
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  )
 }

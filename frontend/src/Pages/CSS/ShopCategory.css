@@ -18,7 +18,7 @@
   object-fit: cover;
   box-shadow: 0 10px 9px rgba(0, 0, 0, 0.2);
   animation: shopcategory-fadeSlide 1s ease;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.6s ease;
   filter: blur(4px);
 }
@@ -83,7 +83,6 @@
   row-gap: 70px;
   justify-items: center;
   width: auto;
-  animation: shopcategory-fadeUp 1s ease;
 }
 
 /* 각 상품 순차 등장 */
@@ -169,7 +168,7 @@
   .shopcategory-products {
     width: 90%;
     margin: 30px auto;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     row-gap: 50px;
   }
@@ -180,6 +179,7 @@
   .shopcategory-indexSort {
     flex-direction: column;
     gap: 10px;
+ 
     border: none;
     width: 100%;
   }
@@ -189,15 +189,15 @@
   }
   .shopcategory-products {
     width: 95%;
-    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     row-gap: 40px;
+    max-width: 650px;
   }
 }
 
 @media (max-width: 500px) {
   .shopcategory-products {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 14px;
     row-gap: 28px;
     width: 92%;

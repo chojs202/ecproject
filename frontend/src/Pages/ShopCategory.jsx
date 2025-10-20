@@ -20,21 +20,17 @@ export const ShopCategory = (props) => {
   const [currentPage, setCurrentPage] = useState(parseInt(pageValue) || 1);
   const [sortOption, setSortOption] = useState(sortValue || 'new');
   const [itemsPerPage, setItemsPerPage] = useState(8);
-
-  // ✅ 이미지 로드 상태
   const [bannerLoaded, setBannerLoaded] = useState(false);
 
-  // ✅ 배너 미리 불러오기 (클릭 전에도 캐시되게)
   useEffect(() => {
     const preload = new Image();
     preload.src = props.banner;
   }, [props.banner]);
 
-  // 반응형 itemsPerPage
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 500) setItemsPerPage(8);
-      else if (window.innerWidth <= 800) setItemsPerPage(9);
+      if (window.innerWidth <= 500) setItemsPerPage(6);
+      else if (window.innerWidth <= 800) setItemsPerPage(8);
       else setItemsPerPage(8);
     };
     handleResize();
@@ -42,13 +38,11 @@ export const ShopCategory = (props) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // URL 변화 동기화
   useEffect(() => {
     setCurrentPage(parseInt(pageValue) || 1);
     setSortOption(sortValue || 'new');
   }, [pageValue, sortValue]);
 
-  // 카테고리 필터
   const filteredProducts = all_product.filter(
     (item) => item.category === props.category
   );
@@ -96,7 +90,7 @@ export const ShopCategory = (props) => {
 
   return (
     <div className='shop-category'>
-      {/* ✅ 배너 로딩 전 / 후 애니메이션 */}
+      {/* ✅ 배너 */}
       <motion.img
         className={`shopcategory-banner ${bannerLoaded ? 'visible' : ''}`}
         src={props.banner}
@@ -107,6 +101,7 @@ export const ShopCategory = (props) => {
         transition={{ duration: 0.8, ease: "easeOut" }}
       />
 
+      {/* ✅ 상단 정렬 영역 */}
       <div className='shopcategory-indexSort'>
         <p>
           <span>
@@ -128,6 +123,7 @@ export const ShopCategory = (props) => {
         </select>
       </div>
 
+      {/* ✅ 상품 리스트 */}
       <div className='shopcategory-products'>
         {currentItems.map((item) => (
           <Item
@@ -143,6 +139,7 @@ export const ShopCategory = (props) => {
         ))}
       </div>
 
+      {/* ✅ 페이지네이션 */}
       <div className='shopcategory-pagination'>
         <button
           className='pagination-btn'

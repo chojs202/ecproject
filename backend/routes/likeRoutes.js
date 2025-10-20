@@ -6,6 +6,6 @@ const router = Router();
 
 router.post("/products/:id/like", fetchUser, toggleLike);
 router.get("/likes", fetchUser, getMyLikes);
-router.get("/products/:id/like-status", fetchUser, getLikeStatus);
+router.get("/products/:id/like", fetchUser, getLikeStatus);
 
 export default router;

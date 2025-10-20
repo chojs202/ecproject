@@ -119,50 +119,46 @@ const EditProductModal = ({ product, onClose, onSave }) => {
   };
 
   const saveChanges = async () => {
-    // 가격 최종 체크
     if (!/^\d+$/.test(productDetails.old_price) || !/^\d+$/.test(productDetails.new_price)) {
       alert("Only Number.");
       return;
     }
-
-    let updatedProduct = { ...productDetails, size: sizes, id: product.id };
+  
+    let updatedProduct = { ...productDetails, size: sizes };
     const newFiles = images.filter((img) => img.file);
-
-     try {
-        if (newFiles.length > 0) {
-          // 🔹 Cloudinary로 직접 업로드
-          const uploadPromises = newFiles.map(({ file }) => uploadImageToCloudinary(file));
-          const uploadedUrls = await Promise.all(uploadPromises);
-        
-          // 기존 순서 유지
-          let imgIndex = 0;
-          updatedProduct.image = images.map((img) =>
-            img.file ? uploadedUrls[imgIndex++] : img.url
-          );
-        } else {
-          updatedProduct.image = images.map((img) => img.url).filter(Boolean);
-        }
+  
+    try {
+      if (newFiles.length > 0) {
+        const uploadPromises = newFiles.map(({ file }) => uploadImageToCloudinary(file));
+        const uploadedUrls = await Promise.all(uploadPromises);
       
-        // 🔹 서버에 업데이트 요청
-        const res = await fetch(`${API}/updateproduct`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedProduct),
-        }).then((res) => res.json());
-      
-        if (!res.success) {
-          alert("Failed to save product");
-          return;
-        }
-      
-        onSave(updatedProduct);
-        onClose();
-      } catch (err) {
-        console.error("❌ Image upload failed:", err);
-        alert("Image upload failed. Please try again.");
+        let imgIndex = 0;
+        updatedProduct.image = images.map((img) =>
+          img.file ? uploadedUrls[imgIndex++] : img.url
+        );
+      } else {
+        updatedProduct.image = images.map((img) => img.url).filter(Boolean);
       }
-    };
-
+    
+      // ✅ RESTful PATCH 요청으로 변경
+      const res = await fetch(`${API}/api/products/${product.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProduct),
+      }).then((res) => res.json());
+    
+      if (!res.success) {
+        alert("Failed to save product");
+        return;
+      }
+    
+      onSave(updatedProduct);
+      onClose();
+    } catch (err) {
+      console.error("❌ Image upload failed:", err);
+      alert("Image upload failed. Please try again.");
+    }
+  };
   return (
     <div className="editproductmodal-container">
       <h2>Edit Product</h2>

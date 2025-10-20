@@ -2,7 +2,7 @@
 import Users from "../models/User.js";
 
 // ✅ 전체 카트 가져오기
-export const getCart = async (req, res) => {
+export const getCartItems = async (req, res) => {
   try {
     const userData = await Users.findById(req.user.id);
     const cartData = userData.cartData || {};
@@ -14,7 +14,7 @@ export const getCart = async (req, res) => {
 };
 
 // ✅ 카트에 아이템 추가
-export const addToCart = async (req, res) => {
+export const addCartItem = async (req, res) => {
   try {
     const { itemId, size } = req.body;
     const userData = await Users.findById(req.user.id);
@@ -35,7 +35,7 @@ export const addToCart = async (req, res) => {
 };
 
 // ✅ 카트에서 아이템 제거
-export const removeFromCart = async (req, res) => {
+export const removeCartItem = async (req, res) => {
   try {
     const { itemId, size } = req.body;
     const userData = await Users.findById(req.user.id);
@@ -59,7 +59,7 @@ export const removeFromCart = async (req, res) => {
 };
 
 // ✅ 카트 전체 업데이트
-export const updateCart = async (req, res) => {
+export const updateCartItem = async (req, res) => {
   try {
     const updatedCart = req.body;
 

@@ -1,8 +1,6 @@
-import Product from "../models/Product.js"; // ✅ .js 확장자 포함
+import Product from "../models/Product.js";
 
-// ==============================
-// 1️⃣ 상품 추가
-// ==============================
+// ✅ 1️⃣ 상품 추가
 export const addProduct = async (req, res) => {
   try {
     const newPrice = Number(req.body.new_price);
@@ -12,7 +10,6 @@ export const addProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: "Price must be a number" });
     }
 
-    // 마지막 id 찾기
     const lastProduct = await Product.findOne({}).sort({ id: -1 });
     const id = lastProduct ? lastProduct.id + 1 : 1;
 
@@ -42,9 +39,7 @@ export const addProduct = async (req, res) => {
   }
 };
 
-// ==============================
-// 2️⃣ 상품명 중복 확인
-// ==============================
+// ✅ 2️⃣ 상품명 중복 확인
 export const checkProductTitle = async (req, res) => {
   try {
     const name = req.query.name?.trim();
@@ -58,28 +53,36 @@ export const checkProductTitle = async (req, res) => {
   }
 };
 
-// ==============================
-// 3️⃣ 전체 상품 조회
-// ==============================
-export const getAllProducts = async (_req, res) => {
+// ✅ 3️⃣ 전체 상품 조회 (필터링 가능)
+export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.send(products);
+    const { filter, category, sort } = req.query;
+    let query = {};
+
+    if (filter === "new") query = { ...query, isNew: true };
+    if (category) query = { ...query, category };
+
+    let products = await Product.find(query);
+
+    if (sort === "popular") {
+      products = products.sort((a, b) => b.likes.length - a.likes.length);
+    }
+
+    res.json({ success: true, products });
   } catch (error) {
     console.error("❌ getAllProducts error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// ==============================
-// 4️⃣ 상품 수정
-// ==============================
+// ✅ 4️⃣ 상품 수정 (PUT /api/products/:id)
 export const updateProduct = async (req, res) => {
   try {
-    const { id, name, old_price, new_price, category, size, description, image } = req.body;
+    const { id } = req.params; // ✅ param 기반으로 수정
+    const { name, old_price, new_price, category, size, description, image } = req.body;
 
     const updatedProduct = await Product.findOneAndUpdate(
-      { id },
+      { id: Number(id) },
       {
         name,
         old_price: Number(old_price),
@@ -103,48 +106,24 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ==============================
-// 5️⃣ 상품 삭제
-// ==============================
+// ✅ 5️⃣ 상품 삭제 (DELETE /api/products/:id)
 export const removeProduct = async (req, res) => {
   try {
-    await Product.findOneAndDelete({ id: req.body.id });
-    res.json({ success: true, name: req.body.name });
+    const { id } = req.params; // ✅ param으로 변경
+    const deletedProduct = await Product.findOneAndDelete({ id: Number(id) });
+
+    if (!deletedProduct) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    res.json({ success: true, deletedId: id });
   } catch (error) {
     console.error("❌ removeProduct error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// ==============================
-// 6️⃣ 신규 컬렉션 조회 (최근 8개)
-// ==============================
-export const getNewCollections = async (_req, res) => {
-  try {
-    const newcollection = await Product.find({}).sort({ date: -1 }).limit(8);
-    res.send(newcollection);
-  } catch (error) {
-    console.error("❌ getNewCollections error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-// ==============================
-// 7️⃣ 여성 인기상품 조회
-// ==============================
-export const getPopularInWomen = async (_req, res) => {
-  try {
-    const popular = await Product.find({ category: "women" }).sort({ date: -1 }).limit(4);
-    res.send(popular);
-  } catch (error) {
-    console.error("❌ getPopularInWomen error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-// ==============================
-// 8️⃣ 상품 검색 (이름 부분 일치)
-// ==============================
+// ✅ 6️⃣ 검색 (이름 부분 일치)
 export const search = async (req, res) => {
   try {
     const query = req.query.q || "";
