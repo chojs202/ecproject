@@ -1,6 +1,8 @@
 import Product from "../models/Product.js";
 
-// ✅ 1️⃣ 상품 추가
+// ==============================
+// 1️⃣ 상품 등록 (POST /api/products)
+// ==============================
 export const addProduct = async (req, res) => {
   try {
     const newPrice = Number(req.body.new_price);
@@ -39,7 +41,9 @@ export const addProduct = async (req, res) => {
   }
 };
 
-// ✅ 2️⃣ 상품명 중복 확인
+// ==============================
+// 2️⃣ 상품명 중복 확인 (GET /api/products/check-title)
+// ==============================
 export const checkProductTitle = async (req, res) => {
   try {
     const name = req.query.name?.trim();
@@ -53,7 +57,9 @@ export const checkProductTitle = async (req, res) => {
   }
 };
 
-// ✅ 3️⃣ 전체 상품 조회 (필터링 가능)
+// ==============================
+// 3️⃣ 전체 상품 조회 (GET /api/products?filter=&category=&sort=)
+// ==============================
 export const getAllProducts = async (req, res) => {
   try {
     const { filter, category, sort } = req.query;
@@ -75,10 +81,12 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-// ✅ 4️⃣ 상품 수정 (PUT /api/products/:id)
+// ==============================
+// 4️⃣ 상품 수정 (PATCH /api/products/:id)
+// ==============================
 export const updateProduct = async (req, res) => {
   try {
-    const { id } = req.params; // ✅ param 기반으로 수정
+    const { id } = req.params;
     const { name, old_price, new_price, category, size, description, image } = req.body;
 
     const updatedProduct = await Product.findOneAndUpdate(
@@ -106,10 +114,12 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ✅ 5️⃣ 상품 삭제 (DELETE /api/products/:id)
+// ==============================
+// 5️⃣ 상품 삭제 (DELETE /api/products/:id)
+// ==============================
 export const removeProduct = async (req, res) => {
   try {
-    const { id } = req.params; // ✅ param으로 변경
+    const { id } = req.params;
     const deletedProduct = await Product.findOneAndDelete({ id: Number(id) });
 
     if (!deletedProduct) {
@@ -123,7 +133,9 @@ export const removeProduct = async (req, res) => {
   }
 };
 
-// ✅ 6️⃣ 검색 (이름 부분 일치)
+// ==============================
+// 6️⃣ 상품 검색 (GET /api/products/search?q=검색어)
+// ==============================
 export const search = async (req, res) => {
   try {
     const query = req.query.q || "";

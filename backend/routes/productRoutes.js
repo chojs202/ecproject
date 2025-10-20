@@ -15,27 +15,27 @@ const router = Router();
 // ==============================
 
 // ✅ 상품 등록 (Create)
-router.post("/", addProduct); 
-// → POST /api/products
+// POST /api/products
+router.post("/", addProduct);
 
-// ✅ 상품 전체 조회 (Read, with optional filters)
-// 예: GET /api/products?filter=new&category=women&sort=popular
+// ✅ 전체 상품 조회 (Read)
+// GET /api/products
 router.get("/", getAllProducts);
 
-// ✅ 특정 상품 수정 (Update)
-// 예: PUT /api/products/12
-router.put("/:id", updateProduct);
-
-// ✅ 특정 상품 삭제 (Delete)
-// 예: DELETE /api/products/12
-router.delete("/:id", removeProduct);
-
 // ✅ 상품명 중복 확인
-// 예: GET /api/products/check-title?name=티셔츠
+// GET /api/products/check-title?name=상품명
 router.get("/check-title", checkProductTitle);
 
 // ✅ 상품 검색 (부분 일치)
-// 예: GET /api/products/search?q=셔츠
+// GET /api/products/search?q=검색어
 router.get("/search", search);
+
+// ✅ 상품 수정 (Update)
+// PATCH /api/products/:id
+router.patch("/:id", updateProduct);
+
+// ✅ 상품 삭제 (Delete)
+// DELETE /api/products/:id
+router.delete("/:id", removeProduct);
 
 export default router;
