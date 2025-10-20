@@ -12,8 +12,11 @@ const ListProduct = () => {
   const fetchInfo = async () => {
     try {
       const res = await fetch(`${API}/api/products`);
+      if (!res.ok) throw new Error("Failed to fetch products");
       const data = await res.json();
-      setAllProducts(data);
+
+      // 백엔드가 배열을 직접 반환하므로 그대로 세팅
+      setAllProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("❌ Failed to fetch products:", error);
     }
@@ -25,22 +28,27 @@ const ListProduct = () => {
 
   // ✅ 상품 삭제 (DELETE /api/products/:id)
   const remove_product = async (id) => {
+    if (!window.confirm("Do you really want to delete this product?")) return;
+
     try {
       const res = await fetch(`${API}/api/products/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
+
       if (data.success) {
+        alert("🗑️ Product deleted successfully!");
         setAllProducts((prev) => prev.filter((p) => p.id !== id));
       } else {
-        alert("Failed to delete product");
+        alert(data.message || "Failed to delete product");
       }
     } catch (error) {
       console.error("❌ Delete failed:", error);
+      alert("Error deleting product");
     }
   };
 
-  // ✅ 수정 후 상태 업데이트
+  // ✅ 수정 후 리스트 즉시 반영
   const handleSave = (updatedProduct) => {
     setAllProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
@@ -67,7 +75,9 @@ const ListProduct = () => {
             <div className="listproduct-product-icon">
               {product.image?.[0] && <img src={product.image[0]} alt={product.name} />}
             </div>
+
             <p>{product.name}</p>
+
             <div className="listproduct-size-tags">
               {product.size?.length ? (
                 <>
@@ -84,9 +94,11 @@ const ListProduct = () => {
                 <span className="listproduct-size-tag empty">-</span>
               )}
             </div>
+
             <p>${product.old_price}</p>
             <p>${product.new_price}</p>
             <p>{product.category}</p>
+
             <button
               className="listproduct-edit-btn"
               onClick={() =>
@@ -99,6 +111,7 @@ const ListProduct = () => {
             >
               Edit
             </button>
+
             <img
               onClick={() => remove_product(product.id)}
               className="listproduct-remove-icon"

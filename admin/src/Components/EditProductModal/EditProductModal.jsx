@@ -123,15 +123,15 @@ const EditProductModal = ({ product, onClose, onSave }) => {
       alert("Only Number.");
       return;
     }
-  
+
     let updatedProduct = { ...productDetails, size: sizes };
     const newFiles = images.filter((img) => img.file);
-  
+
     try {
       if (newFiles.length > 0) {
         const uploadPromises = newFiles.map(({ file }) => uploadImageToCloudinary(file));
         const uploadedUrls = await Promise.all(uploadPromises);
-      
+
         let imgIndex = 0;
         updatedProduct.image = images.map((img) =>
           img.file ? uploadedUrls[imgIndex++] : img.url
@@ -139,19 +139,19 @@ const EditProductModal = ({ product, onClose, onSave }) => {
       } else {
         updatedProduct.image = images.map((img) => img.url).filter(Boolean);
       }
-    
+
       // ✅ RESTful PATCH 요청으로 변경
       const res = await fetch(`${API}/api/products/${product.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedProduct),
       }).then((res) => res.json());
-    
+
       if (!res.success) {
         alert("Failed to save product");
         return;
       }
-    
+      alert("✅ Product updated successfully!");
       onSave(updatedProduct);
       onClose();
     } catch (err) {
@@ -207,7 +207,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
         <select name="category" value={productDetails.category} onChange={ChangeHandler}>
           <option value="women">Women</option>
           <option value="men">Men</option>
-          <option value="kids">Kids</option>
+          <option value="kid">Kid</option>
         </select>
       </div>
 

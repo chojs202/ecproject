@@ -58,7 +58,7 @@ const AddProduct = () => {
     const trimmed = title.trim();
     if (!trimmed) return;
     try {
-      const res = await fetch(`${API}/api/products/check-product-title?name=${encodeURIComponent(trimmed)}`);
+      const res = await fetch(`${API}/api/products/check-title?name=${encodeURIComponent(trimmed)}`);
       const data = await res.json();
       if (data.exists) setTitleError("This product title already exists.");
       else setTitleError("");
@@ -176,7 +176,7 @@ const AddProduct = () => {
         image: uploadUrls,
       };
 
-      const addRes = await fetch(`${API}/api/products/addproduct`, {
+      const addRes = await fetch(`${API}/api/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productToSend),
