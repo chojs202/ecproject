@@ -87,7 +87,7 @@
 @media(max-width:500px){
     .relatedproducts-item{
         display:grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr;
         gap:20px;
     }
 }

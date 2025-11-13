@@ -14,7 +14,7 @@ export const Login = () => {
 
   const login = async () => {
     let responseData;
-    await fetch(`${API}/login`,{
+    await fetch(`${API}/api/users/login`,{
       method:"POST",
       headers:{
         Accept:"application/json",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./EditUser.css"; 
+import "./EditUser.css";
 import { API } from "../../config";
 
 export default function EditUser() {
@@ -16,6 +16,10 @@ export default function EditUser() {
   const [deletePassword, setDeletePassword] = useState("");
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+
+  // ✅ 추가: 최소 보강용 상태
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // ==============================
   // ✅ 유효성 검사 함수 (Signup 그대로 재사용)
@@ -52,22 +56,34 @@ export default function EditUser() {
   };
 
   // ==============================
-  // ✅ 유저 정보 불러오기
+  // ✅ 유저 정보 불러오기 (최소 보강: 401 처리 + AbortController)
   // ==============================
   useEffect(() => {
     const token = localStorage.getItem("auth-token");
     if (!token) {
       alert("로그인이 필요합니다.");
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
 
+    const ac = new AbortController();
+
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${API}/getuser`, {
+        const res = await fetch(`${API}/api/users/me`, {
           method: "GET",
           headers: { "auth-token": token },
+          signal: ac.signal,
         });
+
+        if (res.status === 401) {
+          // 🔒 토큰 만료 즉시 처리
+          localStorage.removeItem("auth-token");
+          setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+          navigate("/login", { replace: true });
+          return;
+        }
+
         const data = await res.json();
         if (data.success) {
           setFormData({
@@ -81,15 +97,19 @@ export default function EditUser() {
             },
           });
         } else {
-          alert("유저 정보를 불러올 수 없습니다.");
-          navigate("/login");
+          setErrorMessage("유저 정보를 불러올 수 없습니다.");
+          navigate("/login", { replace: true });
         }
       } catch (err) {
-        console.error(err);
+        if (err.name !== "AbortError") {
+          console.error(err);
+          setErrorMessage("서버 통신 중 오류가 발생했습니다.");
+        }
       }
     };
 
     fetchUser();
+    return () => ac.abort();
   }, [navigate]);
 
   // ==============================
@@ -112,17 +132,14 @@ export default function EditUser() {
   // ==============================
   const handleBlur = (e) => {
     const { name, value } = e.target;
-
     if (!value.trim()) return;
-
     setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
   };
 
   // ==============================
-  // ✅ 수정 요청
+  // ✅ 수정 요청 (최소 보강: loading/401 처리)
   // ==============================
   const handleUpdate = async () => {
-    // 서버 전송 전 최종 검증
     let newErrors = {};
     Object.keys(formData).forEach((key) => {
       if (key === "address") {
@@ -139,10 +156,11 @@ export default function EditUser() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // 서버 전송
+    setLoading(true);
+    setErrorMessage("");
     try {
-      const res = await fetch(`${API}/edituser`, {
-        method: "PUT",
+      const res = await fetch(`${API}/api/users/me`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "auth-token": localStorage.getItem("auth-token"),
@@ -154,32 +172,42 @@ export default function EditUser() {
         }),
       });
 
+      if (res.status === 401) {
+        localStorage.removeItem("auth-token");
+        setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        navigate("/login", { replace: true });
+        return;
+      }
+
       const data = await res.json();
       if (data.success) {
         setSuccessMessage("Edit Success.");
-        setTimeout(() => navigate("/"), 1500);
+        setTimeout(() => navigate("/", { replace: true }), 1200);
       } else {
-        alert(data.errors || "False Edit.");
+        setErrorMessage(data.errors || "False Edit.");
       }
     } catch (err) {
       console.error(err);
-      alert("Server Error");
+      setErrorMessage("Server Error");
+    } finally {
+      setLoading(false);
     }
   };
 
   // ==============================
-  // ✅ 회원 탈퇴
+  // ✅ 회원 탈퇴 (최소 보강: loading/401 + 로컬 정리 약간 확대)
   // ==============================
   const handleDelete = async () => {
     if (!deletePassword) {
       alert("Please enter your password.");
       return;
     }
-
     if (!window.confirm("Are you sure you want to delete? All data will be deleted.")) return;
 
+    setLoading(true);
+    setErrorMessage("");
     try {
-      const res = await fetch(`${API}/deleteuser`, {
+      const res = await fetch(`${API}/api/users/me`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -188,18 +216,33 @@ export default function EditUser() {
         body: JSON.stringify({ password: deletePassword }),
       });
 
+      if (res.status === 401) {
+        localStorage.removeItem("auth-token");
+        setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+        navigate("/login", { replace: true });
+        return;
+      }
+
       const data = await res.json();
       if (data.success) {
+        // 프로젝트에서 사용하는 주요 로컬 키 간단 정리
         localStorage.removeItem("auth-token");
+        localStorage.removeItem("cartItems");
+        localStorage.removeItem("guestCartItems");
+        localStorage.removeItem("promoApplied");
+        localStorage.removeItem("promoCode");
+        localStorage.removeItem("discountPercent");
         alert("Membership withdrawal was successful.");
-        navigate("/");
+        navigate("/", { replace: true });
         window.location.reload();
       } else {
-        alert(data.errors || "Membership withdrawal failed");
+        setErrorMessage(data.errors || "Membership withdrawal failed");
       }
     } catch (err) {
       console.error(err);
-      alert("Server Error");
+      setErrorMessage("Server Error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -210,6 +253,9 @@ export default function EditUser() {
     <div className="edituser">
       <div className="edituser-container">
         <h1>Edit Account</h1>
+
+        {/* 전역 에러 메시지 (최소 보강) */}
+        {errorMessage && <p className="edituser-error-global">{errorMessage}</p>}
 
         <div className="edituser-fields">
           <input
@@ -229,7 +275,7 @@ export default function EditUser() {
             value={formData.email}
             readOnly
             placeholder="Email Address"
-            style={{ background: "#f0f0f0", cursor: "not-allowed" }} // 비활성 필드 강조
+            style={{ background: "#f0f0f0", cursor: "not-allowed" }}
           />
 
           <input
@@ -284,10 +330,13 @@ export default function EditUser() {
           </div>
         </div>
 
-        <button onClick={handleUpdate}>Update</button>
+        {/* 최소 보강: 로딩 시 중복 제출 방지 */}
+        <button onClick={handleUpdate} disabled={loading}>
+          {loading ? "Updating..." : "Update"}
+        </button>
 
-        <p style={{ marginTop: "20px" , fontSize: "14px" }}>
-          Would you like to change your password?{" "}<br/>
+        <p style={{ marginTop: "20px", fontSize: "14px" }}>
+          Would you like to change your password? <br />
           <Link to="/changepassword">Change Password</Link>
         </p>
 
@@ -298,7 +347,9 @@ export default function EditUser() {
             onChange={(e) => setDeletePassword(e.target.value)}
             placeholder="Enter password"
           />
-          <button onClick={handleDelete}>Delete Account</button>
+          <button onClick={handleDelete} disabled={loading}>
+            {loading ? "Processing..." : "Delete Account"}
+          </button>
         </div>
 
         {successMessage && (
@@ -306,7 +357,6 @@ export default function EditUser() {
             <div className="edituser-success-modal">
               <h2>🎉 Success</h2>
               <p>{successMessage}</p>
-              
             </div>
           </div>
         )}

@@ -118,7 +118,7 @@ export const Signup = () => {
     if (Object.keys(newErrors).length > 0) return;
 
     let responseData;
-    await fetch(`${API}/signup`, {
+    await fetch(`${API}/api/users/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",

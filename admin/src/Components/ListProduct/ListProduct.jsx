@@ -12,16 +12,20 @@ const ListProduct = () => {
   const fetchInfo = async () => {
     try {
       const res = await fetch(`${API}/api/products`);
-      if (!res.ok) throw new Error("Failed to fetch products");
       const data = await res.json();
-
-      // 백엔드가 배열을 직접 반환하므로 그대로 세팅
-      setAllProducts(Array.isArray(data) ? data : []);
+    
+      // ✅ data.products로 지정
+      if (data.success && Array.isArray(data.products)) {
+        setAllProducts(data.products);
+      } else {
+        console.error("Unexpected response format:", data);
+        setAllProducts([]);
+      }
     } catch (error) {
       console.error("❌ Failed to fetch products:", error);
+      setAllProducts([]);
     }
   };
-
   useEffect(() => {
     fetchInfo();
   }, []);

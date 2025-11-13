@@ -1,27 +1,44 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import "./Popular.css";
 import Item from "../Item/Item";
-import { API } from "../../config";
 import { motion } from "framer-motion";
+import { ShopContext } from "../../Context/ShopContext";
 
 export const Popular = () => {
+  const { all_product } = useContext(ShopContext); // ✅ 전체 상품 불러오기
+
   const [popularProducts, setPopularProducts] = useState([]);
   const [bgImage, setBgImage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const hoverTimer = useRef(null);
 
-  // ✅ 데이터 불러오기 (안전 처리 포함)
+  // ✅ women 카테고리 최신 4개 필터링
   useEffect(() => {
-    fetch(`${API}/popularinwomen`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setPopularProducts(Array.isArray(data) ? data : []))
-      .catch(() => setPopularProducts([]));
-  }, []);
+    if (!Array.isArray(all_product)) return;
 
-  // ✅ hover 효과 — 깜빡임 방지 + cleanup 포함
+    try {
+      // 1️⃣ women 카테고리만 필터
+      const womenProducts = all_product.filter(
+        (p) => p.category && p.category.toLowerCase() === "women"
+      );
+
+      // 2️⃣ 날짜순 정렬 (최신순)
+      const sorted = [...womenProducts].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+
+      // 3️⃣ 상위 4개만
+      setPopularProducts(sorted.slice(0, 4));
+    } catch (err) {
+      console.error("❌ 인기상품 로딩 중 오류:", err);
+      setPopularProducts([]);
+    }
+  }, [all_product]);
+
+  // ✅ hover 효과 — 배경 전환
   const handleHoverEnter = (image) => {
-    const src = image[0];
-    if (bgImage === src) return; // 같은 이미지면 skip
+    const src = Array.isArray(image) ? image[0] : image;
+    if (bgImage === src) return;
     clearTimeout(hoverTimer.current);
     setIsActive(false);
     hoverTimer.current = setTimeout(() => {
@@ -35,21 +52,16 @@ export const Popular = () => {
     setIsActive(false);
   };
 
-  // ✅ unmount 시 타이머 클린업
   useEffect(() => {
     return () => clearTimeout(hoverTimer.current);
   }, []);
 
-  // ✅ 애니메이션 설정 (Observer 통합형)
+  // ✅ Framer Motion variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.1,
-        ease: "easeOut",
-      },
+      transition: { staggerChildren: 0.12, delayChildren: 0.1, ease: "easeOut" },
     },
   };
 
@@ -61,12 +73,24 @@ export const Popular = () => {
       scale: 1,
       transition: { duration: 0.8, ease: "easeOut" },
     },
-    exit: {
-      opacity: 0,
-      y: 60,
-      transition: { duration: 0.5, ease: "easeInOut" },
-    },
+    exit: { opacity: 0, y: 60, transition: { duration: 0.5, ease: "easeInOut" } },
   };
+
+  // ✅ 로딩 상태 처리
+  if (!popularProducts.length) {
+    return (
+      <div className="popular">
+        <motion.h1
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6 }}
+        >
+          POPULAR IN WOMEN
+        </motion.h1>
+        <p style={{ marginTop: "20px", color: "#888" }}>Waiting Products...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="popular">
@@ -76,7 +100,7 @@ export const Popular = () => {
         style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
 
-      {/* ✅ 타이틀 애니메이션 */}
+      {/* ✅ 타이틀 */}
       <motion.h1
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -93,7 +117,7 @@ export const Popular = () => {
         viewport={{ once: true, amount: 0.8 }}
       />
 
-      {/* ✅ 스크롤 진입 시 순차 등장 */}
+      {/* ✅ 순차 등장 애니메이션 */}
       <motion.div
         className="popular-item"
         variants={containerVariants}
@@ -110,7 +134,6 @@ export const Popular = () => {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             onMouseEnter={() => handleHoverEnter(item.image)}
             onMouseLeave={handleHoverLeave}
-            style={{ willChange: "transform, opacity" }}
           >
             <Item
               id={item.id}
