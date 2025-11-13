@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", fetchUser, getCartItems);
 router.post("/", fetchUser, addCartItem);
-router.put("/:productId", fetchUser, updateCartItem);
-router.delete("/:productId", fetchUser, removeCartItem);
+router.put("/", fetchUser, updateCartItem);
+router.delete("/", fetchUser, removeCartItem);
 
 export default router;
