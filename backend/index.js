@@ -32,7 +32,7 @@ app.use(
       "https://ecproject-main.onrender.com", // 프론트엔드 배포환경
       "https://ecproject-admin.onrender.com", // admin 배포환경
     ],
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "auth-token"],
     credentials: true,
   })
