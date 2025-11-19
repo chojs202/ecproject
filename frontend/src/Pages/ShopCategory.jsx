@@ -86,6 +86,7 @@ export const ShopCategory = (props) => {
     setSortOption(newSort);
     setCurrentPage(1);
     navigate(`?page=1&sort=${newSort}`);
+     window.location.reload();
   };
 
   return (
@@ -124,20 +125,34 @@ export const ShopCategory = (props) => {
       </div>
 
       {/* ✅ 상품 리스트 */}
-      <div className='shopcategory-products'>
-        {currentItems.map((item) => (
-          <Item
+      <motion.div
+        className='shopcategory-products'
+        layout
+      >
+        {currentItems.map((item, index) => (
+          <motion.div
             key={item.id}
-            id={item.id}
-            name={item.name}
-            image={item.image}
-            size={item.size}
-            new_price={item.new_price}
-            old_price={item.old_price}
-            date={item.date}
-          />
+            layout
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.4,
+              delay: index * 0.05, // 같은 페이지 안에서만 살짝 순차 등장
+              ease: "easeOut",
+            }}
+          >
+            <Item
+              id={item.id}
+              name={item.name}
+              image={item.image}
+              size={item.size}
+              new_price={item.new_price}
+              old_price={item.old_price}
+              date={item.date}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* ✅ 페이지네이션 */}
       <div className='shopcategory-pagination'>

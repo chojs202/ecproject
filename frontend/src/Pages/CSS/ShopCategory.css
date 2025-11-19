@@ -84,22 +84,10 @@
   justify-items: center;
   width: auto;
 }
-
-/* 각 상품 순차 등장 */
 .shopcategory-products > div {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: shopcategory-fadeUp 0.8s ease forwards;
+  width: 100%; /* ✅ motion.div 래퍼가 칸 전체를 꽉 차게 */
 }
 
-.shopcategory-products > div:nth-child(1) { animation-delay: 0.1s; }
-.shopcategory-products > div:nth-child(2) { animation-delay: 0.2s; }
-.shopcategory-products > div:nth-child(3) { animation-delay: 0.3s; }
-.shopcategory-products > div:nth-child(4) { animation-delay: 0.4s; }
-.shopcategory-products > div:nth-child(5) { animation-delay: 0.5s; }
-.shopcategory-products > div:nth-child(6) { animation-delay: 0.6s; }
-.shopcategory-products > div:nth-child(7) { animation-delay: 0.7s; }
-.shopcategory-products > div:nth-child(8) { animation-delay: 0.8s; }
 
 /* ===== 페이지네이션 ===== */
 .shopcategory-pagination {
