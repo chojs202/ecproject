@@ -151,7 +151,7 @@ export const Signup = () => {
             onChange={changeHandler}
             onBlur={handleBlur}
             type="text"
-            placeholder="Username"
+            placeholder="Username ( Eng Only)"
             className={errors.username ? "error" : ""}
           />
           {errors.username && <p className="error-text">{errors.username}</p>}
@@ -162,7 +162,7 @@ export const Signup = () => {
             onChange={changeHandler}
             onBlur={handleBlur}
             type="email"
-            placeholder="Email Address"
+            placeholder="Email Address ( Ex: aaa@aaa.aa )"
             className={errors.email ? "error" : ""}
           />
           {errors.email && <p className="error-text">{errors.email}</p>}
@@ -173,7 +173,7 @@ export const Signup = () => {
             onChange={changeHandler}
             onBlur={handleBlur}
             type="password"
-            placeholder="Password"
+            placeholder="Password ( Eng + Num , over 8 )"
             className={errors.password ? "error" : ""}
           />
           {errors.password && <p className="error-text">{errors.password}</p>}
@@ -184,7 +184,7 @@ export const Signup = () => {
             onChange={changeHandler}
             onBlur={handleBlur}
             type="text"
-            placeholder="Phone Number"
+            placeholder="Phone Number ( Ex: 01012345678 )"
             className={errors.phone ? "error" : ""}
           />
           {errors.phone && <p className="error-text">{errors.phone}</p>}
@@ -200,7 +200,7 @@ export const Signup = () => {
               onChange={addressChangeHandler}
               onBlur={handleBlur}
               type="text"
-              placeholder="Country"
+              placeholder="Country ( Eng Only )"
               className={errors.country ? "error" : ""}
             />
             {errors.country && <p className="error-text">{errors.country}</p>}
@@ -211,7 +211,7 @@ export const Signup = () => {
               onChange={addressChangeHandler}
               onBlur={handleBlur}
               type="text"
-              placeholder="Region / State"
+              placeholder="Region ( Eng Only )"
               className={errors.region ? "error" : ""}
             />
             {errors.region && <p className="error-text">{errors.region}</p>}
@@ -222,7 +222,7 @@ export const Signup = () => {
               onChange={addressChangeHandler}
               onBlur={handleBlur}
               type="text"
-              placeholder="Postal Code"
+              placeholder="Postal Code ( Num Only )"
               className={errors.postalCode ? "error" : ""}
             />
             {errors.postalCode && (

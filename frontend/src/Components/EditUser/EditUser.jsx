@@ -307,7 +307,7 @@ export default function EditUser() {
             value={formData.name}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Username"
+            placeholder="Username ( Eng )"
             className={errors.name ? "edituser-error" : ""}
           />
           {errors.name && <p className="edituser-error-text">{errors.name}</p>}
@@ -317,7 +317,7 @@ export default function EditUser() {
             name="email"
             value={formData.email}
             readOnly
-            placeholder="Email Address"
+            placeholder="Email Address ( Ex: aaa@aaa.aa )"
             style={{ background: "#f0f0f0", cursor: "not-allowed" }}
           />
 
@@ -327,7 +327,7 @@ export default function EditUser() {
             value={formData.phone}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Phone Number"
+            placeholder="Phone Number ( Ex: 01012345678 )"
             className={errors.phone ? "edituser-error" : ""}
           />
           {errors.phone && <p className="edituser-error-text">{errors.phone}</p>}
@@ -342,7 +342,7 @@ export default function EditUser() {
               value={formData.address.country}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Country"
+              placeholder="Country ( Eng )"
               className={errors.country ? "edituser-error" : ""}
             />
             {errors.country && <p className="edituser-error-text">{errors.country}</p>}
@@ -353,7 +353,7 @@ export default function EditUser() {
               value={formData.address.region}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Region / State"
+              placeholder="Region ( Eng )"
               className={errors.region ? "edituser-error" : ""}
             />
             {errors.region && <p className="edituser-error-text">{errors.region}</p>}
@@ -364,7 +364,7 @@ export default function EditUser() {
               value={formData.address.postalCode}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Postal Code"
+              placeholder="Postal Code ( Num )"
               className={errors.postalCode ? "edituser-error" : ""}
             />
             {errors.postalCode && (
