@@ -26,6 +26,7 @@ const LoadingPage = ({ progress }) => {
             style={{ width: `${progress}%` }}
           />
         </div>
+        <div className="loading-percent">{progress}%</div>
       </motion.div>
     </motion.div>
   );
