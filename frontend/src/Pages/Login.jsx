@@ -51,7 +51,7 @@ export const Login = () => {
         </div>
         <button onClick={login}>Continue</button>
         <p className='login-login'>
-          Don’t have an account? <a href="/signup">Sign Up here</a>
+          Don’t have an account?<a href="/signup"> Sign Up here</a>
         </p>
       </div>
     </div>

@@ -220,9 +220,26 @@ input.edituser-error {
   outline: none;
   transition: border-color 0.2s;
 }
-.edituser-delete-section input:focus {
-  border-color: red;
-  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+/* 8자 미만 → 빨간색 */
+.edit-invalid {
+  border: 1px solid #e74c3c;
+  transition: border-color 0.2s ease;
+}
+
+.edit-invalid:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+/* 8자 이상 → 파란색 */
+.edit-valid {
+  border: 1px solid #3498db;
+  transition: border-color 0.2s ease;
+}
+
+.edit-valid:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
 }
 
 .edituser-delete-section button {
@@ -239,6 +256,22 @@ input.edituser-error {
 .edituser-delete-section button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+}
+.change-password-link {
+  padding-top:5px;
+  color: #ff3b3b;    
+  font-weight: 600;  
+  text-decoration: none;  
+}
+.edituser-error-global{
+  color:#e74c3c;
+  margin-bottom:5px;
+}
+.edituser-divider {
+  margin: 30px 0 20px;
+  border: none;
+  height: 1px;
+  background: #e0e0e0;
 }
 
 @media (max-width:800px){

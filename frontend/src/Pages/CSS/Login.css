@@ -72,8 +72,8 @@
     color: #555;
 }
 
-.login-login span {
-    color: #ff4141;   /* 🔴 레드로 변경 */
+.login-login a {
+    color: #ff4141; 
     font-weight: 500;
     cursor: pointer;
 }

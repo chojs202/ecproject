@@ -84,6 +84,7 @@ const ShopContextProvider = ({ children }) => {
   const { isLoggedIn, cartItems, guestCart, promoCode, discount, promoApplied, likedProducts } = state;
 
   const [all_product, setAll_Product] = useState([]);
+  const [initialLoadStatus, setInitialLoadStatus] = useState("loading");
   const hasMerged = useRef(false);
   const updateQueue = useRef(Promise.resolve());
 
@@ -208,13 +209,16 @@ const ShopContextProvider = ({ children }) => {
 
         if (data.success && Array.isArray(data.products)) {
           setAll_Product(data.products);
+          setInitialLoadStatus("success");   // ✅ 정상 로딩 완료
         } else {
           console.error("🚫 상품 데이터 형식이 올바르지 않습니다:", data);
           setAll_Product([]);
+          setInitialLoadStatus("error");     // ✅ 응답은 왔지만 형식이 이상한 경우
         }
       } catch (err) {
         console.error("❌ 상품 데이터를 불러오는 중 오류 발생:", err);
         setAll_Product([]);
+        setInitialLoadStatus("error");       // ✅ 네트워크/서버 오류
       }
     };
 
@@ -511,6 +515,7 @@ const ShopContextProvider = ({ children }) => {
     toggleLike,
     isProductLiked,
     dispatch,
+    initialLoadStatus,
   };
 
   return (

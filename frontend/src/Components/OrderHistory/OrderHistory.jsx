@@ -12,7 +12,7 @@ export const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`${API}/orders`, {
+        const res = await fetch(`${API}/api/orders/orders`, {
           headers: { "auth-token": localStorage.getItem("auth-token") },
         });
         const data = await res.json();

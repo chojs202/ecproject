@@ -28,12 +28,11 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column; /* 기본은 컬럼 */
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: box-shadow 0.2s;
 }
 
 .like-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.12);
 }
 
 .like-card-img {
@@ -111,7 +110,7 @@
 }
 
 /* Like Button */
-.like-btn {
+.like-togglebtn {
   font-size: 22px;
   background: none;
   border: none;
@@ -120,11 +119,11 @@
   color: gray;
 }
 
-.like-btn.liked {
+.like-togglebtn.liked {
   color: #e63946;
 }
 
-.like-btn:hover {
+.like-togglebtn:hover {
   transform: scale(1.2);
 }
 

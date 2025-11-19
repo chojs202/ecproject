@@ -66,7 +66,7 @@ export default function CheckoutForm() {
 
     try {
       // 1) Stripe PaymentIntent 생성
-      const res = await fetch(`${API}/create-payment-intent`, {
+      const res = await fetch(`${API}/api/orders/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: localFinalAmount, currency: "usd" }),
@@ -105,7 +105,7 @@ export default function CheckoutForm() {
           };
         });
 
-        await fetch(`${API}/create-order`, {
+        await fetch(`${API}/api/orders/create-order`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

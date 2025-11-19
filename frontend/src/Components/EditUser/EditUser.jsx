@@ -198,14 +198,23 @@ export default function EditUser() {
   // ✅ 회원 탈퇴 (최소 보강: loading/401 + 로컬 정리 약간 확대)
   // ==============================
   const handleDelete = async () => {
+    // 1) 프론트 유효성 검사
     if (!deletePassword) {
-      alert("Please enter your password.");
+      setErrorMessage("Please enter your password.");
       return;
     }
-    if (!window.confirm("Are you sure you want to delete? All data will be deleted.")) return;
+    if (deletePassword.length < 8) {
+      setErrorMessage("Password must be at least 8 characters.");
+      return;
+    }
+
+    if (!window.confirm("Are you sure you want to delete? All data will be deleted.")) {
+      return;
+    }
 
     setLoading(true);
     setErrorMessage("");
+
     try {
       const res = await fetch(`${API}/api/users/me`, {
         method: "DELETE",
@@ -216,6 +225,7 @@ export default function EditUser() {
         body: JSON.stringify({ password: deletePassword }),
       });
 
+      // 2) 세션 만료 처리
       if (res.status === 401) {
         localStorage.removeItem("auth-token");
         setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
@@ -223,24 +233,57 @@ export default function EditUser() {
         return;
       }
 
-      const data = await res.json();
-      if (data.success) {
-        // 프로젝트에서 사용하는 주요 로컬 키 간단 정리
+      // 3) JSON 파싱 (실패할 수도 있으니 try-catch)
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        // JSON이 아니거나 body가 없을 수도 있음 → 그냥 넘어감
+      }
+
+      const serverMessage =
+        data?.error ||
+        data?.errors ||
+        data?.message ||
+        data?.msg ||
+        "";
+
+      // 4) HTTP 상태 코드별 에러 처리
+      if (!res.ok) {
+        if (res.status === 400) {
+          // 주로 "비밀번호 틀림" 같은 케이스에 사용
+          setErrorMessage(serverMessage || "Wrong Password.");
+          setDeletePassword(""); // 선택 사항: 잘못 입력 시 비움
+        } else if (res.status === 403) {
+          setErrorMessage(serverMessage || "You don't have permission.");
+        } else if (res.status >= 500) {
+          setErrorMessage(
+            serverMessage || "A server error has occurred. Please try again in a moment."
+          );
+        } else {
+          setErrorMessage(serverMessage || "Membership withdrawal failed");
+        }
+        return;
+      }
+
+      // 5) success 플래그 처리
+      if (data?.success) {
         localStorage.removeItem("auth-token");
         localStorage.removeItem("cartItems");
         localStorage.removeItem("guestCartItems");
         localStorage.removeItem("promoApplied");
         localStorage.removeItem("promoCode");
         localStorage.removeItem("discountPercent");
+
         alert("Membership withdrawal was successful.");
         navigate("/", { replace: true });
         window.location.reload();
       } else {
-        setErrorMessage(data.errors || "Membership withdrawal failed");
+        setErrorMessage(serverMessage || "Membership withdrawal failed");
       }
     } catch (err) {
       console.error(err);
-      setErrorMessage("Server Error");
+      setErrorMessage("Error Network.");
     } finally {
       setLoading(false);
     }
@@ -337,17 +380,21 @@ export default function EditUser() {
 
         <p style={{ marginTop: "20px", fontSize: "14px" }}>
           Would you like to change your password? <br />
-          <Link to="/changepassword">Change Password</Link>
+          <Link to="/changepassword" className="change-password-link">Change Password</Link>
         </p>
+        
+        <hr className="edituser-divider" />
 
         <div className="edituser-delete-section">
+          <h1>Delete Account</h1>
           <input
             type="password"
             value={deletePassword}
             onChange={(e) => setDeletePassword(e.target.value)}
+            className={deletePassword.length >= 8 ? "edit-valid" : "edit-invalid"}
             placeholder="Enter password"
           />
-          <button onClick={handleDelete} disabled={loading}>
+          <button onClick={handleDelete} disabled={loading || deletePassword.length < 8}>
             {loading ? "Processing..." : "Delete Account"}
           </button>
         </div>

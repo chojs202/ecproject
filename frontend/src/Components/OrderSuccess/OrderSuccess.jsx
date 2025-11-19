@@ -11,7 +11,7 @@ export const OrderSuccess = () => {
   useEffect(() => {
     const fetchLatestOrder = async () => {
       try {
-        const res = await fetch(`${API}/orders`, {
+        const res = await fetch(`${API}/api/orders/orders`, {
           headers: { "auth-token": localStorage.getItem("auth-token") },
         });
         const data = await res.json();

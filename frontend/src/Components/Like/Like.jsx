@@ -49,7 +49,7 @@ const Like = () => {
   // ------------------- 화면 렌더 -------------------
   return (
     <div className="like-page">
-      <h1>Your Liked Products ❤️</h1>
+      <h1>Your Liked Products</h1>
 
       {likedProducts.length === 0 ? (
         <p>Not like product.</p>
@@ -89,7 +89,7 @@ const Like = () => {
                 </button>
 
                 <button
-                    className={`like-btn ${isProductLiked(product.id) ? 'liked' : ''}`}
+                    className={`like-togglebtn ${isProductLiked(product.id) ? 'liked' : ''}`}
                     onClick={() => {
                     if (isProductLiked(product.id)) {
                       // 찜 해제 확인

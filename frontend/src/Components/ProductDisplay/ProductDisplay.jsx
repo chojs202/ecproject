@@ -5,12 +5,14 @@ import './ProductDisplay.css'
 import star_icon from '../Assets/star_icon.png'
 import star_dull_icon from '../Assets/star_dull_icon.png'
 import { ShopContext } from '../../Context/ShopContext'
+import { Heart } from 'lucide-react' 
 
 export const ProductDisplay = ({ product }) => {
   const { addToCart, toggleLike, isProductLiked, isLoggedIn } = useContext(ShopContext)
   const [selectedSize, setSelectedSize] = useState('')
   const [mainImageIndex, setMainImageIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [showLikeModal, setShowLikeModal] = useState(false)
 
   const images = Array.isArray(product.image) ? product.image : []
   const liked = isProductLiked(product.id)
@@ -89,16 +91,17 @@ export const ProductDisplay = ({ product }) => {
 
             {/* ❤️ 좋아요 버튼 */}
             <button
-              className={`like-btn ${liked ? 'liked' : ''}`}
+              className={`like-product-btn ${liked ? 'liked' : ''}`}
               onClick={() => {
                 if (!isLoggedIn) {
-                  alert('You must be logged in to like a product.')
+                  setShowLikeModal(true)    // ✅ 비로그인 시 모달 표시
                   return
                 }
                 toggleLike(product.id)
               }}
+              title={liked ? '찜 해제' : '찜하기'}
             >
-              {liked ? '❤️' : '🤍'}
+              <Heart size={20} fill={liked ? '#ff4d4f' : 'none'} />
             </button>
 
             <button className="prev-btn" onClick={prevImage} disabled={isTransitioning}>
@@ -186,6 +189,27 @@ export const ProductDisplay = ({ product }) => {
           </p>
         </motion.div>
       </div>
+       {showLikeModal && (
+          <div className="product-like-modal-overlay">
+            <div className="product-like-modal">
+              <p>You need to log in to add this item to your wishlist.</p>
+              <div className="product-like-modal-btns">
+                <button
+                  className="product-modal-login-btn"
+                  onClick={() => (window.location.href = '/login')}
+                >
+                  Log In
+                </button>
+                <button
+                  className="product-modal-close-btn"
+                  onClick={() => setShowLikeModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   )
 }

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
-import './ChangePassword.css';
+import "./ChangePassword.css";
 import { API } from "../../config";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
-  const { logout } = useContext(ShopContext); // Context에서 logout 가져오기
+  const { logout } = useContext(ShopContext);
+
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -14,6 +15,8 @@ const ChangePassword = () => {
   });
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");   // ✅ 추가
+  const [loading, setLoading] = useState(false);          // ✅ 추가
 
   // 🚨 로그인 여부 확인
   useEffect(() => {
@@ -26,32 +29,52 @@ const ChangePassword = () => {
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // 입력 중일 때 이전 에러는 자연스럽게 제거
+    if (errorMessage) setErrorMessage("");
   };
 
-  // ✅ 버튼 활성화 여부
+  // ✅ 버튼 활성화 여부 (기존 로직 유지)
   const allFieldsFilled =
     formData.currentPassword.trim() &&
     formData.newPassword.trim() &&
     formData.confirmPassword.trim();
 
+  // ✅ 비밀번호 변경 요청 (에러 처리 보강 버전)
   const updatePassword = async () => {
-    if (!formData.currentPassword) return alert("You must enter your current password.");
-    if (formData.newPassword.length < 8)
-      return alert("New password must be at least 8 characters long.");
+    // 이전 에러 초기화
+    setErrorMessage("");
+
+    // --- 프론트 유효성 검사 (기존 alert → 화면 메시지로 변경) ---
+    if (!formData.currentPassword) {
+      setErrorMessage("You must enter your current password.");
+      return;
+    }
+    if (formData.newPassword.length < 8) {
+      setErrorMessage("New password must be at least 8 characters long.");
+      return;
+    }
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(formData.newPassword))
-      return alert("The new password must include both English and numbers.");
+    if (!passwordRegex.test(formData.newPassword)) {
+      setErrorMessage("The new password must include both English and numbers.");
+      return;
+    }
 
-    if (formData.currentPassword === formData.newPassword)
-      return alert("The new password must be different from the existing password.");
+    if (formData.currentPassword === formData.newPassword) {
+      setErrorMessage("The new password must be different from the existing password.");
+      return;
+    }
 
-    if (formData.newPassword !== formData.confirmPassword)
-      return alert("The new password and the verification password do not match.");
+    if (formData.newPassword !== formData.confirmPassword) {
+      setErrorMessage("The new password and the verification password do not match.");
+      return;
+    }
 
     try {
-      const res = await fetch(`${API}/changepassword`, {
-        method: "PUT",
+      setLoading(true);
+
+      const res = await fetch(`${API}/api/users/me/password`, {
+        method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -63,21 +86,55 @@ const ChangePassword = () => {
         }),
       });
 
-      const data = await res.json();
-      if (data.success) {
-        // ✅ 토큰 삭제 + Navbar 상태 실시간 반영
-        logout(); // Context logout 호출
-
-        setSuccessMessage("The password change was successful.");
-
-        // 2초 후 로그인 페이지로 이동
-        setTimeout(() => navigate("/login"), 2000);
-      } else {
-        alert(data.errors);
+      // 🔒 세션 만료 처리
+      if (res.status === 401) {
+        logout(); // 토큰/상태 정리
+        setErrorMessage("Your session has expired. Please log in again.");
+        navigate("/login", { replace: true });
+        return;
       }
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        // JSON이 아닐 수도 있으니 그냥 넘어감
+      }
+
+      const serverMessage =
+        data?.error ||
+        data?.errors ||
+        data?.message ||
+        data?.msg ||
+        "";
+
+      // 🔍 HTTP 상태코드 + success 플래그 기반 에러 처리
+      if (!res.ok || !data?.success) {
+        if (res.status === 400) {
+          // 주로 현재 비밀번호 오류 같은 케이스
+          setErrorMessage(serverMessage || "Current password is incorrect.");
+        } else if (res.status >= 500) {
+          setErrorMessage(
+            serverMessage || "Server error occurred. Please try again later."
+          );
+        } else {
+          setErrorMessage(serverMessage || "Failed to change password.");
+        }
+        return;
+      }
+
+      // ✅ 성공 처리 (기존 동작 유지)
+      logout(); // Navbar 상태 포함 전체 로그아웃
+
+      setSuccessMessage("The password change was successful.");
+      setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       console.error("Error updating password:", err);
-      alert("Server Error.");
+      setErrorMessage("Network error. Please check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,6 +142,12 @@ const ChangePassword = () => {
     <div className="changepassword">
       <div className="changepassword-container">
         <h1>Change Password</h1>
+
+        {/* ✅ 전역 에러 메시지 (alert 대신 화면에 노출) */}
+        {errorMessage && (
+          <p className="changepassword-error-global">{errorMessage}</p>
+        )}
+
         <div className="changepassword-fields">
           <input
             type="password"
@@ -112,9 +175,9 @@ const ChangePassword = () => {
         <button
           className="changepassword-btn"
           onClick={updatePassword}
-          disabled={!allFieldsFilled}
+          disabled={!allFieldsFilled || loading}   // ✅ 로딩 시도 비활성
         >
-          Change Password
+          {loading ? "Processing..." : "Change Password"}
         </button>
 
         {successMessage && (

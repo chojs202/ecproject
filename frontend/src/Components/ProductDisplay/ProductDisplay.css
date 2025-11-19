@@ -16,6 +16,7 @@
   padding: 100px 20px;
   font-family: 'Pretendard', 'Inter', sans-serif;
   color: var(--text-dark);
+ 
 }
 
 .productdetail-container {
@@ -71,27 +72,88 @@
   -webkit-user-drag: none;
 }
 
-/* ❤️ 좋아요 버튼 */
-.like-btn {
+/* 상품 상세 페이지용 좋아요 버튼 */
+.like-product-btn {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  border: none;
-  background: rgba(255, 255, 255, 0.95);
-  cursor: pointer;
-  font-size: 22px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  top: 12px;
+  left: 12px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.25s ease;
-  z-index: 5;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.25s ease;
 }
-.like-btn:hover {
+
+.like-product-btn:hover {
   transform: scale(1.1);
 }
+
+.like-product-btn svg {
+  stroke: #fff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  transition: all 0.25s ease;
+}
+
+.like-product-btn.liked svg {
+  fill: #ff4d4f;
+  stroke: #ff4d4f;
+  filter: drop-shadow(0 0 6px rgba(255, 77, 79, 0.5));
+}
+.product-like-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+   margin-top: -60px;
+  z-index: 999;
+}
+
+.product-like-modal {
+  background: #fff;
+  padding: 20px 24px;
+  border-radius: 10px;
+  max-width: 320px;
+  margin-top: 300px;   
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.product-like-modal-btns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.product-modal-login-btn,
+.product-modal-close-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.product-modal-login-btn {
+  background: #111;
+  color: #fff;
+}
+
+.product-modal-close-btn {
+  background: #eee;
+  color: #333;
+}
+
 
 /* ◀ ▶ 슬라이드 버튼 */
 .prev-btn, .next-btn {
@@ -256,7 +318,7 @@
   cursor: pointer;
   letter-spacing: 0.4px;
   transition: all 0.35s ease;
-  box-shadow: 0 6px 12px rgba(242, 61, 61, 0.25);
+
 }
 .add-to-cart-btn:hover {
   background-color: #111;
