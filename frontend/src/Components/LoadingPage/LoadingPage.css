@@ -1,0 +1,55 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f8f6f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-logo {
+  width: 110px;
+}
+
+.loading-text {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+/* 바 전체 틀 */
+.loading-progress {
+  width: 60%;
+  max-width: 260px;
+  height: 2px;
+  background: #e5e5e5;
+  border-radius: 2px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+/* 실제 채워지는 바 */
+.loading-progress-bar {
+  height: 100%;
+  background: #111;                 /* 브랜드 컬러 */
+  width: 0;
+  transition: width 0.25s ease-out; /* 퍼센트 변경 시 부드럽게 */
+}
+
+/* 퍼센트 텍스트를 쓰고 싶다면 */
+.loading-percent {
+  margin-top: 8px;
+  font-size: 10px;
+  color: #888;
+}

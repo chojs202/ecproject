@@ -1,3 +1,4 @@
+// src/App.jsx
 import './App.css';
 import { useEffect, useState, useContext } from 'react';
 import { ScrollToTop } from './ScrollToTop';
@@ -27,7 +28,8 @@ import { ShopContext } from './Context/ShopContext';
 
 function AnimatedRoutes() {
   const location = useLocation();
-   useEffect(() => {
+
+  useEffect(() => {
     const images = [men_banner, women_banner, kid_banner];
     images.forEach((src) => {
       const img = new Image();
@@ -64,30 +66,56 @@ function App() {
   // ✅ 이 세션(탭)에서 인트로(로딩 화면)를 보여줄지 여부
   const [showIntro, setShowIntro] = useState(() => {
     const hasSeenIntro = sessionStorage.getItem("hasSeenIntro") === "true";
-    // 한 번도 안 봤으면 true → 인트로 보여줌
     return !hasSeenIntro;
   });
 
+  // ✅ 진행률 상태 (0 ~ 100)
+  const [progress, setProgress] = useState(0);
+
+  // ✅ 진행률 로직: 로딩 중일 때 0→90% 서서히, 완료 시 100%
+  useEffect(() => {
+    let interval;
+
+    if (showIntro && initialLoadStatus === "loading") {
+      // 로딩 다시 시작 시 0으로 초기화
+      setProgress(0);
+
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 90) return prev; // 실제 완료 전에는 90% 이상 올라가지 않게
+          return prev + 1;             // 1%씩 증가 (40ms * 90 ≈ 3.6초)
+        });
+      }, 40);
+    }
+
+    // 데이터 로딩이 끝난 시점에 100%로 맞춤
+    if (initialLoadStatus === "success" || initialLoadStatus === "error") {
+      setProgress(100);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [initialLoadStatus, showIntro]);
+
   // ✅ 로딩 상태 + 인트로 상태에 따라 인트로 종료 타이밍 제어
   useEffect(() => {
-    if (!showIntro) return; // 이미 인트로를 안 보여주는 상태면 더 볼 필요 없음
+    if (!showIntro) return;
 
-    // 1) 아직 초기 데이터 로딩 중이면 인트로 유지
     if (initialLoadStatus === "loading") return;
 
-    // 2) 에러인 경우: 인트로는 바로 종료 (필요 시 에러용 UI는 라우트/페이지에서 처리)
     if (initialLoadStatus === "error") {
       setShowIntro(false);
       sessionStorage.setItem("hasSeenIntro", "true");
       return;
     }
 
-    // 3) 성공인 경우: 살짝 딜레이 후 자연스럽게 인트로 종료
     if (initialLoadStatus === "success") {
+      // progress는 이미 100으로 맞춰진 상태
       const timer = setTimeout(() => {
         setShowIntro(false);
         sessionStorage.setItem("hasSeenIntro", "true");
-      }, 8000); // 0.8초 정도 여유
+      }, 1500); // 0.5초 정도 100% 상태를 보여주고 종료
 
       return () => clearTimeout(timer);
     }
@@ -95,8 +123,10 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* ✅ 인트로(로딩) 오버레이: 첫 진입 + 초기 로딩 단계에서만 화면 전체 덮기 */}
-      {showIntro && <LoadingPage />}
+      {/* ✅ 인트로(로딩) 오버레이 */}
+      <AnimatePresence>
+        {showIntro && <LoadingPage progress={progress} />}
+      </AnimatePresence>
 
       <ScrollToTop />
       <Navbar />
