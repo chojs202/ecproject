@@ -61,17 +61,17 @@ export const Popular = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.1, ease: "easeOut" },
+      transition: { staggerChildren: 0.08, delayChildren: 0.05 },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 60, scale: 0.98 },
+    hidden: { opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.55, ease: "easeOut" }, },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: { duration: 0.6, ease: "linear" },
     },
     exit: { opacity: 0, y: 60, transition: { duration: 0.5, ease: "easeInOut" } },
   };
@@ -130,8 +130,8 @@ export const Popular = () => {
             key={item.id || i}
             className="fade-card"
             variants={cardVariants}
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            whileHover={{ scale: 1.03, transition: { duration: 0.25, ease: "easeOut" }}}
+            
             onMouseEnter={() => handleHoverEnter(item.image)}
             onMouseLeave={handleHoverLeave}
           >

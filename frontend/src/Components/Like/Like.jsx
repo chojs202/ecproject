@@ -32,7 +32,7 @@ const Like = () => {
   };
 
   // ------------------- 장바구니 담기 -------------------
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = async (productId) => {
     const size = selectedSizes[productId];
 
     // 안전장치: 사이즈 선택 필수
@@ -42,8 +42,11 @@ const Like = () => {
     }
 
     // 1개만 장바구니에 추가
-    addToCart({ id: productId, size });
+    await addToCart({ id: productId, size });
     alert("Add cart Success!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 100); // 50~100ms면 충분
   };
 
   // ------------------- 화면 렌더 -------------------

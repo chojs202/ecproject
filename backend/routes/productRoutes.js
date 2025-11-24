@@ -6,6 +6,7 @@ import {
   updateProduct,
   removeProduct,
   search,
+  getLatestProduct,
 } from "../controllers/productController.js";
 
 const router = Router();
@@ -37,5 +38,9 @@ router.patch("/:id", updateProduct);
 // ✅ 상품 삭제 (Delete)
 // DELETE /api/products/:id
 router.delete("/:id", removeProduct);
+
+// ✅ 최신 상품 1개
+// GET /api/products/latest
+router.get("/products/latest", getLatestProduct); 
 
 export default router;

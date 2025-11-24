@@ -64,7 +64,7 @@ export const NewCollections = () => {
       <motion.h1
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: "linear" }}
         viewport={{ once: true, amount: 0.8 }}
       >
         New Collection
@@ -73,7 +73,7 @@ export const NewCollections = () => {
       <motion.hr
         initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        transition={{ duration: 0.8, delay: 0.2, ease: "linear" }}
         viewport={{ once: true, amount: 0.8 }}
       />
 
@@ -84,7 +84,7 @@ export const NewCollections = () => {
             initial={{
               opacity: 0,
               filter: "blur(10px)",
-              x: i < 4 ? -60 : 60,
+              x: i < 4 ? -30 : 30,
             }}
             whileInView={{
               opacity: 1,
@@ -94,7 +94,7 @@ export const NewCollections = () => {
             transition={{
               duration: 0.8,
               delay: (i % 4) * 0.1,
-              ease: "easeOut",
+              ease: "linear",
             }}
             viewport={{ once: false, amount: 0.3 }}
             className="fade-card"

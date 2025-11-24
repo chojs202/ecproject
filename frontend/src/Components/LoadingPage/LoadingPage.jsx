@@ -17,7 +17,7 @@ const LoadingPage = ({ progress }) => {
         exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <img src={logo} alt="SHOP logo" className="loading-logo" />
+        <img src={logo} key={logo} alt="SHOP logo" className="loading-logo" />
         <span className="loading-text">MODERN ONLINE STORE</span>
           {/* 🔥 진행률 바 */}
         <div className="loading-progress">

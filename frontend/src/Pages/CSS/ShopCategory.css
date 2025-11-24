@@ -128,6 +128,16 @@
   cursor: not-allowed;
 }
 
+.shopcategory-products {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.shopcategory-products.fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ===== Keyframes (Unique Names) ===== */
 @keyframes shopcategory-fadeIn {
   from { opacity: 0; }

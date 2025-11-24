@@ -100,11 +100,12 @@ export const Hero = () => {
       setShowPromoModal(true);
     } else if (currentSlide === 1) {
       try {
-        const res = await fetch(`${API}/allproducts`);
+        const res = await fetch(`${API}/api/products/latest`);
+        if (!res.ok) throw new Error("Failed to fetch latest product");
+      
         const data = await res.json();
-        if (data.length > 0) {
-          const latestProduct = data[data.length - 1];
-          navigate(`/product/${latestProduct.id}`);
+        if (data.success && data.product && data.product.id) {
+          navigate(`/product/${data.product.id}`);
         }
       } catch (err) {
         console.error("Failed to fetch latest product:", err);

@@ -74,6 +74,7 @@ export const ShopCategory = (props) => {
   const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+  const [gridVisible, setGridVisible] = useState(true);
 
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -83,10 +84,15 @@ export const ShopCategory = (props) => {
   };
 
   const handleSortChange = (newSort) => {
-    setSortOption(newSort);
-    setCurrentPage(1);
-    navigate(`?page=1&sort=${newSort}`);
-     window.location.reload();
+    setGridVisible(false); // 🔥 먼저 사라지게
+
+    setTimeout(() => {
+      setSortOption(newSort);
+      setCurrentPage(1);
+      navigate(`?page=1&sort=${newSort}`);
+
+      setGridVisible(true); // 🔥 정렬 후 다시 나타나기
+    }, 200); // 200ms면 충분
   };
 
   return (
@@ -126,7 +132,7 @@ export const ShopCategory = (props) => {
 
       {/* ✅ 상품 리스트 */}
       <motion.div
-        className='shopcategory-products'
+        className={`shopcategory-products ${!gridVisible ? "fadeout" : ""}`}
         layout
       >
         {currentItems.map((item, index) => (

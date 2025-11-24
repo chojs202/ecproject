@@ -151,3 +151,28 @@ export const search = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// ==============================
+// 7️⃣ 최신 상품 1개 조회 (GET /api/products/latest)
+// ==============================
+export const getLatestProduct = async (req, res) => {
+  try {
+    // id를 항상 증가시키면서 저장하고 있으므로,
+    // id 내림차순으로 정렬해서 첫 번째를 "최신"으로 사용합니다.
+    const latestProduct = await Product.findOne({}).sort({ id: -1 });
+
+    if (!latestProduct) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No products found" });
+    }
+
+    return res.json({ success: true, product: latestProduct });
+  } catch (error) {
+    console.error("❌ getLatestProduct error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error" });
+  }
+};
+

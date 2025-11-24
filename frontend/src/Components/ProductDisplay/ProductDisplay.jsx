@@ -129,12 +129,12 @@ export const ProductDisplay = ({ product }) => {
         {/* ================= 상품 정보 (부드럽게 등장) ================= */}
         <motion.div
           className="productdetail-info"
-          initial={{ opacity: 0, y: 40, scale: 0.98 }}
+          initial={{ opacity: 0, y: 0, scale: 0.99 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
             type: "spring",
             stiffness: 10,   // 튕김 정도
-            damping: 2,     // 감속 정도
+            damping: 5,     // 감속 정도
             duration: 1.1,
           }}
         >
