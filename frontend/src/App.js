@@ -1,34 +1,72 @@
 // src/App.jsx
 import './App.css';
-import { useEffect, useState, useContext } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  lazy,
+  Suspense,
+} from 'react';
 import { ScrollToTop } from './ScrollToTop';
 import { Navbar } from './Components/Navbar/Navbar';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { Shop } from './Pages/Shop';
-import { ShopCategory } from './Pages/ShopCategory';
 import LoadingPage from './Components/LoadingPage/LoadingPage';
-import { Product } from './Pages/Product';
-import { Cart } from './Pages/Cart';
-import { Login } from './Pages/Login';
 import { Footer } from './Components/Footer/Footer';
-import { Signup } from './Pages/SignUp';
-import EditUser from './Components/EditUser/EditUser';
 import men_banner from './Components/Assets/men_banner.png';
 import women_banner from './Components/Assets/women_banner.png';
 import kid_banner from './Components/Assets/kid_banner.png';
-import ChangePassword from './Components/ChangePassword/ChangePassword';
-import Checkout from './Components/Checkout/Checkout';
-import OrderHistory from './Components/OrderHistory/OrderHistory';
-import OrderSuccess from './Components/OrderSuccess/OrderSuccess';
-import SearchPage from './Components/Search/SearchPage';
-import Like from './Components/Like/Like';
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from 'framer-motion';
 import PageTransition from './Components/PageTransition/PageTransition';
 import { ShopContext } from './Context/ShopContext';
 
+// ===============================
+// 🔹 페이지 / 주요 화면 lazy 로딩
+// ===============================
+const Shop = lazy(() =>
+  import('./Pages/Shop').then((m) => ({ default: m.Shop }))
+);
+
+const ShopCategory = lazy(() =>
+  import('./Pages/ShopCategory').then((m) => ({ default: m.ShopCategory }))
+);
+
+const Product = lazy(() =>
+  import('./Pages/Product').then((m) => ({ default: m.Product }))
+);
+
+const Cart = lazy(() =>
+  import('./Pages/Cart').then((m) => ({ default: m.Cart }))
+);
+
+const Login = lazy(() =>
+  import('./Pages/Login').then((m) => ({ default: m.Login }))
+);
+
+const Signup = lazy(() =>
+  import('./Pages/SignUp').then((m) => ({ default: m.Signup }))
+);
+
+const EditUser = lazy(() => import('./Components/EditUser/EditUser'));
+const ChangePassword = lazy(() =>
+  import('./Components/ChangePassword/ChangePassword')
+);
+const Checkout = lazy(() => import('./Components/Checkout/Checkout'));
+const OrderHistory = lazy(() =>
+  import('./Components/OrderHistory/OrderHistory')
+);
+const OrderSuccess = lazy(() =>
+  import('./Components/OrderSuccess/OrderSuccess')
+);
+const SearchPage = lazy(() => import('./Components/Search/SearchPage'));
+const Like = lazy(() => import('./Components/Like/Like'));
+
+// ===============================
+// 🔹 라우트 + 페이지 트랜지션
+// ===============================
 function AnimatedRoutes() {
   const location = useLocation();
 
+  // 배너 미리 로딩 (기존 기능 유지)
   useEffect(() => {
     const images = [men_banner, women_banner, kid_banner];
     images.forEach((src) => {
@@ -40,56 +78,168 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Shop /></PageTransition>} />
-        <Route path="/men" element={<PageTransition><ShopCategory banner={men_banner} category="men" /></PageTransition>} />
-        <Route path="/women" element={<PageTransition><ShopCategory banner={women_banner} category="women" /></PageTransition>} />
-        <Route path="/kid" element={<PageTransition><ShopCategory banner={kid_banner} category="kid" /></PageTransition>} />
-        <Route path="/product/:productId" element={<PageTransition><Product /></PageTransition>} />
-        <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
-        <Route path="/edituser" element={<PageTransition><EditUser /></PageTransition>} />
-        <Route path="/changepassword" element={<PageTransition><ChangePassword /></PageTransition>} />
-        <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
-        <Route path="/order-success" element={<PageTransition><OrderSuccess /></PageTransition>} />
-        <Route path="/orders" element={<PageTransition><OrderHistory /></PageTransition>} />
-        <Route path="/search" element={<PageTransition><SearchPage /></PageTransition>} />
-        <Route path="/like" element={<PageTransition><Like /></PageTransition>} />
+        <Route
+          path="/"
+          element={
+            <PageTransition>
+              <Shop />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/men"
+          element={
+            <PageTransition>
+              <ShopCategory banner={men_banner} category="men" />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/women"
+          element={
+            <PageTransition>
+              <ShopCategory banner={women_banner} category="women" />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/kid"
+          element={
+            <PageTransition>
+              <ShopCategory banner={kid_banner} category="kid" />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/product/:productId"
+          element={
+            <PageTransition>
+              <Product />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <PageTransition>
+              <Cart />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PageTransition>
+              <Login />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PageTransition>
+              <Signup />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/edituser"
+          element={
+            <PageTransition>
+              <EditUser />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/changepassword"
+          element={
+            <PageTransition>
+              <ChangePassword />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <PageTransition>
+              <Checkout />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/order-success"
+          element={
+            <PageTransition>
+              <OrderSuccess />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PageTransition>
+              <OrderHistory />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <PageTransition>
+              <SearchPage />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/like"
+          element={
+            <PageTransition>
+              <Like />
+            </PageTransition>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
 }
 
+// 🔹 라우트 lazy 로딩 중에만 보여줄 fallback
+function RouteFallback() {
+  return (
+    <div className="route-fallback">
+      <div className="route-fallback-spinner" />
+    </div>
+  );
+}
+
+// ===============================
+// 🔹 App (인트로 로딩 + 레이아웃)
+// ===============================
 function App() {
   const { initialLoadStatus } = useContext(ShopContext); // "loading" | "success" | "error"
 
-  // ✅ 이 세션(탭)에서 인트로(로딩 화면)를 보여줄지 여부
   const [showIntro, setShowIntro] = useState(() => {
-    const hasSeenIntro = sessionStorage.getItem("hasSeenIntro") === "true";
+    const hasSeenIntro = sessionStorage.getItem('hasSeenIntro') === 'true';
     return !hasSeenIntro;
   });
 
-  // ✅ 진행률 상태 (0 ~ 100)
   const [progress, setProgress] = useState(0);
 
-  // ✅ 진행률 로직: 로딩 중일 때 0→90% 서서히, 완료 시 100%
   useEffect(() => {
     let interval;
 
-    if (showIntro && initialLoadStatus === "loading") {
-      // 로딩 다시 시작 시 0으로 초기화
+    if (showIntro && initialLoadStatus === 'loading') {
       setProgress(0);
 
       interval = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 90) return prev; // 실제 완료 전에는 90% 이상 올라가지 않게
-          return prev + 1;             // 1%씩 증가 (40ms * 90 ≈ 3.6초)
+          if (prev >= 90) return prev;
+          return prev + 1;
         });
       }, 40);
     }
 
-    // 데이터 로딩이 끝난 시점에 100%로 맞춤
-    if (initialLoadStatus === "success" || initialLoadStatus === "error") {
+    if (initialLoadStatus === 'success' || initialLoadStatus === 'error') {
       setProgress(100);
     }
 
@@ -98,24 +248,21 @@ function App() {
     };
   }, [initialLoadStatus, showIntro]);
 
-  // ✅ 로딩 상태 + 인트로 상태에 따라 인트로 종료 타이밍 제어
   useEffect(() => {
     if (!showIntro) return;
+    if (initialLoadStatus === 'loading') return;
 
-    if (initialLoadStatus === "loading") return;
-
-    if (initialLoadStatus === "error") {
+    if (initialLoadStatus === 'error') {
       setShowIntro(false);
-      sessionStorage.setItem("hasSeenIntro", "true");
+      sessionStorage.setItem('hasSeenIntro', 'true');
       return;
     }
 
-    if (initialLoadStatus === "success") {
-      // progress는 이미 100으로 맞춰진 상태
+    if (initialLoadStatus === 'success') {
       const timer = setTimeout(() => {
         setShowIntro(false);
-        sessionStorage.setItem("hasSeenIntro", "true");
-      }, 1500); // 0.5초 정도 100% 상태를 보여주고 종료
+        sessionStorage.setItem('hasSeenIntro', 'true');
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
@@ -123,16 +270,22 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* ✅ 인트로(로딩) 오버레이 */}
+      {/* ✅ 인트로(로딩) 오버레이 — 기존 그대로 */}
       <AnimatePresence>
         {showIntro && <LoadingPage progress={progress} />}
       </AnimatePresence>
 
       <ScrollToTop />
       <Navbar />
-      <main>
-        <AnimatedRoutes />
+
+      {/* ✅ main 레이아웃은 항상 유지 */}
+      <main className="app-main">
+        {/* ✅ 이 안에서만 lazy 라우트 교체 */}
+        <Suspense fallback={<RouteFallback />}>
+          <AnimatedRoutes />
+        </Suspense>
       </main>
+
       <Footer />
     </BrowserRouter>
   );

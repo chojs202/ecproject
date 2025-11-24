@@ -21,6 +21,7 @@ export const ShopCategory = (props) => {
   const [sortOption, setSortOption] = useState(sortValue || 'new');
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [gridVisible, setGridVisible] = useState(true); // 🔹 위로 조금 올려만 둠
 
   useEffect(() => {
     const preload = new Image();
@@ -74,7 +75,6 @@ export const ShopCategory = (props) => {
   const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
-  const [gridVisible, setGridVisible] = useState(true);
 
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -92,7 +92,7 @@ export const ShopCategory = (props) => {
       navigate(`?page=1&sort=${newSort}`);
 
       setGridVisible(true); // 🔥 정렬 후 다시 나타나기
-    }, 200); // 200ms면 충분
+    }, 200);
   };
 
   return (
@@ -132,18 +132,20 @@ export const ShopCategory = (props) => {
 
       {/* ✅ 상품 리스트 */}
       <motion.div
+        key={`${sortOption}-${currentPage}`}  // 🔹 정렬/페이지 바뀔 때마다 새로 마운트
         className={`shopcategory-products ${!gridVisible ? "fadeout" : ""}`}
-        layout
+        initial={{ opacity: 0, y: 20 }}       // 🔹 새 리스트 등장 모션
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {currentItems.map((item, index) => (
           <motion.div
             key={item.id}
-            layout
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.4,
-              delay: index * 0.05, // 같은 페이지 안에서만 살짝 순차 등장
+              duration: 0.3,
+              delay: index * 0.04,          // 🔹 순차 등장 (원하시면 줄여도 됨)
               ease: "easeOut",
             }}
           >

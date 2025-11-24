@@ -1,3 +1,31 @@
-main {
-    padding-top:52px;
+
+
+/* 메인 컨텐츠 영역: 최소 높이 확보해서 푸터가 위로 붙지 않게 */
+.app-main {
+  min-height: 60vh;               /* 필요하면 70~80vh로 조절 가능 */
+  padding-top:52px;
+}
+
+/* 라우트 lazy 로딩 중 보여줄 영역 */
+.route-fallback {
+  min-height: 50vh;               /* 화면 중간에 보이도록 높이 확보 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 간단한 스피너 */
+.route-fallback-spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid #e0e0e0;
+  border-top-color: #111;
+  animation: route-spin 0.8s linear infinite;
+}
+
+@keyframes route-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
