@@ -41,6 +41,6 @@ router.delete("/:id", removeProduct);
 
 // ✅ 최신 상품 1개
 // GET /api/products/latest
-router.get("/products/latest", getLatestProduct); 
+router.get("/latest", getLatestProduct); 
 
 export default router;

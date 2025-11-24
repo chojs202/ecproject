@@ -102,7 +102,7 @@ export const Hero = () => {
       try {
         const res = await fetch(`${API}/api/products/latest`);
         if (!res.ok) throw new Error("Failed to fetch latest product");
-      
+
         const data = await res.json();
         if (data.success && data.product && data.product.id) {
           navigate(`/product/${data.product.id}`);
