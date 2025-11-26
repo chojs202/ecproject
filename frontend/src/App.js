@@ -18,6 +18,7 @@ import kid_banner from './Components/Assets/kid_banner.png';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './Components/PageTransition/PageTransition';
 import { ShopContext } from './Context/ShopContext';
+import { HelmetProvider } from "react-helmet-async";
 
 // ===============================
 // 🔹 페이지 / 주요 화면 lazy 로딩
@@ -269,25 +270,27 @@ function App() {
   }, [showIntro, initialLoadStatus]);
 
   return (
-    <BrowserRouter>
-      {/* ✅ 인트로(로딩) 오버레이 — 기존 그대로 */}
-      <AnimatePresence>
-        {showIntro && <LoadingPage progress={progress} />}
-      </AnimatePresence>
-
-      <ScrollToTop />
-      <Navbar />
-
-      {/* ✅ main 레이아웃은 항상 유지 */}
-      <main className="app-main">
-        {/* ✅ 이 안에서만 lazy 라우트 교체 */}
-        <Suspense fallback={<RouteFallback />}>
-          <AnimatedRoutes />
-        </Suspense>
-      </main>
-
-      <Footer />
-    </BrowserRouter>
+     <HelmetProvider>
+      <BrowserRouter>
+        {/* ✅ 인트로(로딩) 오버레이 — 기존 그대로 */}
+        <AnimatePresence>
+          {showIntro && <LoadingPage progress={progress} />}
+        </AnimatePresence>
+    
+        <ScrollToTop />
+        <Navbar />
+    
+        {/* ✅ main 레이아웃은 항상 유지 */}
+        <main className="app-main">
+          {/* ✅ 이 안에서만 lazy 라우트 교체 */}
+          <Suspense fallback={<RouteFallback />}>
+            <AnimatedRoutes />
+          </Suspense>
+        </main>
+    
+        <Footer />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

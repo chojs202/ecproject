@@ -4,12 +4,22 @@ import './CSS/ShopCategory.css';
 import { ShopContext } from '../Context/ShopContext';
 import Item from '../Components/Item/Item';
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
 export const ShopCategory = (props) => {
+
+  const readable = props.category === "women"
+    ? "WOMEN"
+    : props.category === "men"
+    ? "MEN"
+    : "KID";
+
   const { all_product } = useContext(ShopContext);
   const query = useQuery();
   const navigate = useNavigate();
@@ -96,6 +106,18 @@ export const ShopCategory = (props) => {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>{`${readable} | SHOP`}</title>
+      <meta
+        name="description"
+        content={`${readable} Check out new products, best items, and discount products.`}
+      />
+      {BASE_URL && (
+        <link rel="canonical" href={`${BASE_URL}/${props.category}`} />
+      )}
+    </Helmet>
+    
     <div className='shop-category'>
       {/* ✅ 배너 */}
       <motion.img
@@ -194,6 +216,7 @@ export const ShopCategory = (props) => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 
