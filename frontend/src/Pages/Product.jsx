@@ -21,17 +21,17 @@ export const Product = () => {
   return (
     <>
       <Helmet>
-        {/* --- 기본 SEO --- */}
+        {/* --- 基本 SEO --- */}
         <title>{product.name} | SHOP</title>
         <meta
           name="description"
           content={`Buy ${product.name}. Price: ${product.new_price}. Available sizes: ${product.size?.join(", ")}.`}
         />
 
-        {/* --- Canonical (중복 URL 방지) --- */}
+        {/* --- Canonical (重複URL防止) --- */}
         <link rel="canonical" href={productUrl} />
 
-        {/* --- OG(Open Graph): 공유 미리보기 --- */}
+        {/* --- OG(Open Graph): 共有プレビュー --- */}
         <meta property="og:title" content={product.name} />
         <meta
           property="og:description"
@@ -43,7 +43,7 @@ export const Product = () => {
 
       </Helmet>
 
-      {/* --- 실제 렌더링 요소 --- */}
+      {/* --- 実際レンダリング要素 --- */}
       <div>
         <Breadcrum product={product} />
         <ProductDisplay product={product} />
