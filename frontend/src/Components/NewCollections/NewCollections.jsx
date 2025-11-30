@@ -39,11 +39,31 @@ export const NewCollections = () => {
     fetchLatestProducts();
   }, [all_product]);
 
-  // ✅ 로딩 상태
+  // ✅ 로딩 상태 - NewCollections 전용 스켈레톤
   if (loading) {
     return (
-      <div className="new-collections loading-state">
-        <p>loding Product...</p>
+      <div className="new-collections">
+        <motion.h1
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          New Collection
+        </motion.h1>
+
+        <motion.hr
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        />
+
+        <div className="collections">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <div key={idx} className="nc-skeleton-card" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -51,14 +71,61 @@ export const NewCollections = () => {
   // ✅ 오류 상태
   if (error) {
     return (
-      <div className="new-collections error-state">
-        <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Refresh</button>
+      <div className="new-collections">
+        <motion.h1
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          New Collection
+        </motion.h1>
+
+        <motion.hr
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        />
+
+        <div className="new-collections-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>
+            Refresh
+          </button>
+        </div>
       </div>
     );
   }
 
-  // ✅ 정상 상태
+  // ✅ 아이템 없음 상태
+  if (!new_collection.length) {
+    return (
+      <div className="new-collections">
+        <motion.h1
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          New Collection
+        </motion.h1>
+
+        <motion.hr
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "linear" }}
+          viewport={{ once: true, amount: 0.8 }}
+        />
+
+        <p className="new-collections-empty">
+          No new products found.
+        </p>
+      </div>
+    );
+  }
+
+  // ✅ 정상 상태 (기존 기능 그대로 유지)
   return (
     <div className="new-collections">
       <motion.h1

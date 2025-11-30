@@ -74,6 +74,54 @@
   box-shadow: 0 4px 20px rgba(14, 14, 14, 0.918);
   animation: popIn 0.3s ease forwards;
 }
+/* ============================= */
+/* 🔹 NewCollections 전용 로딩 스켈레톤 */
+/* ============================= */
+
+.nc-skeleton-card {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #eee 0%, #f5f5f5 50%, #eee 100%);
+  background-size: 200% 100%;
+  animation: ncSkeletonLoading 1.2s infinite linear; /* ✅ 같은 키프레임 재사용 */
+}
+
+@keyframes ncSkeletonLoading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 에러 상태 */
+.new-collections-error {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.new-collections-error p {
+  margin-bottom: 12px;
+  color: #c00;
+  font-size: 14px;
+}
+
+.new-collections-error button {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 아이템 없음 상태 */
+.new-collections-empty {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+}
+
 
 /* ✅ 등장 애니메이션 */
 @keyframes popIn {

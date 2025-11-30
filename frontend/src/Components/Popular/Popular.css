@@ -99,6 +99,21 @@
   filter: contrast(1.05) saturate(1.05) brightness(0.98);
 }
 
+/* 🔳 Popular Skeleton UI */
+.skeleton-card {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #eee 0%, #f5f5f5 50%, #eee 100%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+
+@keyframes skeleton-loading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 
 /* 반응형 */
 @media (max-width: 1024px) {
