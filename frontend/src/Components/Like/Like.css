@@ -130,17 +130,12 @@
 /* ================== Responsive ================== */
 @media (max-width: 1024px) {
   .like-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
   }
 }
 
 @media (max-width: 668px) {
-  .like-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
   .like-card {
     flex-direction: column; /* 모바일에서는 세로 정렬 */
   }
