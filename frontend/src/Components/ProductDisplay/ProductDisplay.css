@@ -321,7 +321,7 @@
 
 }
 .add-to-cart-btn:hover {
-  background-color: #111;
+  background-color: #f23d3d;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
