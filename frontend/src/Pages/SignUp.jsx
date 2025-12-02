@@ -17,8 +17,17 @@ export const Signup = () => {
   const [errors, setErrors] = useState({});
   const [isAgreed, setIsAgreed] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ✅ 필드 단위 검증
+  // Extract readable server error message safely
+  const getErrorMessage = (data, fallback = "Signup failed.") => {
+    if (!data) return fallback;
+    if (typeof data.message === "string") return data.message;
+    if (Array.isArray(data.errors)) return data.errors.join("\n");
+    if (typeof data.errors === "string") return data.errors;
+    return fallback;
+  };
+
   const validateField = (name, value) => {
     switch (name) {
       case "username":
@@ -60,7 +69,6 @@ export const Signup = () => {
     return "";
   };
 
-  // ✅ input 변경 핸들러 (입력하면 에러 제거)
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -82,7 +90,6 @@ export const Signup = () => {
     }
   };
 
-  // ✅ blur 시 검사 (빈 값은 에러 제거)
   const handleBlur = (e) => {
     const { name, value } = e.target;
 
@@ -94,10 +101,11 @@ export const Signup = () => {
     setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
   };
 
-  // ✅ 회원가입
   const signup = async () => {
+    if (loading) return;
+
     if (!isAgreed) {
-      alert("You must agree to the terms before continuing.");
+      alert("You must agree to the terms.");
       return;
     }
 
@@ -117,25 +125,37 @@ export const Signup = () => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    let responseData;
-    await fetch(`${API}/api/users/signup`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        responseData = data;
+    setLoading(true);
+    setErrors({});
+
+    try {
+      const res = await fetch(`${API}/api/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-    if (responseData.success) {
-      setSuccessMessage("Go to the login page in a moment...");
-      setTimeout(() => navigate("/login"), 4000);
-    } else {
-      setErrors({ general: responseData.errors });
+      const data = await res.json().catch(() => {
+        throw new Error("Invalid server response.");
+      });
+
+      if (!res.ok) {
+        throw new Error(getErrorMessage(data, "Signup failed."));
+      }
+
+      if (!data.success) {
+        throw new Error(getErrorMessage(data, "Signup failed."));
+      }
+
+      setSuccessMessage("Account created! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 3000);
+
+    } catch (err) {
+      console.error("Signup Error:", err);
+      setErrors({ general: err.message || "Something went wrong." });
+
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -190,7 +210,6 @@ export const Signup = () => {
           {errors.phone && <p className="error-text">{errors.phone}</p>}
         </div>
 
-        {/* ✅ Address 카드 */}
         <div className="address-card">
           <label className="address-label">Address</label>
           <div className="address-fields">
@@ -237,15 +256,13 @@ export const Signup = () => {
             checked={isAgreed}
             onChange={(e) => setIsAgreed(e.target.checked)}
           />
-          <p>
-            I agree to the terms of use & privacy policy.
-          </p>
+          <p>I agree to the terms of use & privacy policy.</p>
         </div>
 
         {errors.general && <p className="error-text">{errors.general}</p>}
 
-        <button onClick={signup} disabled={!isAgreed}>
-          Continue
+        <button onClick={signup} disabled={!isAgreed || loading}>
+          {loading ? "Processing..." : "Continue"}
         </button>
 
         <p className="signup-login">
@@ -254,11 +271,10 @@ export const Signup = () => {
         </p>
       </div>
 
-      {/* ✅ 성공 모달 */}
       {successMessage && (
         <div className="success-overlay">
           <div className="success-modal">
-            <h2>🎉 Success Sign Up</h2>
+            <h2>🎉 Success</h2>
             <p>{successMessage}</p>
             <button className="success-btn" onClick={() => navigate("/login")}>
               Go Login
