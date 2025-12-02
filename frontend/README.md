@@ -76,15 +76,18 @@ MongoDB (User / Product / Order)
 
 ```
 frontend/
-│─ public/
-│─ src/
-│   ├─ App.jsx              # 라우팅 및 전역 구조
-│   ├─ Pages/              # 페이지 단위 화면
+│
+├─ public/                 # 정적 리소스
+│
+├─ src/
 │   ├─ Components/         # UI 컴포넌트
-│   ├─ Context/            # 전역 상태 (Auth, Cart, Like)
-│   ├─ Hooks/              # Custom Hooks
-│   ├─ Assets/             # Image, Icon, Font
-│   └─ utils/              # 공용 함수 및 헬퍼
+│   ├─ Context/            # 전역 상태 관리 (Auth, Cart, Like 등)
+│   ├─ Pages/              # 라우트 페이지
+│   ├─ App.js              # 라우팅 및 전역 레이아웃 구조
+│   └─ index.js            # 애플리케이션 엔트리 포인트
+│
+├─ package.json
+└─ README.md
 ```
 
 ---
@@ -93,7 +96,7 @@ frontend/
 
 ```sh
 npm install
-npm run dev
+npm start
 ```
 
 ---
