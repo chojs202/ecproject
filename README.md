@@ -39,7 +39,7 @@ Frontend	https://ecproject-main.onrender.com
 Admin	https://ecproject-admin.onrender.com
 
 API	https://ecproject-backend.onrender.com
-
+```
 📦 설치 및 실행
 # backend
 cd backend
@@ -49,3 +49,4 @@ npm start
 # frontend / admin
 npm install
 npm start / npm run dev
+```
