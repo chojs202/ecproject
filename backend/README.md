@@ -114,7 +114,6 @@ backend/
 | `routes/` | 기능별 API endpoint 집합 |
 | `index.js` | 서버 구동, DB 연결, 라우팅 등록 |
 
-> 필요 시 `services/` 레이어 확장이 가능하도록 구조 여유를 두고 설계했습니다.
 
 ---
 
