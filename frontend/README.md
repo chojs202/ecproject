@@ -77,17 +77,17 @@ UX 흐름, 성능 최적화, 유지보수 구조, SEO 대응을 고려하여 개
 ## 📦 Data Flow
 
 ```
-User Action
+User Interaction
    ↓
-React View Layer
+UI Rendering (React)
    ↓
-Context State (Auth / Cart / Like)
+State Management (Context API + LocalStorage Sync)
    ↓
-Backend REST API
+API Communication (Fetch → Express Server)
    ↓
-MongoDB (User / Product / Order)
-   ↳ Stripe 결제 처리
-   ↳ Cloudinary 이미지 로딩
+Database (MongoDB)
+      ↳ Payment (Stripe)
+      ↳ Asset Storage (Cloudinary)
 ```
 
 ---
