@@ -5,13 +5,13 @@
 상품 관리부터 주문·결제·사용자 인증까지 포함한 end-to-end 구조로 설계되었습니다.
 
 📂 프로젝트 구조
-
+```
 ecproject/
 │─ frontend/   → 사용자 쇼핑몰
 │─ admin/      → 관리자 대시보드
 │─ backend/    → Node.js API 서버
 │─ README.md   → 전체 설명
-
+```
 🧭 주요 기능
 
 회원가입 / 로그인 / 사용자 정보 수정
