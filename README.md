@@ -12,6 +12,7 @@ ecproject/
 │─ backend/    → Node.js API 서버
 │─ README.md   → 전체 설명
 ```
+```
 🧭 주요 기능
 
 회원가입 / 로그인 / 사용자 정보 수정
@@ -23,7 +24,8 @@ ecproject/
 Stripe 기반 결제 및 주문 내역 관리
 
 관리자 상품/주문/사용자 운영 기능 포함
-
+```
+```
 ⚙️ 기술 스택
 
 영역	사용 기술
@@ -31,7 +33,8 @@ Frontend :	React, Vite, Context API, React Router, Framer Motion
 Admin :	React, React Table, Cloudinary
 Backend :	Node.js, Express, MongoDB, JWT, Stripe
 기타 :	Cloudinary, Render Hosting, MongoDB Atlas
-
+```
+```
 🌐 배포 주소
 용도	링크
 Frontend	https://ecproject-main.onrender.com
@@ -39,6 +42,7 @@ Frontend	https://ecproject-main.onrender.com
 Admin	https://ecproject-admin.onrender.com
 
 API	https://ecproject-backend.onrender.com
+```
 ```
 📦 설치 및 실행
 # backend
