@@ -42,15 +42,35 @@ UX 흐름, 성능 최적화, 유지보수 구조, SEO 대응을 고려하여 개
 
 ---
 
-## ⚙️ Architecture & 설계 기준
+## ⚙️ Architecture & Implementation
+
+아래 구성 요소들은 본 Frontend를 설계할 때 고려한 기준이며,  
+각 항목은 실제 구현 방식과 연결되어 있습니다.
+
+---
+
+### 🧩 설계 기준 (What & Why)
 
 | 구성 요소 | 설명 |
-|----------|------|
-| **Lazy Routing + Code Splitting** | 초기 번들 크기 감소 및 체감 성능 개선 |
-| **Global Frontend Structure** | SEO·로딩 UI·페이지 전환·레이아웃 유지 통합 관리 |
-| **Session 기반 Intro Loading** | 초기 로딩 UX 강화 및 첫 방문 시 브랜드 경험 제공 |
-| **Persistent Layout** | Navbar / Footer 유지로 탐색 중 맥락 유지 |
-| **Responsive UI** | 모바일 중심 UI 설계 → Desktop 확장형 |
+|-----------|------|
+| Lazy Routing + Code Splitting | 초기 번들 크기 감소 및 체감 성능 개선 |
+| Global Frontend Structure | SEO·로딩 UI·페이지 전환·레이아웃 통합 관리 |
+| Session 기반 Intro Loading | 초기 로딩 UX 강화 및 첫 방문 시 브랜드 경험 제공 |
+| Persistent Layout | Navbar / Footer 유지로 탐색 중 맥락 유지 |
+| Responsive UI | Desktop-first UI 설계 후 반응형 스타일 적용 |
+
+---
+
+### 🔧 구현 방식 (How)
+
+| 구성 요소 | 목적 | 적용 방식 |
+|-----------|------|-----------|
+| Lazy Routing | 초기 로딩 성능 개선 | `React.lazy + Suspense` |
+| Global Layout Shell | 공통 UI 유지 및 자연스러운 탐색 경험 | Navbar/Footer 고정 구조 적용 |
+| Intro Loading | 첫 방문 UX 보조 및 로딩 체감 감소 | `sessionStorage` 기반 1회 노출 처리 |
+| SEO 대응 | SPA의 검색 노출 한계 보완 | Dynamic Helmet Meta 설정 |
+| Cart Sync Logic | 로그인 전/후 경험 일관성 제공 | LocalStorage + DB Sync |
+| Responsive Layout | PC 중심 설계 후 모바일 대응 | Desktop-first + Media Query |
 
 ---
 
