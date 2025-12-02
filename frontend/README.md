@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+# 🛒 Frontend — User Web Store
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+사용자가 상품을 탐색하고 구매할 수 있는 React 기반 쇼핑몰 웹 인터페이스입니다.  
+UX 흐름, 성능 최적화, 유지보수 구조, SEO 대응을 고려하여 개발되었습니다.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ⭐ Overview
 
-### `npm start`
+본 프론트엔드는 다음 요구사항을 충족하도록 설계되었습니다:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 상품 탐색 → 상세 → 장바구니 → 결제 → 주문 내역까지의 완결된 사용자 플로우
+- SPA 기반에서 발생하는 SEO·로딩·전환 UX 문제 해결
+- 모바일, 태블릿, 데스크톱 환경 모두 대응 가능한 반응형 레이아웃
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🚀 주요 기능
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 상품 목록, 상세 보기, 카테고리/검색 기반 필터링
+- 장바구니 및 찜 기능(비회원 저장 포함)
+- 로그인 후 **Local → DB로 장바구니 자동 병합**
+- Stripe 결제, 주문 생성 및 주문 내역 조회
+- 사용자 계정: 회원가입 / 로그인 / 정보 수정 / 비밀번호 변경
+- Lazy-load 기반 라우팅 및 페이지 전환 애니메이션 적용
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🧩 기술 스택
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| 카테고리 | 기술 |
+|---------|------|
+| Framework | React (Vite) |
+| Architecture | SPA |
+| Routing | React Router |
+| State Management | Context API |
+| UI/UX Interaction | Framer Motion, Skeleton Loader |
+| SEO 대응 | react-helmet-async |
+| Assets | Cloudinary |
+| Network | REST API 요청 기반 |
+| Deploy | Render |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## ⚙️ Architecture & Implementation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+아래 구성 요소들은 본 Frontend를 설계할 때 고려한 기준이며,  
+각 항목은 실제 구현 방식과 연결되어 있습니다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🧩 설계 기준 (What & Why)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+| 구성 요소 | 설명 |
+|-----------|------|
+| Lazy Routing + Code Splitting | 초기 번들 크기 감소 및 체감 성능 개선 |
+| Global Frontend Structure | SEO·로딩 UI·페이지 전환·레이아웃 통합 관리 |
+| Session 기반 Intro Loading | 초기 로딩 UX 강화 및 첫 방문 시 브랜드 경험 제공 |
+| Persistent Layout | Navbar / Footer 유지로 탐색 중 맥락 유지 |
+| Responsive UI | Desktop-first UI 설계 후 반응형 스타일 적용 |
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 🔧 구현 방식 (How)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+| 구성 요소 | 목적 | 적용 방식 |
+|-----------|------|-----------|
+| Lazy Routing | 초기 로딩 성능 개선 | `React.lazy + Suspense` |
+| Global Layout Shell | 공통 UI 유지 및 자연스러운 탐색 경험 | Navbar/Footer 고정 구조 적용 |
+| Intro Loading | 첫 방문 UX 보조 및 로딩 체감 감소 | `sessionStorage` 기반 1회 노출 처리 |
+| SEO 대응 | SPA의 검색 노출 한계 보완 | Dynamic Helmet Meta 설정 |
+| Cart Sync Logic | 로그인 전/후 경험 일관성 제공 | LocalStorage + DB Sync |
+| Responsive Layout | PC 중심 설계 후 모바일 대응 | Desktop-first + Media Query |
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 📦 Data Flow
 
-### Analyzing the Bundle Size
+```
+User Interaction
+   ↓
+UI Rendering (React)
+   ↓
+State Management (Context API + LocalStorage Sync)
+   ↓
+API Communication (Fetch → Express Server)
+   ↓
+Database (MongoDB)
+      ↳ Payment (Stripe)
+      ↳ Asset Storage (Cloudinary)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 📁 프로젝트 구조
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+frontend/
+│
+├─ public/                 # 정적 리소스
+│
+├─ src/
+│   ├─ Components/         # UI 컴포넌트
+│   ├─ Context/            # 전역 상태 관리 (Auth, Cart, Like 등)
+│   ├─ Pages/              # 라우트 페이지
+│   ├─ App.js              # 라우팅 및 전역 레이아웃 구조
+│   └─ index.js            # 애플리케이션 엔트리 포인트
+│
+├─ package.json
+└─ README.md
+```
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## ▶ 실행 방법
 
-### Deployment
+```sh
+npm install
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 🎯 목적
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> **사용자의 구매 경험을 빠르고 자연스럽게 연결하며, 운영 환경에서 유지보수성과 확장성을 고려한 Frontend 구현.**
