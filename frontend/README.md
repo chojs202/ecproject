@@ -33,7 +33,7 @@ UX の導線設計、パフォーマンス最適化、保守性の高い構造�
 
 | カテゴリ | 技術 |
 |-----------|------|
-| Framework | React（Vite） |
+| Framework | React |
 | Architecture | SPA（Single Page Application） |
 | Routing | React Router |
 | State Management | Context API |
