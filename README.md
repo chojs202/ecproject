@@ -1,46 +1,50 @@
 # 🛍️ EC Project — Full-Stack E-Commerce Application
 
-React, Node.js, MongoDB 기반의 전자상거래 서비스로  
-**사용자 쇼핑 웹, 관리자 운영 시스템, API 서버**로 구성된 Full-Stack 프로젝트입니다.
+React・Node.js・MongoDB を基盤とした EC サービスで、
+**ユーザー向け Web ストア、管理者用ダッシュボード、API サーバー**で構成されたフルスタックプロジェクトです。
+
 
 ---
 
 ## ⭐ Overview
 
-본 프로젝트는 실제 커머스 서비스 환경을 기준으로 설계되었으며,  
-**상품 탐색 → 장바구니 → 결제 → 주문 관리 → 관리자 운영**의 전체 흐름을 포함합니다.
+本プロジェクトは、実際の EC サービス運用を前提として設計されており、
+**商品閲覧 → カート → 決済 → 注文管理 → 管理者運用**までの一連のフローを含んでいます。
 
-사용자 경험(UX), 성능 최적화, 데이터 정합성, 유지보수 구조를 고려하여 구현되었습니다.
+ユーザー体験（UX）、パフォーマンス最適化、データ整合性、保守性を考慮して実装しています。
 
----
-
-## 🚀 주요 기능
-
-- **사용자 서비스 (Frontend)**  
-  - 상품 조회, 검색, 찜, 장바구니, Stripe 결제, 주문 내역 조회  
-  - 비회원 → 로그인 전환 시 장바구니 데이터 자동 병합  
-  - Lazy Routing 기반 성능 최적화 및 SEO 대응  
-
-- **관리자 시스템 (Admin)**  
-  - 상품 CRUD, 주문 상태 변경, 사용자 목록 확인  
-  - Cloudinary 이미지 업로드  
-  - 테이블 기반 데이터 관리 UI  
-
-- **백엔드 API (Server)**  
-  - JWT 인증 및 보호된 API 구조  
-  - Product / User / Order CRUD  
-  - Stripe 결제 처리 및 Cloudinary 이미지 저장  
 
 ---
 
-## 🧰 기술 스택
+## 🚀 主な機能
 
-| 영역 | 기술 |
+- **ユーザー向けサービス（Frontend）**  
+  - 商品閲覧、検索、お気に入り、カート、Stripe 決済、注文履歴の確認  
+  - 未ログイン → ログイン切り替え時、カートデータを自動マージ  
+  - Lazy Routing を利用したパフォーマンス最適化と SEO 対応  
+
+- **管理者システム（Admin）**  
+  - 商品 CRUD 管理  
+  - Cloudinary を利用した画像アップロード  
+  - テーブルベースのデータ管理 UI  
+
+- **バックエンド API（Server）**  
+  - JWT 認証および保護された API 構成  
+  - Product／User／Order の CRUD 処理  
+  - Stripe 決済処理および Cloudinary への画像保存  
+
+
+---
+
+## 🧰 技術スタック
+
+| 区分 | 技術 |
 |------|------|
-| Frontend | React, Vite, React Router, Context API, Framer Motion, Helmet |
-| Backend | Node.js, Express, MongoDB(Mongoose), JWT, Stripe |
-| Admin | React, React Table, Axios |
-| Infra / External | Render Hosting, MongoDB Atlas, Cloudinary |
+| Frontend | React（SPA）、React Router、Context API、Framer Motion、Helmet（SEO） |
+| Backend | Node.js、Express、MongoDB（Mongoose）、JWT、Stripe |
+| Admin | React、React Table、Axios |
+| Infra / External | Render、MongoDB Atlas、Cloudinary |
+
 
 ---
 
@@ -49,20 +53,22 @@ React, Node.js, MongoDB 기반의 전자상거래 서비스로
 ```
 ecproject/
 │
-├─ frontend/      # 사용자 쇼핑 웹
-├─ admin/         # 관리자 운영 화면
-└─ backend/       # Node.js REST API 서버
+├─ frontend/      # ユーザー向けショッピングサイト
+├─ admin/         # 管理者用管理画面
+└─ backend/       # Node.js ベースの REST API サーバー
+
 ```
 
 ---
 
-## 🔗 배포 URL
+## 🔗 デプロイ URL
 
-| 시스템 | 링크 |
-|--------|------|
+| システム | リンク |
+|----------|--------|
 | Frontend | https://ecproject-main.onrender.com |
 | Admin Dashboard | https://ecproject-admin.onrender.com |
 | Backend API | https://ecproject-backend.onrender.com |
+
 
 ---
 
@@ -82,9 +88,9 @@ User (Web / Mobile)
 
 ---
 
-## ▶ 설치 및 실행
+## ▶ インストール & 実行方法
 
-### ① Backend 실행
+### ① Backend 
 
 ```sh
 cd backend
@@ -92,7 +98,7 @@ npm install
 npm start
 ```
 
-### ② Frontend / Admin 실행
+### ② Frontend / Admin 
 
 ```sh
 npm install
@@ -101,10 +107,10 @@ npm start / npm run dev
 
 ---
 
-## 🎯 프로젝트 목적
+🎯 プロジェクト目的
 
-> 단순 기능 구현을 넘어, 실제 서비스 환경에 맞춘  
-> **확장성 · 안정성 · 유지보수성 중심의 e-Commerce 시스템 구축**을 목표로 했습니다.
+単なる機能実装にとどまらず、実サービス運用を前提とした
+拡張性・安定性・保守性を重視した e-commerce システムの構築を目指しました。
 
 ---
 
