@@ -1,74 +1,78 @@
-# 🧩 Backend — REST API Server
+# 🧩 Backend — RESTful API Server
 
-Node.js(Express) 기반의 RESTful API 서버로,  
-사용자 인증, 상품 데이터 관리, 장바구니/찜 기능, 결제 처리(Stripe), 주문 관리 기능을 제공합니다.
+Node.js（Express）を使用した RESTful API サーバーで、  
+ユーザー認証、商品データ管理、カート・お気に入り機能、Stripe を利用した決済処理、注文管理機能を提供しています。
+
 
 ---
 
 ## ⭐ Overview
 
-본 백엔드는 프론트엔드와 독립적으로 동작하며,  
-**JWT 인증 · Stripe 결제 · Cloudinary 이미지 저장 · CRUD 데이터 처리**가 핵심 역할입니다.
+本バックエンドはフロントエンドとは独立して動作し、  
+JWT 認証、Stripe 決済、Cloudinary での画像保存、そして CRUD ベースのデータ処理を中心に役割を担っています。
+
 
 ---
 
-## 🚀 주요 기능
+## 🚀 主な機能
 
-- **JWT 기반 인증**
-  - 회원가입, 로그인, 토큰 검증 및 보호된 API 접근 제어
+- **JWT ベースの認証**
+  - 新規登録、ログイン、トークン検証、および保護された API へのアクセス制御
 
-- **상품 / 주문 / 사용자 데이터 처리**
-  - Mongoose 모델 기반 CRUD 구조
+- **商品・注文・ユーザーデータ管理**
+  - Mongoose モデルによる CRUD ベースのデータ構造
 
-- **장바구니 및 찜 목록 관리**
-  - 로그인 전·후 데이터 정합성 유지
+- **カートおよびお気に入り管理**
+  - ログイン前後でデータ整合性を保持
 
-- **Stripe 결제 연동**
-  - PaymentIntent 기반 결제 요청 및 승인 처리
+- **Stripe 決済連携**
+  - PaymentIntent を使用した決済リクエストおよび承認処理
 
-- **Cloudinary 연동**
-  - 이미지 업로드 및 외부 저장 처리
+- **Cloudinary 連携**
+  - 画像アップロードおよび外部ストレージ処理
+
 
 ---
 
-## 🧰 기술 스택
+## 🧰 技術スタック
 
-| 카테고리 | 기술 |
-|---------|------|
+| カテゴリ | 技術 |
+|----------|------|
 | Runtime | Node.js |
 | Framework | Express |
 | Database | MongoDB + Mongoose |
 | Auth | JWT |
 | Payment | Stripe |
 | Storage | Cloudinary |
-| Validation | Express Middleware 기반 |
+| Validation | Express Middleware ベース |
+
 
 ---
 
 ## ⚙️ Architecture & Implementation
 
-### 🧩 설계 기준 (What & Why)
+### 🧩 設計基準（What & Why）
 
-| 구성 요소 | 설명 |
-|-----------|------|
-| RESTful API 설계 | 클라이언트와 명확한 엔드포인트 기반 통신 구조 |
-| JWT 인증 방식 | 상태 비저장 인증 처리로 서버 부담 최소화 |
-| Modular Layering | 유지보수성과 확장성 고려한 레이어 분리 |
-| Schema 기반 모델링 | 데이터 일관성과 안정성 확보 |
-| 외부 서비스 연동 | Cloudinary, Stripe 등 클라우드 기반 확장 대응 |
+| 項目 | 説明 |
+|------|------|
+| RESTful API 設計 | クライアントと明確なエンドポイントで通信できる構造 |
+| JWT 認証方式 | ステートレス認証によりサーバー負荷を軽減 |
+| モジュール化レイヤリング | 保守性と拡張性を考慮したレイヤー分離 |
+| スキーマベースのモデリング | データの一貫性と安定性を確保 |
+| 外部サービス連携 | Cloudinary / Stripe などクラウドサービスに対応 |
 
 ---
 
-### 🔧 구현 방식 (How)
+### 🔧 実装方式（How）
 
-| 구성 요소 | 목적 | 적용 방식 |
-|-----------|------|-----------|
-| Routing 분리 | 기능 단위 API 구조화 | `/routes/*` 기반 |
-| Controller Layer | 비즈니스 로직 분리 | `/controllers/*` |
-| JWT Middleware | 인증/인가 처리 | `middlewares/auth.js` |
-| Error Handling | 일관된 예외 처리 | 글로벌 미들웨어 |
-| Stripe Payment | 결제 요청 처리 | PaymentIntent 기반 처리 |
-| Image Upload | 외부 저장 기반 관리 | Cloudinary + Multer |
+| 項目 | 目的 | 実装内容 |
+|------|------|-----------|
+| ルーティング分離 | 機能単位で API を構造化 | `/routes/*` ベース |
+| コントローラーレイヤー | ビジネスロジックを分離 | `/controllers/*` |
+| JWT ミドルウェア | 認証／認可処理 | `middlewares/auth.js` |
+| エラーハンドリング | 一貫した例外処理 | グローバルミドルウェア |
+| Stripe 決済処理 | 決済リクエストの処理 | PaymentIntent ベース |
+| 画像アップロード | 外部ストレージ管理 | Cloudinary + Multer |
 
 ---
 
@@ -93,12 +97,12 @@ MongoDB (Mongoose Models)
 ```
 backend/
 │
-├─ controllers/        # 요청 처리 비즈니스 로직
-├─ middlewares/        # 인증 및 공통 처리 미들웨어
-├─ models/             # Mongoose Schema/Model
-├─ routes/             # REST API Endpoint 정의
+├─ controllers/        # リクエスト処理のビジネスロジック
+├─ middlewares/        # 認証および共通処理のミドルウェア
+├─ models/             # Mongoose の Schema / Model
+├─ routes/             # REST API エンドポイント定義
 │
-├─ index.js            # 서버 엔트리 포인트
+├─ index.js            # サーバーのエントリーポイント
 │
 ├─ package.json
 └─ README.md
@@ -106,18 +110,17 @@ backend/
 
 ### Directory Notes
 
-| 항목 | 설명 |
+| 項目 | 説明 |
 |------|------|
-| `controllers/` | API 동작 로직 분리(읽기/변경/검증) |
-| `middlewares/` | JWT 인증, 에러 처리 등 공통 처리 |
-| `models/` | MongoDB 데이터 스키마 정의 |
-| `routes/` | 기능별 API endpoint 집합 |
-| `index.js` | 서버 구동, DB 연결, 라우팅 등록 |
-
+| `controllers/` | API の処理ロジックを分離（読み取り／更新／検証） |
+| `middlewares/` | JWT 認証やエラー処理などの共通処理 |
+| `models/` | MongoDB のデータスキーマ定義 |
+| `routes/` | 機能別の API エンドポイント群 |
+| `index.js` | サーバー起動、DB 接続、ルーティング登録 |
 
 ---
 
-## ▶ 실행 방법
+## ▶ 実行方法
 
 ```sh
 npm install
