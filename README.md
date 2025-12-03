@@ -21,7 +21,7 @@ React・Node.js・MongoDB を基盤とした EC サービスで、
 - **ユーザー向けサービス（Frontend）**  
   - 商品閲覧、検索、お気に入り、カート、Stripe 決済、注文履歴の確認  
   - 未ログイン → ログイン切り替え時、カートデータを自動マージ  
-  - Lazy Routing を利用したパフォーマンス最適化と SEO 対応  
+  - Lazy Routing によるパフォーマンス最適化と SEO 対応" 
 
 - **管理者システム（Admin）**  
   - 商品 CRUD 管理  
