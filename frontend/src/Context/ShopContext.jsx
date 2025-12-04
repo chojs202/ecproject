@@ -31,17 +31,11 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case "LOGOUT":
-      localStorage.removeItem("auth-token");
-      localStorage.removeItem("discountPercent");
-      localStorage.removeItem("promoApplied");
-      localStorage.removeItem("promoCode");
-      localStorage.removeItem("hasMerged");
-      localStorage.removeItem("cartItems");
-      localStorage.removeItem("guestCartItems");
       return {
         ...state,
         isLoggedIn: false,
         cartItems: {},
+        guestCart: {},
         discount: 0,
         discountPercent: 0,
         promoApplied: false,
@@ -87,6 +81,22 @@ const ShopContextProvider = ({ children }) => {
   const [initialLoadStatus, setInitialLoadStatus] = useState("loading");
   const hasMerged = useRef(false);
   const updateQueue = useRef(Promise.resolve());
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("discountPercent");
+    localStorage.removeItem("promoApplied");
+    localStorage.removeItem("promoCode");
+    localStorage.removeItem("hasMerged");
+    localStorage.removeItem("cartItems");
+    localStorage.removeItem("guestCartItems");
+    localStorage.removeItem("likedProducts");  // 혹시 예전에 쓰던 키 대비
+
+    hasMerged.current = false;
+
+    // 2) 상태 초기화
+    dispatch({ type: "LOGOUT" });
+  }, []);
 
   // ---------------------
   // 비회원용 임시 guestId
@@ -445,25 +455,34 @@ const ShopContextProvider = ({ children }) => {
   // ---------------------
   // 찜(Like) 기능
   // ---------------------
-  const fetchLikedProducts = async () => {
+  const fetchLikedProducts = useCallback(async () => {
     const token = localStorage.getItem("auth-token");
-    if (!isLoggedIn || !token) return;
+    if (!token) return;             // 토큰 없으면 바로 종료
+
     try {
       const res = await fetch(`${API}/api/likes/likes`, {
         headers: { "auth-token": token },
       });
+
       if (res.status === 401) {
         console.warn("Your login has expired.");
-        dispatch({ type: "LOGOUT" });
+        logout();                   // 토큰 만료 시에도 통합 logout 처리
         return;
       }
+
       const data = await res.json();
-      if (data.success)
+
+      // ✅ 응답이 돌아온 "지금 시점"에 다시 한 번 토큰 체크
+      const latestToken = localStorage.getItem("auth-token");
+      if (!latestToken) return;     // 이미 로그아웃 되었으면 상태 갱신하지 않음
+
+      if (data.success) {
         dispatch({ type: "SET_LIKED_PRODUCTS", payload: data.products });
+      }
     } catch (err) {
       console.error("Failed to fetch liked products:", err);
     }
-  };
+  }, [logout]);   
 
   const toggleLike = async (productId) => {
     if (!isLoggedIn) return;
@@ -502,10 +521,7 @@ const ShopContextProvider = ({ children }) => {
     discountPercent: state.discountPercent || 0,
     promoApplied,
     isLoggedIn,
-    logout: () => {
-      dispatch({ type: "LOGOUT" });
-      localStorage.removeItem("likedProducts");
-    },
+    logout,
     mergeLocalCartToServer,
     applyPromoCode,
     clearCart,
