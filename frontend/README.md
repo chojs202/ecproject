@@ -1,76 +1,80 @@
 # 🛒 Frontend — User Web Store
 
-사용자가 상품을 탐색하고 구매할 수 있는 React 기반 쇼핑몰 웹 인터페이스입니다.  
-UX 흐름, 성능 최적화, 유지보수 구조, SEO 대응을 고려하여 개발되었습니다.
+ユーザーが商品を閲覧し、購入できるように構築した React ベースのショッピングサイトです。
+UX の導線設計、パフォーマンス最適化、保守性の高い構造、SEO 対応を考慮して開発しました。
+
 
 ---
 
 ## ⭐ Overview
 
-본 프론트엔드는 다음 요구사항을 충족하도록 설계되었습니다:
+本フロントエンドは、以下の要件を満たすよう設計されています
 
-- 상품 탐색 → 상세 → 장바구니 → 결제 → 주문 내역까지의 완결된 사용자 플로우
-- SPA 기반에서 발생하는 SEO·로딩·전환 UX 문제 해결
-- 모바일, 태블릿, 데스크톱 환경 모두 대응 가능한 반응형 레이아웃
+- 商品閲覧 → 詳細ページ → カート → 決済 → 注文履歴まで完結するユーザーフロー
+- SPA における SEO・初期ロード・画面遷移の UX 課題へ対応
+- モバイル・タブレット・デスクトップに対応したレスポンシブレイアウト
 
----
-
-## 🚀 주요 기능
-
-- 상품 목록, 상세 보기, 카테고리/검색 기반 필터링
-- 장바구니 및 찜 기능(비회원 저장 포함)
-- 로그인 후 **Local → DB로 장바구니 자동 병합**
-- Stripe 결제, 주문 생성 및 주문 내역 조회
-- 사용자 계정: 회원가입 / 로그인 / 정보 수정 / 비밀번호 변경
-- Lazy-load 기반 라우팅 및 페이지 전환 애니메이션 적용
 
 ---
 
-## 🧩 기술 스택
+## 🚀 主な機能
 
-| 카테고리 | 기술 |
-|---------|------|
-| Framework | React (Vite) |
-| Architecture | SPA |
+- 商品一覧、商品詳細、カテゴリ／検索ベースのフィルタリング
+- カートおよびお気に入り機能（未ログイン時のローカル保存に対応）
+- ログイン時、ローカルデータ → DB への自動マージ
+- Stripe を使用した決済処理、注文作成、注文履歴の確認
+- アカウント管理：新規登録／ログイン／情報編集／パスワード変更
+- Lazy Load を用いたルーティングおよびページ遷移アニメーション
+
+
+---
+
+## 🧩 技術スタック
+
+| カテゴリ | 技術 |
+|-----------|------|
+| Framework | React |
+| Architecture | SPA（Single Page Application） |
 | Routing | React Router |
 | State Management | Context API |
-| UI/UX Interaction | Framer Motion, Skeleton Loader |
-| SEO 대응 | react-helmet-async |
-| Assets | Cloudinary |
-| Network | REST API 요청 기반 |
+| UI／UX Interaction | Framer Motion、Skeleton Loader |
+| SEO 対応 | react-helmet-async |
+| Network | REST API ベースの通信 |
 | Deploy | Render |
+
 
 ---
 
 ## ⚙️ Architecture & Implementation
 
-아래 구성 요소들은 본 Frontend를 설계할 때 고려한 기준이며,  
-각 항목은 실제 구현 방식과 연결되어 있습니다.
+以下は、本フロントエンドを設計する際に考慮した要素であり、
+各項目は実際の実装内容と紐づいています。
 
 ---
 
-### 🧩 설계 기준 (What & Why)
+### 🧩 設計基準（What & Why）
 
-| 구성 요소 | 설명 |
-|-----------|------|
-| Lazy Routing + Code Splitting | 초기 번들 크기 감소 및 체감 성능 개선 |
-| Global Frontend Structure | SEO·로딩 UI·페이지 전환·레이아웃 통합 관리 |
-| Session 기반 Intro Loading | 초기 로딩 UX 강화 및 첫 방문 시 브랜드 경험 제공 |
-| Persistent Layout | Navbar / Footer 유지로 탐색 중 맥락 유지 |
-| Responsive UI | Desktop-first UI 설계 후 반응형 스타일 적용 |
+| 項目 | 説明 |
+|------|------|
+| Lazy Routing ＋ Code Splitting | 初期バンドルサイズを削減し、体感パフォーマンスを向上 |
+| Global Frontend Structure | SEO・ローディング UI・ページ遷移・レイアウトを一元管理 |
+| セッションベースのイントロローディング | 初回アクセス時のブランド体験とローディング UX を強化 |
+| Persistent Layout | ナビゲーション中も Navbar／Footer を維持し、コンテキストを保持 |
+| Responsive UI | Desktop-first 設計を基にレスポンシブスタイルを適用 |
 
 ---
 
-### 🔧 구현 방식 (How)
+### 🔧 実装方式（How）
 
-| 구성 요소 | 목적 | 적용 방식 |
-|-----------|------|-----------|
-| Lazy Routing | 초기 로딩 성능 개선 | `React.lazy + Suspense` |
-| Global Layout Shell | 공통 UI 유지 및 자연스러운 탐색 경험 | Navbar/Footer 고정 구조 적용 |
-| Intro Loading | 첫 방문 UX 보조 및 로딩 체감 감소 | `sessionStorage` 기반 1회 노출 처리 |
-| SEO 대응 | SPA의 검색 노출 한계 보완 | Dynamic Helmet Meta 설정 |
-| Cart Sync Logic | 로그인 전/후 경험 일관성 제공 | LocalStorage + DB Sync |
-| Responsive Layout | PC 중심 설계 후 모바일 대응 | Desktop-first + Media Query |
+| 項目 | 目的 | 実装内容 |
+|------|------|-----------|
+| Lazy Routing | 初期ロード時間の最適化 | `React.lazy + Suspense` |
+| Global Layout Shell | 共通 UI を維持し、自然なページ遷移を実現 | Navbar／Footer を固定したレイアウト構造 |
+| Intro Loading | 初回訪問時の UX 補助とローディング体感の軽減 | `sessionStorage` を利用し 1 回のみ表示 |
+| SEO 対応 | SPA における検索インデックス課題を補完 |  `react-helmet-async` による動的メタタグ設定 |
+| Cart Sync Logic | ログイン前後で一貫したショッピング体験を提供 | LocalStorage + DB 同期処理 |
+| Responsive Layout | PC 中心の設計からモバイルへ最適化 | Desktop-first + Media Query |
+
 
 ---
 
@@ -92,19 +96,19 @@ Database (MongoDB)
 
 ---
 
-## 📁 프로젝트 구조
+## 📁 プロジェクト構成
 
 ```
 frontend/
 │
-├─ public/                 # 정적 리소스
+├─ public/                 # 静的リソース
 │
 ├─ src/
-│   ├─ Components/         # UI 컴포넌트
-│   ├─ Context/            # 전역 상태 관리 (Auth, Cart, Like 등)
-│   ├─ Pages/              # 라우트 페이지
-│   ├─ App.js              # 라우팅 및 전역 레이아웃 구조
-│   └─ index.js            # 애플리케이션 엔트리 포인트
+│   ├─ Components/         # UI コンポーネント
+│   ├─ Context/            # グローバル状態管理（Auth・Cart・Like など）
+│   ├─ Pages/              # ルーティング対象ページ
+│   ├─ App.js              # ルーティングおよび全体レイアウト
+│   └─ index.js            # アプリケーションのエントリーポイント
 │
 ├─ package.json
 └─ README.md
@@ -112,7 +116,7 @@ frontend/
 
 ---
 
-## ▶ 실행 방법
+## ▶ 実行方法
 
 ```sh
 npm install
@@ -121,6 +125,8 @@ npm start
 
 ---
 
-## 🎯 목적
+## 🎯 目的
 
-> **사용자의 구매 경험을 빠르고 자연스럽게 연결하며, 운영 환경에서 유지보수성과 확장성을 고려한 Frontend 구현.**
+>本プロジェクトの目的は、ユーザーの購買導線をストレスなくつなぎ、
+運用フェーズでの保守性・拡張性を備えたフロントエンドを構築することです。
+

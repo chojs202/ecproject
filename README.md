@@ -1,56 +1,118 @@
+# 🛍️ EC Project — Full-Stack E-Commerce Application
 
-🛍️ E-Commerce Project (Full-Stack)
+React・Node.js・MongoDB を基盤とした EC サービスで、
+**ユーザー向け Web ストア、管理者用ダッシュボード、API サーバー**で構成されたフルスタックプロジェクトです。
 
-본 프로젝트는 사용자 쇼핑몰(Frontend), 관리자(Admin Dashboard), REST API Backend로 구성된 전자상거래 서비스입니다.
-상품 관리부터 주문·결제·사용자 인증까지 포함한 end-to-end 구조로 설계되었습니다.
 
-📂 프로젝트 구조
+---
+
+## ⭐ Overview
+
+本プロジェクトは、実際の EC サービス運用を前提として設計されており、
+**商品閲覧 → カート → 決済 → 注文管理 → 管理者運用**までの一連のフローを含んでいます。
+
+ユーザー体験（UX）、パフォーマンス最適化、データ整合性、保守性を考慮して実装しています。
+
+
+---
+
+## 🚀 主な機能
+
+- **ユーザー向けサービス（Frontend）**  
+  - 商品閲覧、検索、お気に入り、カート、Stripe 決済、注文履歴の確認  
+  - 未ログイン → ログイン切り替え時、カートデータを自動マージ  
+  - Lazy Routing によるパフォーマンス最適化と SEO 対応" 
+
+- **管理者システム（Admin）**  
+  - 商品 CRUD 管理  
+  - Cloudinary を利用した画像アップロード  
+  - テーブルベースのデータ管理 UI  
+
+- **バックエンド API（Server）**  
+  - JWT 認証および保護された API 構成  
+  - Product／User／Order の CRUD 処理  
+  - Stripe 決済処理および Cloudinary への画像保存  
+
+
+---
+
+## 🧰 技術スタック
+
+| 区分 | 技術 |
+|------|------|
+| Frontend | React（SPA）、React Router、Context API、Framer Motion、Helmet（SEO） |
+| Backend | Node.js、Express、MongoDB（Mongoose）、JWT、Stripe |
+| Admin | React、React Table、Axios |
+| Infra / External | Render、MongoDB Atlas、Cloudinary |
+
+
+---
+
+## 📁 Project Structure
+
 ```
 ecproject/
-│─ frontend/   → 사용자 쇼핑몰
-│─ admin/      → 관리자 대시보드
-│─ backend/    → Node.js API 서버
-│─ README.md   → 전체 설명
-```
-```
-🧭 주요 기능
+│
+├─ frontend/      # ユーザー向けショッピングサイト
+├─ admin/         # 管理者用管理画面
+└─ backend/       # Node.js ベースの REST API サーバー
 
-회원가입 / 로그인 / 사용자 정보 수정
-
-상품 목록, 상세, 검색, 카테고리 필터
-
-장바구니, 찜, 할인 코드 적용
-
-Stripe 기반 결제 및 주문 내역 관리
-
-관리자 상품/주문/사용자 운영 기능 포함
 ```
-```
-⚙️ 기술 스택
 
-영역	사용 기술
-Frontend :	React, Vite, Context API, React Router, Framer Motion
-Admin :	React, React Table, Cloudinary
-Backend :	Node.js, Express, MongoDB, JWT, Stripe
-기타 :	Cloudinary, Render Hosting, MongoDB Atlas
-```
-```
-🌐 배포 주소
-용도	링크
-Frontend	https://ecproject-main.onrender.com
+---
 
-Admin	https://ecproject-admin.onrender.com
+## 🔗 デプロイ URL
 
-API	https://ecproject-backend.onrender.com
+| システム | リンク |
+|----------|--------|
+| Frontend | https://ecproject-main.onrender.com |
+| Admin Dashboard | https://ecproject-admin.onrender.com |
+| Backend API | https://ecproject-backend.onrender.com |
+
+
+---
+
+## ⚙️ System Architecture
+
 ```
+User (Web / Mobile)
+            ↓
+      Frontend (React)
+            ↓
+      REST API (Express)
+            ↓
+       MongoDB Atlas
+            ↳ Stripe Payment
+            ↳ Cloudinary Image Storage
 ```
-📦 설치 및 실행
-# backend
+
+---
+
+## ▶ インストール & 実行方法
+
+### ① Backend 
+
+```sh
 cd backend
 npm install
 npm start
+```
 
-# frontend / admin
+### ② Frontend / Admin 
+
+```sh
 npm install
 npm start / npm run dev
 ```
+
+---
+
+🎯 プロジェクト目的
+
+> 本システムは、実サービスとしての運用を想定し、
+> 拡張性・安定性・保守性を満たすアーキテクチャ設計と機能実装を目的として開発しました。
+
+---
+
+
+
