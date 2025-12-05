@@ -42,7 +42,18 @@ app.use(express.json());
 // ==============================
 // 3. MongoDB 연결
 // ==============================
+
+// ❗ 환경변수 체크 (실수 방지)
+if (!process.env.MONGODB_URI) {
+  console.error("❌ ERROR: MONGODB_URI is missing in .env file.");
+  process.exit(1);
+}
+
+let isConnecting = false; // 중복 연결 방지
+
 const connectDB = async () => {
+  if (isConnecting) return;
+  isConnecting = true;
   let retries = 5;
 
   while (retries) {
@@ -56,6 +67,7 @@ const connectDB = async () => {
       });
 
       console.log("✅ MongoDB connected");
+      isConnecting = false;
       break;
     } catch (err) {
       retries--;
