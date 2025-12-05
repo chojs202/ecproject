@@ -53,7 +53,6 @@ const connectDB = async () => {
         useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
-        keepAlive: true,
       });
 
       console.log("✅ MongoDB connected");
@@ -77,8 +76,10 @@ connectDB();
 
 // 연결 끊겼을 때 대응
 mongoose.connection.on("disconnected", () => {
-  console.log("⚠️ MongoDB disconnected, reconnecting...");
-  connectDB();
+  console.log("⚠️ MongoDB disconnected, reconnecting in 3s...");
+  setTimeout(() => {
+    connectDB();
+  }, 3000);
 });
 
 
