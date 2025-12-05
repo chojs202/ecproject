@@ -42,13 +42,45 @@ app.use(express.json());
 // ==============================
 // 3. MongoDB 연결
 // ==============================
-mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+const connectDB = async () => {
+  let retries = 5;
+
+  while (retries) {
+    try {
+      console.log("⏳ Connecting to MongoDB...");
+      await mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        keepAlive: true,
+      });
+
+      console.log("✅ MongoDB connected");
+      break;
+    } catch (err) {
+      retries--;
+      console.error(`❌ MongoDB connection failed. Retries left: ${retries}`);
+      console.error(err.message);
+
+      if (!retries) {
+        console.log("🚨 MongoDB connection failed permanently.");
+        process.exit(1);
+      }
+
+      await new Promise((res) => setTimeout(res, 3000));
+    }
+  }
+};
+
+connectDB();
+
+// 연결 끊겼을 때 대응
+mongoose.connection.on("disconnected", () => {
+  console.log("⚠️ MongoDB disconnected, reconnecting...");
+  connectDB();
+});
+
 
 // ==============================
 // 4. 기본 라우트
