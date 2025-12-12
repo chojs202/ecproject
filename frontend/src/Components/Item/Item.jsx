@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
 import { Heart } from "lucide-react";
 
-const Item = ({ id, name, image, new_price, old_price }) => {
+const Item = ({ id, name, image, new_price, old_price, category }) => {
   const { isLoggedIn, toggleLike, likedProducts } = useContext(ShopContext);
   const [showModal, setShowModal] = useState(false); // 로그인 모달 상태
 
@@ -40,7 +40,7 @@ const Item = ({ id, name, image, new_price, old_price }) => {
         </button>
 
         {/* 🖼️ 상품 이미지 */}
-        <Link to={`/product/${id}`}>
+        <Link to={`/${category}/product/${id}`}>
           <img
             src={imageSrc}
             alt={name}

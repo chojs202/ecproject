@@ -112,7 +112,7 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/product/:productId"
+          path="/:category/product/:productId"
           element={
             <PageTransition>
               <Product />

@@ -48,21 +48,22 @@ export const OrderSuccess = () => {
       <table className="order-table">
         <thead>
           <tr>
-            <th>Product Name</th>
-            <th>Size</th>
-            <th>Quantity</th>
-            <th>Total</th>
+            <th className="col-name">Product Name</th>
+            <th className="col-center">Size</th>
+            <th className="col-center">Quantity</th>
+            <th className="col-amount">Total</th>
           </tr>
         </thead>
+        
         <tbody>
           {order.items?.map((item, idx) => {
             const itemTotal = item.price * item.quantity;
             return (
               <tr key={idx}>
-                <td>{item.name ?? "N/A"}</td>
-                <td>{item.size ?? "N/A"}</td>
-                <td>{item.quantity ?? 0}</td>
-                <td>${itemTotal.toFixed(2)}</td>
+                <td className="col-name">{item.name ?? "N/A"}</td>
+                <td className="col-center">{item.size ?? "N/A"}</td>
+                <td className="col-center">{item.quantity ?? 0}</td>
+                <td className="col-amount">${itemTotal.toFixed(2)}</td>
               </tr>
             );
           })}

@@ -179,6 +179,7 @@ export const ShopCategory = (props) => {
               new_price={item.new_price}
               old_price={item.old_price}
               date={item.date}
+              category={item.category} 
             />
           </motion.div>
         ))}

@@ -28,24 +28,29 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
+  table-layout: fixed; /* 열 흔들림 방지 (선택) */
 }
 
 .order-table th,
 .order-table td {
   border-bottom: 1px solid #ccc;
   padding: 8px;
+  vertical-align: middle;
 }
 
-.order-table .left {
-  text-align: left;
-}
-
-.order-table .center {
-  text-align: center;
-}
-
-.order-table .right {
+.order-table .col-name { text-align: left; }
+.order-table .col-center { text-align: center; }
+.order-table .col-amount {
   text-align: right;
+  font-variant-numeric: tabular-nums; /* 금액 정렬 깔끔 */
+  white-space: nowrap; /* $1500.00 줄바꿈 방지 */
+}
+
+/* 상품명이 길어질 때 레이아웃 보호 (선택) */
+.order-table .col-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .order-total {
