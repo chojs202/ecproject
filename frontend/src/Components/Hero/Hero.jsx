@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
-import banner_1 from "../Assets/banner_1.png";
-import banner_2 from "../Assets/banner_2.png";
+import banner_1 from "../Assets/banner_1.webp";
+import banner_2 from "../Assets/banner_2.webp";
 import { API } from "../../config";
 import { Check } from "lucide-react";
 

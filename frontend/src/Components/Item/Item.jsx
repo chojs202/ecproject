@@ -14,8 +14,16 @@ const Item = ({ id, name, image, new_price, old_price, category }) => {
   );
 
   // ✅ 이미지 처리 (배열 대비)
-  const imageSrc =
+  const rawSrc =
     Array.isArray(image) && image.length > 0 ? image[0] : "/placeholder.png";
+  
+  const imageSrc = 
+    rawSrc.includes("res.cloudinary.com") && rawSrc.includes("/image/upload/")
+    ? rawSrc.replace(
+      "/image/upload/",
+      "/image/upload/f_auto,q_auto,dpr_auto,w_290,h_347,c_fill,g_auto/"
+    ) : rawSrc;
+ 
 
   // ✅ 찜 버튼 클릭 핸들러
   const handleLikeClick = (e) => {
@@ -44,6 +52,10 @@ const Item = ({ id, name, image, new_price, old_price, category }) => {
           <img
             src={imageSrc}
             alt={name}
+            width={290}
+            height={347}
+            loading="lazy"
+            decoding="async"
             onClick={() => window.scrollTo(0, 0)}
           />
         </Link>

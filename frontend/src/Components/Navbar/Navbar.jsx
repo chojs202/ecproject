@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Navbar.css';
-import logo from '../Assets/shop_image.png';
+import logo from '../Assets/shop_image.webp';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
 import { LogIn, LogOut, Heart, ShoppingCart, Menu, X } from 'lucide-react';
