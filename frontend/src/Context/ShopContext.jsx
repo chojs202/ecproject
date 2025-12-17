@@ -98,6 +98,37 @@ const ShopContextProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   }, []);
 
+    // ✅ 공통 인증 fetch: 401이면 자동 로그아웃
+  const fetchWithAuth = useCallback(
+    async (url, options = {}) => {
+      const token = localStorage.getItem("auth-token");
+
+      // 토큰이 없으면 애초에 인증 요청을 보내지 않음
+      if (!token) {
+        //  기존 로직에 영향 최소화를 위해 null 반환
+        return null;
+      }
+
+      const headers = {
+        ...(options.headers || {}),
+        "auth-token": token,
+      };
+
+      const res = await fetch(url, { ...options, headers });
+
+      // ✅ 토큰 만료/인증 실패 → 전역 로그아웃
+      if (res.status === 401) {
+        console.warn("Your login has expired.");
+        logout();
+        return null;
+      }
+
+      return res;
+    },
+    [logout]
+  );
+
+
   // ---------------------
   // 비회원용 임시 guestId
   // ---------------------
@@ -119,14 +150,18 @@ const ShopContextProvider = ({ children }) => {
 
       for (let attempt = 1; attempt <= retryCount; attempt++) {
         try {
-          await fetch(`${API}/api/cart`, {
-            method: "PUT", // 🔵 전체 cartData 덮어쓰기
-            headers: {
-              "auth-token": token,
-              "Content-Type": "application/json",
-            },
+          const res = await fetchWithAuth(`${API}/api/cart`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedCart),
           });
+
+          if (!res) return; // ✅ 토큰 없음 or 401 → logout 됐으니 종료
+
+          // (선택) 서버가 400/500 등을 주는 경우를 대비해 최소 방어
+          if (!res.ok) {
+            throw new Error(`Cart update failed (${res.status})`);
+          }
 
           localStorage.setItem("cartItems", JSON.stringify(updatedCart));
           break;
@@ -159,10 +194,11 @@ const ShopContextProvider = ({ children }) => {
 
     try {
       // 🔵 서버 카트 조회: GET /api/cart
-      const serverRes = await fetch(`${API}/api/cart`, {
+      const serverRes = await fetchWithAuth(`${API}/api/cart`, {
         method: "GET",
         headers: { "auth-token": token },
       });
+      if (!serverRes) return; // ✅ 토큰 없음 or 401
       const serverData = await serverRes.json();
       const serverCart = serverData?.cartData || {};
 
@@ -377,11 +413,13 @@ const ShopContextProvider = ({ children }) => {
     const cartTotal = getTotalCartAmount();
 
     try {
-      const response = await fetch(`${API}/api/promos/applypromo`, {
+      const response = await fetchWithAuth(`${API}/api/promos/applypromo`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "auth-token": token },
         body: JSON.stringify({ code, cartTotal }),
       });
+      if (!response) return callback?.(false, "Please login"); // ✅ 토큰 없음 or 401
+
       const data = await response.json();
 
       if (data.success) {
@@ -456,25 +494,14 @@ const ShopContextProvider = ({ children }) => {
   // 찜(Like) 기능
   // ---------------------
   const fetchLikedProducts = useCallback(async () => {
-    const token = localStorage.getItem("auth-token");
-    if (!token) return;             // 토큰 없으면 바로 종료
-
     try {
-      const res = await fetch(`${API}/api/likes/likes`, {
-        headers: { "auth-token": token },
-      });
-
-      if (res.status === 401) {
-        console.warn("Your login has expired.");
-        logout();                   // 토큰 만료 시에도 통합 logout 처리
-        return;
-      }
+      const res = await fetchWithAuth(`${API}/api/likes/likes`);
+      if (!res) return;
 
       const data = await res.json();
 
-      // ✅ 응답이 돌아온 "지금 시점"에 다시 한 번 토큰 체크
       const latestToken = localStorage.getItem("auth-token");
-      if (!latestToken) return;     // 이미 로그아웃 되었으면 상태 갱신하지 않음
+      if (!latestToken) return;
 
       if (data.success) {
         dispatch({ type: "SET_LIKED_PRODUCTS", payload: data.products });
@@ -482,20 +509,19 @@ const ShopContextProvider = ({ children }) => {
     } catch (err) {
       console.error("Failed to fetch liked products:", err);
     }
-  }, [logout]);   
+  }, [fetchWithAuth]);
+  
 
   const toggleLike = async (productId) => {
     if (!isLoggedIn) return;
-    try {
-      const res = await fetch(`${API}/api/likes/products/${productId}/like`, {
-        method: "POST",
-        headers: { "auth-token": localStorage.getItem("auth-token") },
-      });
-      const data = await res.json();
-      if (data.success) fetchLikedProducts();
-    } catch (err) {
-      console.error("Failed to toggle like:", err);
-    }
+
+    const res = await fetchWithAuth(`${API}/api/likes/products/${productId}/like`, {
+      method: "POST",
+    });
+    if (!res) return; // ✅ 토큰 없음 or 401
+
+    const data = await res.json();
+    if (data.success) fetchLikedProducts();
   };
 
   const isProductLiked = (productId) => {
