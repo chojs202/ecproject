@@ -105,7 +105,7 @@ export const Hero = () => {
 
         const data = await res.json();
         if (data.success && data.product && data.product.id) {
-          navigate(`/product/${data.product.id}`);
+          navigate(`/${data.product.category}/product/${data.product.id}`);
         }
       } catch (err) {
         console.error("Failed to fetch latest product:", err);
